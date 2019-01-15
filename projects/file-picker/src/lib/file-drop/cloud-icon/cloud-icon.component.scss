@@ -1,0 +1,75 @@
+:host {
+  display: block;
+  font-size: 48px;
+  margin-bottom: 0.4em;
+  height: 1.36em;
+  width: 1.36em;
+  position: relative;
+}
+$color: #789BEC;
+.cloud-upload-icon {
+  color: #000;
+  position: absolute;
+  margin-left: 0.0625em;
+  margin-top: 0.5625em;
+  width: 0.3125em;
+  height: 0.375em;
+  border-radius: 0.25em 0 0 0.25em;
+  border-left: solid 0.0625em $color;
+  border-top: solid 0.0625em $color;
+  border-bottom: solid 0.0625em $color;
+}
+.cloud-upload-icon:before {
+  content: '';
+  position: absolute;
+  top: -0.4375em;
+  left: 0.25em;
+  width: 0.75em;
+  height: 0.75em;
+  border-radius: 50%;
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  border-left: solid 0.0625em transparent;
+  border-right: solid 0.0625em $color;
+  border-top: solid 0.0625em $color;
+  border-bottom: solid 0.0625em $color;
+}
+.cloud-upload-icon:after {
+  content: '';
+  position: absolute;
+  top: 0.3125em;
+  left: 0.3125em;
+  width: 0.5625em;
+  height: 0.125em;
+  color: #fff;
+  background-color: $color;
+}
+.cloud-upload-icon i {
+  position: absolute;
+  left: 0.3125em;
+  top: -0.25em;
+  z-index: 2;
+}
+.cloud-upload-icon i:before {
+  content: '';
+  position: absolute;
+  top: 0.25em;
+  left: 0.0625em;
+  width: 0.0625em;
+  height: 0.4375em;
+  background-color: $color;
+  border-left: solid 0.25em #fff;
+  border-right: solid 0.25em #fff;
+}
+.cloud-upload-icon i:after {
+  content: '';
+  position: absolute;
+  left: 0.1875em;
+  top: 0.25em;
+  width: 0.25em;
+  height: 0.25em;
+  border-top: solid 0.0625em $color;
+  border-right: solid 0.0625em $color;
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
