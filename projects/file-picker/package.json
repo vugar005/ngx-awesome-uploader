@@ -1,7 +1,7 @@
 {
   "name": "ngx-awesome-uploader",
-  "version": "1.1.8",
-  "description": "Angular Library for uploading files with Real-Time Progress bar with File Preview and Drag && Drop",
+  "version": "1.2.0",
+  "description": "Angular Library for uploading files with Real-Time Progress bar, File Preview and Drag && Drop",
   "peerDependencies": {
     "@angular/common": "^6.0.0-rc.0 || ^6.0.0",
     "@angular/core": "^6.0.0-rc.0 || ^6.0.0"
@@ -17,7 +17,7 @@
     "angular image uploader"
   ],
   "license": "MIT",
-  "repository": "https://github.com/vugar005/ngx-agile-components",
+  "repository": "https://github.com/vugar005/ngx-awesome-uploader",
   "author": "",
   "homepage": "https://angular-demo-file-picker.stackblitz.io/"
 
