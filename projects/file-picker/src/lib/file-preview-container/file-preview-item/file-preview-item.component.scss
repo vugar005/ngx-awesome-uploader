@@ -1,0 +1,187 @@
+:host {
+  display: block;
+  padding: 20px 16px;
+  border-bottom: 1px solid #ebeef1;
+  max-width: 440px;
+  position: relative;
+}
+.file-preview-wrapper {
+  display: flex;
+  width: 100%;
+  .file-preview-thumbnail {
+    position: relative;
+    z-index: 2;
+    cursor: pointer;
+    .img-preview-thumbnail {
+      width: 36px;
+      height: 36px;
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 6px;
+      }
+    }
+    .other-preview-thumbnail {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #706fd3;
+      border-radius: 4px;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      &.pdf {
+        background: #e4394e;
+      }
+      &.doc, &.docx {
+       background: #2196F3;
+      }
+      &.xls, &.xlsx {
+        background: #4CAF50;
+      }
+     &.txt, &.ppt {
+       background: #FF9800;
+     }
+    }
+
+ .thumbnail-backdrop {
+     visibility: hidden;
+     position: absolute;
+     left: 0;
+     top:0;
+     width: 100%;
+     height: 100%;
+     border-radius: 6px;
+     transition: all 100ms ease-in-out;
+     pointer-events: none;
+     background: rgba(43,56,71,.2);
+   }
+   &:hover {
+    .thumbnail-backdrop {
+      visibility: visible;
+    }
+  }
+  &:active {
+    .thumbnail-backdrop {
+      visibility: visible;
+      background: rgba(43,56,71,.4);
+    }
+  }
+  }
+  .file-preview-description {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 16px;
+    padding-right: 16px;
+    color: #74809d;
+    overflow: hidden;
+    flex: 1;
+    z-index: 2;
+    position: relative;
+    .file-preview-title {
+      font-weight: 700;
+      width: 90%;
+      text-decoration: none;
+      color: #74809d;
+      cursor: default;
+      p {
+        text-overflow: ellipsis;
+        max-width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        margin: 0;
+      }
+    }
+    .file-preview-size {
+      font-size: 12px;
+      color: #979fb8;
+    }
+  }
+  .file-preview-actions {
+    display: flex;
+    align-items: center;
+    font-size: 10px;
+    z-index: 3;
+    position: relative;
+    .ngx-checkmark-wrapper {
+      position: relative;
+      cursor: pointer;
+      font-size: 22px;
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+      background: #43d084;
+      box-shadow: -1px 1px 6px rgba(67, 208, 132, 0.8);
+      .ngx-checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 19px;
+        width: 19px;
+        &:after {
+          content: '';
+          position: absolute;
+          display: block;
+          left: 7px;
+          top: 4px;
+          width: 3px;
+          height: 7px;
+          border: 1px solid #ffffff;
+          border-width: 0 3px 3px 0;
+          -webkit-transform: rotate(45deg);
+          -ms-transform: rotate(45deg);
+          transform: rotate(45deg);
+        }
+      }
+    }
+    .ngx-close-icon-wrapper {
+      border-radius: 50%;
+      background: #fe7676;
+      padding: 3px;
+      box-shadow: -1px 1px 6px rgba(254, 118, 118, 0.8);
+      cursor: pointer;
+    }
+  }
+  .file-upload-progress-bar-wrapper,
+  .file-upload-percentage-wrapper {
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 95%;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+  }
+  .file-upload-progress-bar {
+    background: #eef1fa;
+    border-radius: 6px;
+    width: 0%;
+    height: 95%;
+    transition: width 300ms ease-in;
+  }
+  .file-upload-percentage {
+    padding-right: 10%;
+    color: #c2cdda;
+    padding-top: 5%;
+    font-size: 19px;
+    text-align: right;
+  }
+  .file-upload-error-wrapper {
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 95%;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    background: rgba(254,84,111,.06);
+  }
+}

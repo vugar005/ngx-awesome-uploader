@@ -1,0 +1,40 @@
+:host {
+  display: block;
+  margin-right: 12px;
+  font-size: 19px;
+}
+.upload-refresh-icon {
+  display: block;
+  color: grey;
+  transform: rotateZ(-180deg);
+  position:relative;
+  margin-left: 0.25em;
+  margin-top: 0.1875em;
+  width: 0.75em;
+  height: 0.75em;
+  border-radius: 50%;
+  border-top: solid 0.0625em currentColor;
+  border-bottom: solid 0.0625em currentColor;
+  border-left: solid 0.0625em transparent;
+  border-right: solid 0.0625em currentColor;
+  text-decoration: none;
+  transition: color 100ms ease-in-out;
+  cursor: pointer;
+  &:hover {
+    color: #668ee9;
+  }
+}
+
+.upload-refresh-icon:before {
+  content: '';
+  position: absolute;
+  left: 0.0625em;
+  top: 0.625em;
+  width: 0.1875em;
+  height: 0.1875em;
+  border-top: solid 0.0625em currentColor;
+  border-left: solid 0.0625em currentColor;
+  -webkit-transform: rotate(-22.5deg);
+          transform: rotate(-22.5deg);
+}
+
