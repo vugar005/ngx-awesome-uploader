@@ -16,8 +16,8 @@ Tested on Angular 4.3/5/6/7
 
 
 ## Quick-links
-[Example Application](https://angular-demo-file-picker.stackblitz.io/) [StackBlitzDemo](
-https://stackblitz.com/edit/angular-demo-file-picker
+[Example Application](https://ngx-awesome-uploader.stackblitz.io/) [StackBlitzDemo](
+https://ngx-awesome-uploader.stackblitz.io/
 )
 ## Install
      npm install ngx-awesome-uploader --save
@@ -46,7 +46,7 @@ After importing it to your custom adapter implementation (EG: CustomAdapter.ts),
 public  abstract  uploadFile(fileItem: FilePreviewModel): Observable<HttpEvent<any>  | string>;
 public  abstract  removeFile(id: string, fileItem: FilePreviewModel): Observable<any>;
 ```
-**Note:**  Since uploadFile method will use http progress event, it has to return **id** of file in HttpEventType.Response type, otherwise return request.  You will receive this id on removeFile method when you click remove.
+**Note:**  Since uploadFile method will use http progress event, it has to return **id** of file (string) in HttpEventType.Response type, otherwise return request.  You will receive this id on removeFile method when you click remove.
 You can check DEMO adapter [here](https://github.com/vugar005/ngx-awesome-uploader/blob/master/src/app/demo-file-picker/demo-file-picker.adapter.ts)
 ####  Now you can use it in your template
 
@@ -75,7 +75,7 @@ constructor(private  http: HttpClient) { }
 }
  ```
 **Note:** As you see you should provide http instance to adapter.
-Still in Doubt? Check [Minimal Setup Demo](https://stackblitz.com/edit/angular-demo-file-picker?file=src%2Fapp%2Fsimple-demo%2Fsimple-demo.component.html)
+Still in Doubt? Check [Minimal Setup Demo](https://ngx-awesome-uploader.stackblitz.io?file=src%2Fapp%2Fsimple-demo%2Fsimple-demo.component.html)
 ## api
 ```typescript
 /** Whether to enable cropper. Default: disabled */
@@ -148,14 +148,14 @@ Supported validations:
 
 | **Validation Type**                | **Description**                                                                                                                                                                       | **Default** |
 |----------------------------|---------------------------------------------------------------------------------------|----------------------------------------|
-| fileMaxCount: number       | Max size of selected file in MB.   | No limit
+| fileMaxSize: number       | Max size of selected file in MB.   | No limit
 | fileExtensions: String        |  Emitted when file does not satisfy provided extension   | Any extension
 | uploadType: String      | Upload type. Values: 'single' and 'multi'.  |multi
 | totalMaxSize: number       | Total Max size of files in MB. If cropper is enabled, the cropped image size is considered.| No limit
 | fileMaxCount: number       | Limit total files to upload by count  | No limit
 
 
-Check [Demo](https://stackblitz.com/edit/angular-demo-file-picker?file=src%2Fapp%2Fadvanced-demo%2Fadvanced-demo.component.ts)
+Check [Demo](https://ngx-awesome-uploader.stackblitz.io/?file=src%2Fapp%2Fadvanced-demo%2Fadvanced-demo.component.ts)
 
 ## Cropper
 Library uses cropperjs to crop images but you need  import it to use it. Example: in index html
@@ -178,7 +178,7 @@ I) To provide custom template for drag and drop zone, use content projection. Ex
 </ngx-file-picker>
  ````
  **Note:** The wrapper of your custom template must have class **dropzoneTemplate**.
- [Checkout Demo](https://stackblitz.com/edit/angular-demo-file-picker?file=src%2Fapp%2Fadvanced-demo%2Fadvanced-demo.component.html)
+ [Checkout Demo](https://ngx-awesome-uploader.stackblitz.io/?file=src%2Fapp%2Fadvanced-demo%2Fadvanced-demo.component.html)
 
  II) To use custom file preview template, library emits fileAdded output event which you can listen and pickup file so you can build your own template. Library also exposes removeFileFromList method which removes files from fileList in library. To use it you need to give a reference to library:
  ```html

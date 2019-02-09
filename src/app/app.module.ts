@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DemoFilePickerComponent } from './demo-file-picker/demo-file-picker.component';
 import { FilePickerModule } from 'projects/file-picker/src/public_api';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -14,6 +15,7 @@ import { FilePickerModule } from 'projects/file-picker/src/public_api';
   imports: [
     BrowserModule,
     FilePickerModule,
+    HttpClientModule,
     AppRoutingModule
   ],
   providers: [],
