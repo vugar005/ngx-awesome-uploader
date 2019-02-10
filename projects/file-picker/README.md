@@ -16,9 +16,8 @@ Tested on Angular 4.3/5/6/7
 
 
 ## Quick-links
-[Example Application](https://ngx-awesome-uploader.stackblitz.io/) [StackBlitzDemo](
-https://ngx-awesome-uploader.stackblitz.io/
-)
+[Example Application](https://ngx-awesome-uploader.stackblitz.io/)
+[StackBlitzDemo](https://stackblitz.com/edit/ngx-awesome-uploader?file=src%2Fapp%2Fsimple-demo%2Fsimple-demo.component.ts)
 ## Install
      npm install ngx-awesome-uploader --save
 
