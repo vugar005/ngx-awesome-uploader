@@ -17,7 +17,7 @@ export class DemoFilePickerAdapter extends FilePickerAdapter {
     .pipe(
       map( (res: HttpEvent<any>) => {
         if (res.type === HttpEventType.Response) {
-          return res.body.id;
+          return res.body.id.toString();
         } else {
           return res;
         }

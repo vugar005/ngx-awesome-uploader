@@ -1,49 +1,56 @@
-<div class="file-preview-wrapper" *ngIf="fileItem">
-  <div class="file-preview-thumbnail">
-    <div class="img-preview-thumbnail" *ngIf="fileType === 'image'" >
-      <img [src]="safeUrl" (click)="imageClicked.next(fileItem)">
-    </div>
-    <div class="other-preview-thumbnail"
-      *ngIf="fileType !== 'image'"
-      [ngClass]="fileItem.fileName.split('.').pop()"
-      >
-      {{fileItem.fileName.split('.').pop()}}
-    </div>
-    <div class="thumbnail-backdrop">
+<ng-container *ngIf="!itemTemplate">
+    <div class="file-preview-wrapper" *ngIf="fileItem">
 
-    </div>
-  </div>
-  <div class="file-preview-description" >
-    <a class="file-preview-title" [title]="fileItem.fileName" href="javascript:void(0)"><p>{{fileItem.fileName}}</p></a>
-    <div class="file-preview-size">{{niceBytes(fileItem.file.size)}}</div>
-  </div>
-  <div class="file-preview-actions" >
-      <div class="ngx-checkmark-wrapper" (click)="onCheckMarkClick()" *ngIf="(icon === 'checkmark') && !uploadError && !uploadProgress" (mouseenter)="icon = 'close'">
-        <span class="ngx-checkmark"></span>
+
+        <div class="file-preview-thumbnail">
+          <div class="img-preview-thumbnail" *ngIf="fileType === 'image'" >
+            <img [src]="safeUrl" (click)="imageClicked.next(fileItem)">
+          </div>
+          <div class="other-preview-thumbnail"
+            *ngIf="fileType !== 'image'"
+            [ngClass]="fileItem.fileName.split('.').pop()"
+            >
+            {{fileItem.fileName.split('.').pop()}}
+          </div>
+          <div class="thumbnail-backdrop">
+
+          </div>
+        </div>
+        <div class="file-preview-description" >
+          <a class="file-preview-title" [title]="fileItem.fileName" href="javascript:void(0)"><p>{{fileItem.fileName}}</p></a>
+          <div class="file-preview-size">{{niceBytes(fileItem.file.size)}}</div>
+        </div>
+        <div class="file-preview-actions" >
+            <div class="ngx-checkmark-wrapper" (click)="onCheckMarkClick()" *ngIf="(icon === 'checkmark') && !uploadError && !uploadProgress" (mouseenter)="icon = 'close'">
+              <span class="ngx-checkmark"></span>
+            </div>
+            <refresh-icon *ngIf="uploadError" (retry)="onRetry()"></refresh-icon>
+            <a class="ngx-close-icon-wrapper"
+            *ngIf= "(icon === 'close') ||  uploadError || uploadProgress"
+            (click)="onRemove(fileItem)"
+             (mouseleave)="icon = 'checkmark'"
+             title="Remove"
+             >
+              <close-icon></close-icon>
+            </a>
+        </div>
+        <!-- *ngIf="uploadProgress !== 100"-->
+          <a class="file-upload-error-wrapper" *ngIf="uploadError && !uploadProgress" href="javascipt:void(0)" title="Error on Upload">
+          </a>
+
+        <ng-container *ngIf="uploadProgress">
+        <div class="file-upload-progress-bar-wrapper"  >
+          <div class="file-upload-progress-bar"  [ngStyle]="{ 'width': uploadProgress + '%' }">
+          </div>
+        </div>
+
+        <div class="file-upload-percentage-wrapper" >
+          <div class="file-upload-percentage">{{uploadProgress}} %</div>
+          </div>
+        </ng-container>
+
       </div>
-      <refresh-icon *ngIf="uploadError" (retry)="onRetry()"></refresh-icon>
-      <a class="ngx-close-icon-wrapper"
-      *ngIf= "(icon === 'close') ||  uploadError || uploadProgress"
-      (click)="onRemove(fileItem)"
-       (mouseleave)="icon = 'checkmark'"
-       title="Remove"
-       >
-        <close-icon></close-icon>
-      </a>
-  </div>
-  <!-- *ngIf="uploadProgress !== 100"-->
-    <a class="file-upload-error-wrapper" *ngIf="uploadError && !uploadProgress" href="javascipt:void(0)" title="Error on Upload">
-    </a>
+</ng-container>
 
-  <ng-container *ngIf="uploadProgress">
-  <div class="file-upload-progress-bar-wrapper"  >
-    <div class="file-upload-progress-bar"  [ngStyle]="{ 'width': uploadProgress + '%' }">
-    </div>
-  </div>
 
-  <div class="file-upload-percentage-wrapper" >
-    <div class="file-upload-percentage">{{uploadProgress}} %</div>
-    </div>
-  </ng-container>
-
-</div>
+<ng-container *ngTemplateOutlet="itemTemplate;context: {fileItem: fileItem}" > </ng-container>

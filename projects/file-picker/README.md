@@ -1,8 +1,12 @@
+
+
 # Anguar File Uploader
 
 <p align="center">
  <img src="https://d2eip9sf3oo6c2.cloudfront.net/tags/images/000/000/962/square_256/angularcli.png">
  <p>
+
+[![npm](https://img.shields.io/npm/l/ngx-awesome-uploader.svg)]() [![NPM Downloads](https://img.shields.io/npm/dt/ngx-awesome-uploader.svg)](https://www.npmjs.com/package/ngx-router-animations) [![npm](https://img.shields.io/twitter/follow/vugar005.svg?label=Follow)](https://twitter.com/vugar005) [![npm](https://img.shields.io/github/issues/vugar005/ngx-awesome-uploader.svg)](https://github.com/vugar005/ngx-router-animations) [![npm](https://img.shields.io/github/last-commit/vugar005/ngx-awesome-uploader.svg)](https://github.com/vugar005/ngx-router-animations)
 
 This is an Angular Library for uploading files. It supports: File Upload and  Preview (additionally preview images with lightbox),  validation, image cropper , drag and drop.
 Tested on Angular 4.3/5/6/7
@@ -83,9 +87,6 @@ Still in Doubt? Check [Minimal Setup Demo](https://ngx-awesome-uploader.stackbli
 /** Whether to show default drag and drop template. Default:true */
 @Input() showeDragDropZone  =  true;
 
-/** Whether to show default files preview container. Default: true */
-@Input() showPreviewContainer  =  true;
-
 /** Single or multiple. Default: multi */
 @Input() uploadType  =  'multi';
 
@@ -120,6 +121,13 @@ Still in Doubt? Check [Minimal Setup Demo](https://ngx-awesome-uploader.stackbli
 
 /** Custom template for dropzone. Optional */
 @Input() dropzoneTemplate: TemplateRef<any>;
+
+/** Custom Preview Item template */
+ @Input() itemTemplate: TemplateRef<any>;
+
+/** Whether to show default files preview container. Default: true */
+@Input() showPreviewContainer  =  true;
+
  ```
 ## Output events
 ```typescript
@@ -179,45 +187,22 @@ I) To provide custom template for drag and drop zone, use content projection. Ex
  **Note:** The wrapper of your custom template must have class **dropzoneTemplate**.
  [Checkout Demo](https://ngx-awesome-uploader.stackblitz.io/?file=src%2Fapp%2Fadvanced-demo%2Fadvanced-demo.component.html)
 
- II) To use custom file preview template, library emits fileAdded output event which you can listen and pickup file so you can build your own template. Library also exposes removeFileFromList method which removes files from fileList in library. To use it you need to give a reference to library:
+ II) To use custom file preview template, pass your custom template as below:
  ```html
  <ngx-file-picker #uploader
 [adapter]="adapter"
-(fileAdded)="onFileAdded($event)"
+[itemTemplate]="itemTemplate"
 >
 </ngx-file-picker>
-<button  (click)="removeFile()">Remove First File</button>
-```
-and in component:
-```typescript
-import { FilePreviewModel } from  'ngx-awesome-uploader';
-import { ValidationError } from  'ngx-awesome-uploader';
-import { FilePickerComponent } from  'ngx-awesome-uploader';
-import { HttpClient } from  '@angular/common/http';
-import { DemoFilePickerAdapter } from  './demo-file-picker.adapter';
-import { Component, OnInit } from  '@angular/core';
-@Component({
-selector:  'demo-file-picker',
-templateUrl:  './demo-file-picker.component.html',
-styleUrls:  ['./demo-file-picker.component.scss']
-})
 
-export  class  DemoFilePickerComponent  implements  OnInit {
-@ViewChild('uploader') uploader: FilePickerComponent;
-adapter  =  new  DemoFilePickerAdapter(this.http);
-myFiles: FilePreviewModel[] = [];
-constructor(private  http: HttpClient) { }
-onValidationError(error: ValidationError) {
-	console.log(error);
-}
-onFileAdded(file: FilePreviewModel) {
-	myFiles.push(file);
-}
-removeFile() {
-	this.uploader.removeFileFromList(this.myFiles[0].fileName);
-}
-}
+<ng-template  #itemTemplate  let-fileItem="fileItem">
+	<p>{{fileItem.file.size}}</p>
+	<p>{{fileItem.fileName}}</p>
+	<button  (click)="uploader.removeFile(fileItem)">Remove</button>
+</ng-template>
 ```
+In custom template <b>fileItem</b> is exposed (implements FilePreviewModel interface).
+
 ## Contribution
 You can fork project from github. Pull requests are kindly accepted.
 1. Building library: ng build file-picker

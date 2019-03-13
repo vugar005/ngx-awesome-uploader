@@ -1,6 +1,7 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, TemplateRef } from '@angular/core';
 import { FilePreviewModel } from '../file-preview.model';
 import { FilePickerAdapter } from '../file-picker.adapter';
+import { FilePickerComponent } from 'file-picker/public_api';
 
 @Component({
   selector: 'file-preview-container',
@@ -9,7 +10,8 @@ import { FilePickerAdapter } from '../file-picker.adapter';
 })
 export class FilePreviewContainerComponent implements OnInit {
   @Input() previewFiles: FilePreviewModel[];
-  @Output() public removeSuccess = new EventEmitter<FilePreviewModel>();
+  @Input() itemTemplate: TemplateRef<any>;
+  @Output() public removeFile = new EventEmitter<FilePreviewModel>();
   @Output() public uploadSuccess = new EventEmitter<FilePreviewModel>();
   lightboxFile: FilePreviewModel;
   @Input() adapter: FilePickerAdapter;

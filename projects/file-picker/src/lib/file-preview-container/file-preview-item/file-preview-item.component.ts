@@ -1,11 +1,12 @@
 import { FilePickerService } from './../../file-picker.service';
 import { FilePreviewModel } from './../../file-preview.model';
-import { Component, OnInit, Input, Output, EventEmitter, Host } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, Host, TemplateRef } from '@angular/core';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { getFileType} from '../../file-upload.utils';
 import {  Subscription } from 'rxjs';
 import { FilePickerAdapter } from '../../file-picker.adapter';
+import { FilePickerComponent } from '../../file-picker.component';
 
 @Component({
   selector: 'file-preview-item',
@@ -13,11 +14,12 @@ import { FilePickerAdapter } from '../../file-picker.adapter';
   styleUrls: ['./file-preview-item.component.scss']
 })
 export class FilePreviewItemComponent implements OnInit {
-  @Output() public removeSuccess = new EventEmitter<FilePreviewModel>();
+  @Output() public removeFile = new EventEmitter<FilePreviewModel>();
   @Output() public uploadSuccess = new EventEmitter<FilePreviewModel>();
   @Output() public imageClicked = new EventEmitter<FilePreviewModel>();
   @Input() public fileItem: FilePreviewModel;
   @Input() adapter: FilePickerAdapter;
+  @Input() itemTemplate: TemplateRef<any>;
   icon = 'checkmark';
   uploadProgress: number;
   fileType: string;
@@ -30,6 +32,7 @@ export class FilePreviewItemComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    console.log(this.itemTemplate)
       this.uploadFile(this.fileItem);
     this.fileType = getFileType(this.fileItem.file.type);
     this.safeUrl = this.getSafeUrl(this.fileItem.file);
@@ -78,6 +81,7 @@ export class FilePreviewItemComponent implements OnInit {
   /** Emits event when file upload api returns success  */
   onUploadSuccess(id: string, fileItem: FilePreviewModel): void {
     this.fileId = id;
+    this.fileItem.fileId = id;
     this.uploadSuccess.next({...fileItem, fileId: id});
   }
   handleProgressResponse(event: HttpEvent<any> , fileName) {
@@ -104,7 +108,7 @@ export class FilePreviewItemComponent implements OnInit {
   }
  onRemove(fileItem: FilePreviewModel): void {
   this.uploadUnsubscribe();
-  this.removeFile();
+  this.removeFile.next(fileItem);
  }
  /** Cancel upload. Cancels request  */
  uploadUnsubscribe(): void {
@@ -112,17 +116,5 @@ export class FilePreviewItemComponent implements OnInit {
     this.uploadSubscription.unsubscribe();
    }
  }
- removeFile(): void {
-  if (this.adapter) {
-    this.adapter.removeFile(this.fileId, this.fileItem)
-    .subscribe(res => {
-      this.onRemoveSuccess(this.fileItem);
-    });
-   } else {
-    console.warn('no adapter was provided');
-   }
- }
- onRemoveSuccess(fileItem: FilePreviewModel) {
-  this.removeSuccess.next(fileItem);
- }
+
 }
