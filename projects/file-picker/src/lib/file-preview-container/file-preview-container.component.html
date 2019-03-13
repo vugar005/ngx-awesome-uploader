@@ -2,8 +2,9 @@
 <file-preview-item
 *ngFor="let file of previewFiles"
 [fileItem]="file"
-(removeSuccess)="removeSuccess.next($event)"
+(removeFile)="removeFile.next($event)"
 (uploadSuccess)="uploadSuccess.next($event)"
 (imageClicked)="openLightbox($event)"
+[itemTemplate]="itemTemplate"
 [adapter]="adapter"
 ></file-preview-item>

@@ -5,7 +5,8 @@ import {
   OnInit,
   Output,
   EventEmitter,
-  TemplateRef
+  TemplateRef,
+  ElementRef
 } from '@angular/core';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { FilePreviewModel } from './file-preview.model';
@@ -46,9 +47,10 @@ declare var Cropper;
     <div class="files-preview-wrapper" *ngIf="showPreviewContainer">
       <file-preview-container *ngIf="files"
       [previewFiles]="files"
-      (removeSuccess)="onRemoveSuccess($event)"
+      (removeFile)="onRemoveFile($event)"
       (uploadSuccess)="onUploadSuccess($event)"
       [adapter]="adapter"
+      [itemTemplate]="itemTemplate"
       > </file-preview-container>
     </div>
 
@@ -71,6 +73,8 @@ export class FilePickerComponent implements OnInit {
   @Input() showeDragDropZone = true;
    /** Whether to show default files preview container. Default: true */
   @Input() showPreviewContainer = true;
+   /** Preview Item template */
+  @Input() itemTemplate: TemplateRef<any>;
   /** Single or multiple. Default: multi */
   @Input()
    uploadType = 'multi';
@@ -99,7 +103,9 @@ export class FilePickerComponent implements OnInit {
    adapter: FilePickerAdapter;
   /**  Custome template for dropzone */
    @Input() dropzoneTemplate: TemplateRef<any>;
-  constructor(private fileService: FilePickerService) {}
+  constructor(private fileService: FilePickerService, private elementRef: ElementRef) {
+    console.log(this.elementRef)
+  }
 
   ngOnInit() {
     this.setCropperOptions();
@@ -198,11 +204,7 @@ export class FilePickerComponent implements OnInit {
     this.objectForCropper = undefined;
     this.cropper = undefined;
   }
-  /** Emits event when file remove api returns success  */
-  onRemoveSuccess(fileItem: FilePreviewModel): void {
-    this.removeSuccess.next(fileItem);
-    this.removeFileFromList(fileItem.fileName);
-  }
+
   removeFileFromList(fileName: string): void {
     this.files = this.files.filter(f =>  f.fileName !== fileName);
   }
@@ -253,6 +255,20 @@ export class FilePickerComponent implements OnInit {
     }
    this.closeCropper();
   }
-
+  removeFile(fileItem: FilePreviewModel): void {
+    if (this.adapter) {
+      this.adapter.removeFile(fileItem.fileId, fileItem)
+      .subscribe(res => {
+        this.onRemoveSuccess(fileItem);
+      });
+     } else {
+      console.warn('no adapter was provided');
+     }
+   }
+    /** Emits event when file remove api returns success  */
+  onRemoveSuccess(fileItem: FilePreviewModel): void {
+    this.removeSuccess.next(fileItem);
+    this.removeFileFromList(fileItem.fileName);
+  }
 
 }

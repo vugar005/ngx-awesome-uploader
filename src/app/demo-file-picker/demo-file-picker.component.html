@@ -13,6 +13,7 @@
     [showeDragDropZone]="true"
     [showPreviewContainer]="true"
     (fileAdded)="onFileAdded($event)"
+    [itemTemplate]="itemTemplate"
   >
   <!-- <div class="dropzoneTemplate">
     <button>Custom</button>
@@ -21,3 +22,9 @@
 <!-- <button (click)="removeFile()">Remove First File</button> -->
 
 </div>
+
+<ng-template #itemTemplate let-fileItem="fileItem">
+  <p>{{fileItem.file.size}}</p>
+  <p>{{fileItem.fileName}}</p>
+  <button (click)="uploader.removeFile(fileItem)">Remove</button>
+</ng-template>
