@@ -13,7 +13,7 @@ export class MockableUploaderAdapter extends FilePickerAdapter {
   public uploadFile(fileItem: FilePreviewModel) {
    return of('123');
   }
-    public removeFile(id: string, fileItem: FilePreviewModel) {
+    public removeFile(fileItem: FilePreviewModel) {
       return of('ok');
   }
 
@@ -64,42 +64,42 @@ describe('FilePickerComponent', () => {
    const spy = spyOn(component, 'pushFile');
    component.fileExtensions = 'doc';
    const file = createMockFile('demo.png', 'image/png');
-   component.handleInputFile(file);
+    component.handleFiles([file]);
    expect(spy).not.toHaveBeenCalled();
  });
  it('should call pushFile on extension validation success ', () => {
    const spy = spyOn(component, 'pushFile');
    component.fileExtensions = 'pdf';
    const file = createMockFile('demo.pdf', 'application/pdf');
-   component.handleInputFile(file);
+    component.handleFiles([file]);
    expect(spy).toHaveBeenCalled();
  });
  it('should open cropper when type is image and cropper enabled', () => {
   const spy = spyOn(component, 'openCropper');
   component.enableCropper = true;
   const file = createMockFile('demo.png', 'image/png');
-  component.handleInputFile(file);
+   component.handleFiles([file]);
   expect(spy).toHaveBeenCalled();
  });
  it('should NOT open cropper when type is not image', () => {
   const spy = spyOn(component, 'openCropper');
   component.enableCropper = true;
   const file = createMockFile('demo.pdf', 'application/pdf');
-  component.handleInputFile(file);
+  component.handleFiles([file]);
   expect(spy).not.toHaveBeenCalled();
  });
  it('should NOT open cropper when cropper is not enabled', () => {
   const spy = spyOn(component, 'openCropper');
   component.enableCropper = false;
   const file = createMockFile('demo.png', 'image/png');
-  component.handleInputFile(file);
+   component.handleFiles([file]);
   expect(spy).not.toHaveBeenCalled();
  });
  it('should NOT push file on size validation fail without cropper feature', () => {
    const spy = spyOn(component, 'pushFile');
    component.fileMaxSize = 1;
    const file = createMockFile('demo.png', 'image/png', 1.1);
-   component.handleInputFile(file);
+    component.handleFiles([file]);
    expect(spy).not.toHaveBeenCalled();
  });
 
@@ -108,7 +108,7 @@ describe('FilePickerComponent', () => {
    component.fileMaxCount = 1;
    component.files.push(createMockPreviewFile('demo.png', 'image/png'));
    const file = createMockFile('demo2.png', 'image/png');
-   component.handleInputFile(file);
+  // component.handleInputFile(file);
    expect(spy).not.toHaveBeenCalled();
  });
  it('should NOT push another file when upload type is single', () => {
@@ -116,7 +116,7 @@ describe('FilePickerComponent', () => {
    component.uploadType = 'single';
    component.files.push(createMockPreviewFile('demo.png', 'image/png'));
    const file = createMockFile('demo2.png', 'image/png');
-   component.handleInputFile(file);
+    component.handleFiles([file]);
    expect(spy).not.toHaveBeenCalled();
  });
  it('should isValidMaxExtension work', () => {
@@ -133,9 +133,9 @@ describe('FilePickerComponent', () => {
   spyOn(component.validationError, 'next');
   const fileItem = createMockPreviewFile('demo2.png', 'image/png');
   component.files.push(fileItem);
-  const res =  component.isValidMaxFileCount(<File>fileItem.file);
-  expect(res).toBe(false);
-  expect(component.validationError.next).toHaveBeenCalledWith({file: fileItem.file, error: FileValidationTypes.fileMaxCount});
+  const res =  component.isValidMaxFileCount([<File>fileItem.file]);
+   expect(res).toBe(false);
+  expect(component.validationError.next).toHaveBeenCalledWith({file: null, error: FileValidationTypes.fileMaxCount});
 
 });
 it('should isValidSize work', () => {
