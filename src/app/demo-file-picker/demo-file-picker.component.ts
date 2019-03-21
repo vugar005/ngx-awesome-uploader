@@ -22,8 +22,8 @@ export class DemoFilePickerComponent implements OnInit {
     console.log(e);
   }
   onUploadSuccess(e: FilePreviewModel) {
-   console.log(e);
-   console.log(this.myFiles)
+   // console.log(e);
+  // console.log(this.myFiles)
   }
   onRemoveSuccess(e: FilePreviewModel) {
     console.log(e);

@@ -34,9 +34,9 @@
     font-size: 20px;
   }
   .lightbox-item {
-    max-width: calc(100vw - 30px);
-    max-height: calc(100vh - 30px);
     img {
+      max-width: calc(100vw - 30px);
+      max-height: calc(100vh - 30px);
       width: 100%;
       height: auto;
       object-fit: contain;

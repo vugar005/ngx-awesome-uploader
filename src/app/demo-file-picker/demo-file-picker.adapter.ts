@@ -18,13 +18,15 @@ export class DemoFilePickerAdapter extends FilePickerAdapter {
       map( (res: HttpEvent<any>) => {
         if (res.type === HttpEventType.Response) {
           return res.body.id.toString();
-        } else {
-          return res;
+        } else if (res.type ===  HttpEventType.UploadProgress) {
+            // Compute and show the % done:
+            const UploadProgress = +Math.round((100 * res.loaded) / res.total);
+            return UploadProgress;
         }
       })
       );
   }
-    public removeFile(id: string, fileItem: FilePreviewModel): Observable<any> {
+    public removeFile(fileItem: FilePreviewModel): Observable<any> {
       console.log(fileItem.fileId);
     const removeApi = 'https://file-remove-demo.free.beeceptor.com';
     return this.http.post(removeApi, {id: fileItem.fileId});

@@ -6,14 +6,15 @@
   width: 1.36em;
   position: relative;
 }
-$color: #789BEC;
+$color: #673ab7;
+// $color: #789BEC;
 .cloud-upload-icon {
   color: #000;
   position: absolute;
   margin-left: 0.0625em;
   margin-top: 0.5625em;
-  width: 0.3125em;
-  height: 0.375em;
+  width: 0.3725em;
+  height: 0.49em;
   border-radius: 0.25em 0 0 0.25em;
   border-left: solid 0.0625em $color;
   border-top: solid 0.0625em $color;

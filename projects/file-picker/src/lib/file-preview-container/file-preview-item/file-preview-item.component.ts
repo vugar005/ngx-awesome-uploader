@@ -1,12 +1,11 @@
 import { FilePickerService } from './../../file-picker.service';
 import { FilePreviewModel } from './../../file-preview.model';
-import { Component, OnInit, Input, Output, EventEmitter, Host, TemplateRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, TemplateRef } from '@angular/core';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { getFileType} from '../../file-upload.utils';
 import {  Subscription } from 'rxjs';
 import { FilePickerAdapter } from '../../file-picker.adapter';
-import { FilePickerComponent } from '../../file-picker.component';
 
 @Component({
   selector: 'file-preview-item',
@@ -32,8 +31,7 @@ export class FilePreviewItemComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log(this.itemTemplate)
-      this.uploadFile(this.fileItem);
+  this.uploadFile(this.fileItem);
     this.fileType = getFileType(this.fileItem.file.type);
     this.safeUrl = this.getSafeUrl(this.fileItem.file);
   }
@@ -63,12 +61,14 @@ export class FilePreviewItemComponent implements OnInit {
     if (this.adapter) {
       this.uploadSubscription =
       this.adapter.uploadFile(fileItem)
-      .subscribe((res: HttpEvent<any> | string) => {
+      .subscribe((res: number | string) => {
         if (typeof res === 'string') {
           this.onUploadSuccess(res, fileItem);
+          this.uploadProgress = undefined;
         }
-        if (typeof res === 'object') {
-          this.handleProgressResponse(<HttpEvent<any>>res, fileItem);
+        if (typeof res === 'number') {
+          this.uploadProgress = res;
+        //  this.handleProgressResponse(<HttpEvent<any>>res, fileItem);
         }
       }, (er) => {
         this.uploadError = er;
