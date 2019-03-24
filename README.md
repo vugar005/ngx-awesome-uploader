@@ -8,6 +8,7 @@
 <img  src="https://i.gifer.com/MJQT.gif">
 <p>
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/6f51a6295cdc49348d07166932b674e4)](https://app.codacy.com/app/vugar005/ngx-awesome-uploader?utm_source=github.com&utm_medium=referral&utm_content=vugar005/ngx-awesome-uploader&utm_campaign=Badge_Grade_Dashboard)
 [![npm](https://img.shields.io/npm/l/ngx-awesome-uploader.svg)]() [![NPM Downloads](https://img.shields.io/npm/dt/ngx-awesome-uploader.svg)](https://www.npmjs.com/package/ngx-awesome-uploader) [![npm](https://img.shields.io/twitter/follow/vugar005.svg?label=Follow)](https://twitter.com/vugar005) [![npm](https://img.shields.io/github/issues/vugar005/ngx-awesome-uploader.svg)](https://github.com/vugar005/ngx-awesome-uploader) [![npm](https://img.shields.io/github/last-commit/vugar005/ngx-awesome-uploader.svg)](https://github.com/vugar005/ngx-awesome-uploader)
 
 
