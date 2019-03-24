@@ -122,6 +122,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this._onDestroy$.next();
   }
+  /** Listen when Cropper is closed and open new cropper if next image exists */
   listenToCropClose() {
     this.cropClosed$
     .pipe(takeUntil(this._onDestroy$))
@@ -174,6 +175,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
     if (!this.isValidExtension(file, file.name)) {return; }
     return true;
   }
+  /** Handles input and drag&drop files */
   handleInputFile(file: File, index): void {
     const type = getFileType(file.type);
     if (type === 'image' && this.enableCropper) {
@@ -214,7 +216,6 @@ export class FilePickerComponent implements OnInit, OnDestroy {
       if (droppedFile.fileEntry.isFile) {
         const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
         fileEntry.file((file: File) => {
-     //    this.handleInputFile(file);
           filesForUpload.push(file);
         });
       } else {
