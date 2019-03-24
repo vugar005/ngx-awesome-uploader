@@ -9,6 +9,8 @@ import { FilePickerComponent } from './file-picker.component';
 import { createMockFile, createMockPreviewFile } from './test-utils';
 import { FilePreviewItemComponent } from './file-preview-container/file-preview-item/file-preview-item.component';
 import { of } from 'rxjs';
+import { getFileType } from './file-upload.utils';
+import { By } from '@angular/platform-browser';
 export class MockableUploaderAdapter extends FilePickerAdapter {
   public uploadFile(fileItem: FilePreviewModel) {
    return of('123');
@@ -185,6 +187,26 @@ it('shoud emit uploadSuccess when file is uploaded successfully', fakeAsync(() =
     fixture.detectChanges();
    // expect(component.uploadSuccess.next).toHaveBeenCalled();
     expect(componentPreviewItem.uploadSuccess.next).toHaveBeenCalled();
+  });
+}));
+it('should push images to filesForCropper if cropper Enabled', fakeAsync(() => {
+  component.enableCropper = true;
+  const files = [createMockFile('test.jpg', 'image/jpeg'), createMockFile('test2.png', 'image/png')];
+  component.handleFiles(files);
+  expect(component.filesForCropper.length).toBe(2);
+}));
+xit('should open cropper as many times as image length on multi mode', fakeAsync(() => {
+  spyOn(component, 'openCropper').and.callThrough();
+  spyOn(component, 'closeCropper').and.callThrough();
+  component.enableCropper = true;
+  const files = [createMockFile('test.jpg', 'image/jpeg'), createMockFile('test2.png', 'image/png')];
+  component.handleFiles(files);
+  fixture.detectChanges();
+  fixture.debugElement.query(By.css('.cropCancel')).nativeElement.click();
+  tick(1000);
+  fixture.whenStable().then(res => {
+    fixture.detectChanges();
+    expect(component.openCropper).toHaveBeenCalledTimes(2);
   });
 }));
 

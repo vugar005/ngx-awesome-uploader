@@ -2,14 +2,16 @@
 
 
 
-# Anguar File Uploader
+# NGX-AWESOME-UPLOADER
 
 <p align="center">
-
-<img  src="https://d2eip9sf3oo6c2.cloudfront.net/tags/images/000/000/962/square_256/angularcli.png">
+<img  src="https://i.gifer.com/MJQT.gif">
 <p>
 
-[![npm](https://img.shields.io/npm/l/ngx-awesome-uploader.svg)]() [![NPM Downloads](https://img.shields.io/npm/dt/ngx-awesome-uploader.svg)](https://www.npmjs.com/package/ngx-router-animations) [![npm](https://img.shields.io/twitter/follow/vugar005.svg?label=Follow)](https://twitter.com/vugar005) [![npm](https://img.shields.io/github/issues/vugar005/ngx-awesome-uploader.svg)](https://github.com/vugar005/ngx-router-animations) [![npm](https://img.shields.io/github/last-commit/vugar005/ngx-awesome-uploader.svg)](https://github.com/vugar005/ngx-router-animations)
+[![npm](https://img.shields.io/npm/l/ngx-awesome-uploader.svg)]() [![NPM Downloads](https://img.shields.io/npm/dt/ngx-awesome-uploader.svg)](https://www.npmjs.com/package/ngx-awesome-uploader) [![npm](https://img.shields.io/twitter/follow/vugar005.svg?label=Follow)](https://twitter.com/vugar005) [![npm](https://img.shields.io/github/issues/vugar005/ngx-awesome-uploader.svg)](https://github.com/vugar005/ngx-awesome-uploader) [![npm](https://img.shields.io/github/last-commit/vugar005/ngx-awesome-uploader.svg)](https://github.com/vugar005/ngx-awesome-uploader)
+
+
+
 This is an Angular Library for uploading files. It supports: File Upload and Preview (additionally preview images with lightbox), validation, image cropper , drag and drop.
 Tested on Angular 4.3/5/6/7
 
@@ -50,15 +52,14 @@ So this libray exposes a FilePickerAdapter abstract class which you can import o
 
 ```
 
-public abstract uploadFile(fileItem: FilePreviewModel): Observable<HttpEvent<any> | string>;
-
+public abstract uploadFile(fileItem: FilePreviewModel): Observable<number | string>;
 public abstract removeFile(id: string, fileItem: FilePreviewModel): Observable<any>;
 
 ```
 
->**Note:** Since uploadFile method will use http progress event, it has to return **id** of file (string) in HttpEventType.Response type, otherwise return request. You will receive this id on removeFile method when you click remove.
+>**Note:** Since uploadFile method will use http progress event, it has to return **id** of file (***in string type only***) in  case of HttpEventType.Response type, or progress (***in number type***) in case of HttpEventType.UploadProgress. You will receive this id on removeFile method when you click remove.
 
-You can check DEMO adapter [here](https://github.com/vugar005/ngx-awesome-uploader/blob/master/src/app/demo-file-picker/demo-file-picker.adapter.ts)
+You can check DEMO adapter [here](https://github.com/vugar005/ngx-awesome-uploader/tree/master/projects/file-picker/src/lib/mock-file-picker.adapter.ts)
 
 #### Now you can use it in your template
 
@@ -92,36 +93,48 @@ Still in Doubt? Check [Minimal Setup Demo](https://ngx-awesome-uploader.stackbli
 ```typescript
 /** Whether to enable cropper. Default: disabled */
 @Input() enableCropper =  false;
+
 /** Whether to show default drag and drop template. Default:true */
 @Input() showeDragDropZone =  true;
+
 /** Single or multiple. Default: multi */
 @Input() uploadType =  'multi';
+
 /** Max size of selected file in MB. Default: no limit */
 @Input() fileMaxSize: number;
+
 /** Max count of file in multi-upload. Default: no limit */
 @Input() fileMaxCount: number;
+
 /** Total Max size limit of all files in MB. Default: no limit */
 @Input() totalMaxSize: number;
+
 /** Which file types to show on choose file dialog. Default: show all */
 @Input() accept: string;
+
 /** File extensions filter. Default: any exteion */
 @Input() fileExtensions: String;
+
 /** Cropper options if cropper enabled. Default:
-dragMode: 'crop',
-aspectRatio: 1,
-autoCrop: true,
-movable: true,
-zoomable: true,
-scalable: true,
-autoCropArea: 0.8
+	dragMode: 'crop',
+	aspectRatio: 1,
+	autoCrop: true,
+	movable: true,
+	zoomable: true,
+	scalable: true,
+	autoCropArea: 0.8
 */
 @Input() cropperOptions: Object;
+
 /** Custom Adapter for uploading/removing files. Required */
 @Input() adapter: FilePickerAdapter;
+
 /** Custom template for dropzone. Optional */
 @Input() dropzoneTemplate: TemplateRef<any>;
+
 /** Custom Preview Item template */
 @Input() itemTemplate: TemplateRef<any>;
+
 /** Whether to show default files preview container. Default: true */
 @Input() showPreviewContainer =  true;
 ```
@@ -144,7 +157,7 @@ Emitted for every file */
 
 All validations are emitted through <b> ValidationError </b>event.
 To listen to validation errors (in case you provided validations), validationError event is emitted. validationError event implements interface [ValidationError](https://github.com/vugar005/ngx-awesome-uploader/blob/master/projects/file-picker/src/lib/validation-error.model.ts)
-and which emites failed file and error type.
+and which emits failed file and error type.
 Supported validations:
 
 | **Validation Type**                | **Description**                                                                                                                                                                       | **Default** |
@@ -169,7 +182,7 @@ Library uses cropperjs to crop images but you need import it to use it. Example:
 <link  rel="stylesheet"  href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.4.3/cropper.css"  />
 ```
 
-To use cropper, you should enableCropper. Look at API section above.
+>**Note**: To use cropper, you should set enableCropper to true. Look at API section above.
 You can also provide your custom cropper options.
 
 ## Custom-Template
@@ -180,15 +193,16 @@ I) To provide custom template for drag and drop zone, use content projection. Ex
 
 ```html
 <ngx-file-picker
-[adapter]="adapter"
->
-<div  class="dropzoneTemplate">
-<button>Custom</button>
-</div>
+[adapter]="adapter">
+
+	<div  class="dropzoneTemplate">
+		<button>Custom</button>
+	</div>
+
 </ngx-file-picker>
 ````
 
->**Note:**  The wrapper of your custom template must have class **dropzoneTemplate**.
+>**Note:**  The wrapper of your custom template must have a class **dropzoneTemplate**.
 
 [Checkout Demo](https://ngx-awesome-uploader.stackblitz.io/?file=src%2Fapp%2Fadvanced-demo%2Fadvanced-demo.component.html)
 
@@ -200,17 +214,18 @@ II) To use custom file preview template, pass your custom template as below:
 	[itemTemplate]="itemTemplate"
 >
 </ngx-file-picker>
+
 <ng-template  #itemTemplate  let-fileItem="fileItem">
 	<p>{{fileItem.file.size}}</p>
 	<p>{{fileItem.fileName}}</p>
 	<button  (click)="uploader.removeFile(fileItem)">Remove</button>
 </ng-template>
 ```
-In custom template <b>fileItem</b> is exposed (implements FilePreviewModel interface).
+In custom template <b>fileItem</b> is exposed (which implements FilePreviewModel interface).
 
 ## Contribution
 
 You can fork project from github. Pull requests are kindly accepted.
 1. Building library: ng build file-picker
 2. Running tests: ng test file-picker
-3. Run demo: in app component, uncomment demo-file-picker.
+3. Run demo: ng serve
