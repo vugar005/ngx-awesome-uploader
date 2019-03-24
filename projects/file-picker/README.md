@@ -21,6 +21,7 @@ Tested on Angular 4.3/5/6/7
 * [File Validation](#file-validation)
 * [Cropper](#cropper)
 * [Custom template](#custom-template)
+* [Bonus](#bonus)
 
 ## Quick-links
 [Example Application](https://ngx-awesome-uploader.stackblitz.io/)
@@ -51,10 +52,9 @@ So this libray exposes a FilePickerAdapter abstract class which you can import o
   After importing it to your custom adapter implementation (EG: CustomAdapter.ts), you must implement those 2 methods which are abstract in the FilePickerAdapter base class which are:
 
 ```
-
 public abstract uploadFile(fileItem: FilePreviewModel): Observable<number | string>;
-public abstract removeFile(id: string, fileItem: FilePreviewModel): Observable<any>;
 
+public abstract removeFile(fileItem: FilePreviewModel): Observable<any>;
 ```
 
 >**Note:** Since uploadFile method will use http progress event, it has to return **id** of file (***in string type only***) in  case of HttpEventType.Response type, or progress (***in number type***) in case of HttpEventType.UploadProgress. You will receive this id on removeFile method when you click remove.
@@ -77,17 +77,17 @@ import { HttpClient } from  '@angular/common/http';
 import { DemoFilePickerAdapter } from  './demo-file-picker.adapter';
 import { Component} from  '@angular/core';
 @Component({
-selector:  'demo-file-picker',
-templateUrl:  './demo-file-picker.component.html',
-styleUrls:  ['./demo-file-picker.component.scss']
+selector: 'demo-file-picker',
+templateUrl: './demo-file-picker.component.html',
+styleUrls: ['./demo-file-picker.component.scss']
 })
-export  class  DemoFilePickerComponent {
-adapter  =  new  DemoFilePickerAdapter(this.http);
+export class DemoFilePickerComponent {
+adapter = new DemoFilePickerAdapter(this.http);
 constructor(private  http: HttpClient) { }
 }
 ```
 >**Note:** As you see you should provide http instance to adapter.
-Still in Doubt? Check [Minimal Setup Demo](https://ngx-awesome-uploader.stackblitz.io?file=src%2Fapp%2Fsimple-demo%2Fsimple-demo.component.html)
+Still in Doubt? Check [Minimal Setup Demo](https://stackblitz.com/edit/ngx-awesome-uploader?file=src%2Fapp%2Fsimple-demo%2Fsimple-demo.component.ts)
 
 ## api
 ```typescript
@@ -169,7 +169,7 @@ Supported validations:
 | fileMaxCount: number       | Limit total files to upload by count  | No limit
 
 
-Check [Demo](https://ngx-awesome-uploader.stackblitz.io/?file=src%2Fapp%2Fadvanced-demo%2Fadvanced-demo.component.ts)
+Check [Demo](https://stackblitz.com/edit/ngx-awesome-uploader?file=src%2Fapp%2Fadvanced-demo%2Fadvanced-demo.component.html)
 
 
 
@@ -204,7 +204,7 @@ I) To provide custom template for drag and drop zone, use content projection. Ex
 
 >**Note:**  The wrapper of your custom template must have a class **dropzoneTemplate**.
 
-[Checkout Demo](https://ngx-awesome-uploader.stackblitz.io/?file=src%2Fapp%2Fadvanced-demo%2Fadvanced-demo.component.html)
+[Checkout Demo](https://stackblitz.com/edit/ngx-awesome-uploader?file=src%2Fapp%2Fadvanced-demo%2Fadvanced-demo.component.html)
 
 II) To use custom file preview template, pass your custom template as below:
 
@@ -221,8 +221,9 @@ II) To use custom file preview template, pass your custom template as below:
 	<button  (click)="uploader.removeFile(fileItem)">Remove</button>
 </ng-template>
 ```
-In custom template <b>fileItem</b> is exposed (which implements FilePreviewModel interface).
-
+In custom template <b>fileItem</b> is exposed (which implements [FilePrevieModel](https://github.com/vugar005/ngx-awesome-uploader/blob/master/projects/file-picker/src/lib/file-preview.model.ts) interface).
+## Bonus
+You can also check out library [router animations ](https://www.npmjs.com/package/ngx-router-animations)
 ## Contribution
 
 You can fork project from github. Pull requests are kindly accepted.
