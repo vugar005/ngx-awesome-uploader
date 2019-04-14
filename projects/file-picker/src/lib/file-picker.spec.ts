@@ -6,7 +6,7 @@ import { FilePickerModule, FilePreviewModel } from 'projects/file-picker/src/pub
 import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 
 import { FilePickerComponent } from './file-picker.component';
-import { createMockFile, createMockPreviewFile } from './test-utils';
+import { createMockFile, createMockPreviewFile, mockCustomValidator } from './test-utils';
 import { FilePreviewItemComponent } from './file-preview-container/file-preview-item/file-preview-item.component';
 import { of } from 'rxjs';
 import { getFileType } from './file-upload.utils';
@@ -33,6 +33,7 @@ describe('FilePickerComponent', () => {
   let service: FilePickerService;
   let mockFile: File;
   let mockFilePreview: FilePreviewModel;
+  (<any>window).UPLOADER_TEST_MODE = true;
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ ],
@@ -62,46 +63,55 @@ describe('FilePickerComponent', () => {
     fixture.detectChanges();
     // expect(spy).toHaveBeenCalled();
   });
- it('should not call pushFile on extension validation fails ', () => {
+ it('should not call pushFile on extension validation fails ', async() => {
    const spy = spyOn(component, 'pushFile');
    component.fileExtensions = 'doc';
    const file = createMockFile('demo.png', 'image/png');
-    component.handleFiles([file]);
+    await component.handleFiles([file]).toPromise();
    expect(spy).not.toHaveBeenCalled();
  });
- it('should call pushFile on extension validation success ', () => {
+ it('should call pushFile on extension validation success ', async () => {
    const spy = spyOn(component, 'pushFile');
    component.fileExtensions = 'pdf';
    const file = createMockFile('demo.pdf', 'application/pdf');
-    component.handleFiles([file]);
+   await component.handleFiles([file]).toPromise();
    expect(spy).toHaveBeenCalled();
  });
- it('should open cropper when type is image and cropper enabled', () => {
+
+ it('should not call pushFile on custom validation failure ', async () => {
+   const spy = spyOn(component, 'pushFile');
+   component.customValidator = mockCustomValidator;
+   const file = createMockFile('uploader.pdf', 'application/pdf');
+   await component.handleFiles([file]).toPromise();
+    expect(spy).not.toHaveBeenCalled();
+ });
+
+ it('should open cropper when type is image and cropper enabled', async () => {
   const spy = spyOn(component, 'openCropper');
   component.enableCropper = true;
-  const file = createMockFile('demo.png', 'image/png');
-   component.handleFiles([file]);
+ const file = createMockFile('demo.png', 'image/png');
+  await component.handleFiles([file]).toPromise();
   expect(spy).toHaveBeenCalled();
  });
- it('should NOT open cropper when type is not image', () => {
+ it('should NOT open cropper when type is not image', async () => {
   const spy = spyOn(component, 'openCropper');
   component.enableCropper = true;
   const file = createMockFile('demo.pdf', 'application/pdf');
-  component.handleFiles([file]);
+ await component.handleFiles([file]).toPromise();
   expect(spy).not.toHaveBeenCalled();
  });
- it('should NOT open cropper when cropper is not enabled', () => {
+ it('should NOT open cropper when cropper is not enabled', async() => {
   const spy = spyOn(component, 'openCropper');
   component.enableCropper = false;
   const file = createMockFile('demo.png', 'image/png');
-   component.handleFiles([file]);
+  await  component.handleFiles([file]).toPromise();
   expect(spy).not.toHaveBeenCalled();
  });
  it('should NOT push file on size validation fail without cropper feature', () => {
    const spy = spyOn(component, 'pushFile');
    component.fileMaxSize = 1;
    const file = createMockFile('demo.png', 'image/png', 1.1);
-    component.handleFiles([file]);
+    component.handleFiles([file]).toPromise();
    expect(spy).not.toHaveBeenCalled();
  });
 
@@ -113,12 +123,12 @@ describe('FilePickerComponent', () => {
   // component.handleInputFile(file);
    expect(spy).not.toHaveBeenCalled();
  });
- it('should NOT push another file when upload type is single', () => {
+ it('should NOT push another file when upload type is single',  async() => {
    const spy = spyOn(component, 'pushFile');
    component.uploadType = 'single';
    component.files.push(createMockPreviewFile('demo.png', 'image/png'));
    const file = createMockFile('demo2.png', 'image/png');
-    component.handleFiles([file]);
+  await component.handleFiles([file]).toPromise();
    expect(spy).not.toHaveBeenCalled();
  });
  it('should isValidMaxExtension work', () => {
@@ -189,18 +199,18 @@ it('shoud emit uploadSuccess when file is uploaded successfully', fakeAsync(() =
     expect(componentPreviewItem.uploadSuccess.next).toHaveBeenCalled();
   });
 }));
-it('should push images to filesForCropper if cropper Enabled', fakeAsync(() => {
+it('should push images to filesForCropper if cropper Enabled', fakeAsync(async () => {
   component.enableCropper = true;
   const files = [createMockFile('test.jpg', 'image/jpeg'), createMockFile('test2.png', 'image/png')];
-  component.handleFiles(files);
+  await component.handleFiles(files).toPromise();
   expect(component.filesForCropper.length).toBe(2);
 }));
-xit('should open cropper as many times as image length on multi mode', fakeAsync(() => {
+it('should open cropper as many times as image length on multi mode', fakeAsync(async() => {
   spyOn(component, 'openCropper').and.callThrough();
   spyOn(component, 'closeCropper').and.callThrough();
   component.enableCropper = true;
   const files = [createMockFile('test.jpg', 'image/jpeg'), createMockFile('test2.png', 'image/png')];
-  component.handleFiles(files);
+  await component.handleFiles(files).toPromise();
   fixture.detectChanges();
   fixture.debugElement.query(By.css('.cropCancel')).nativeElement.click();
   tick(1000);
@@ -209,5 +219,6 @@ xit('should open cropper as many times as image length on multi mode', fakeAsync
     expect(component.openCropper).toHaveBeenCalledTimes(2);
   });
 }));
+
 
 });
