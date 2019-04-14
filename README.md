@@ -8,7 +8,7 @@
 <img  src="https://i.gifer.com/MJQT.gif">
 <p>
 
-[![npm](https://img.shields.io/npm/l/ngx-awesome-uploader.svg)]() [![NPM Downloads](https://img.shields.io/npm/dt/ngx-awesome-uploader.svg)](https://www.npmjs.com/package/ngx-awesome-uploader) [![npm](https://img.shields.io/twitter/follow/vugar005.svg?label=Follow)](https://twitter.com/vugar005) [![npm](https://img.shields.io/github/issues/vugar005/ngx-awesome-uploader.svg)](https://github.com/vugar005/ngx-awesome-uploader) [![npm](https://img.shields.io/github/last-commit/vugar005/ngx-awesome-uploader.svg)](https://github.com/vugar005/ngx-awesome-uploader)
+[![npm](https://img.shields.io/npm/l/ngx-awesome-uploader.svg)]() [![NPM Downloads](https://img.shields.io/npm/dt/ngx-awesome-uploader.svg)](https://www.npmjs.com/package/ngx-awesome-uploader) [![npm](https://img.shields.io/twitter/follow/vugar005.svg?label=Follow)](https://twitter.com/vugar005) [![npm](https://img.shields.io/github/issues/vugar005/ngx-awesome-uploader.svg)](https://github.com/vugar005/ngx-awesome-uploader) [![npm](https://img.shields.io/github/last-commit/vugar005/ngx-awesome-uploader.svg)](https://github.com/vugar005/ngx-awesome-uploader) ![npm](https://img.shields.io/readthedocs/ngx-awesome-uploader.svg)
 
 
 
@@ -19,6 +19,8 @@ Tested on Angular 4.3/5/6/7
 * [Usage](#usage)
 * [Configuration](#api)
 * [File Validation](#file-validation)
+		* [Built-in validations](#built-in-validations)
+		* [Custom validation](#custom-validation)
 * [Cropper](#cropper)
 * [Custom template](#custom-template)
 * [Bonus](#bonus)
@@ -132,11 +134,14 @@ Still in Doubt? Check [Minimal Setup Demo](https://stackblitz.com/edit/ngx-aweso
 /** Custom template for dropzone. Optional */
 @Input() dropzoneTemplate: TemplateRef<any>;
 
-/** Custom Preview Item template */
+/** Custom Preview Item template. Optional */
 @Input() itemTemplate: TemplateRef<any>;
 
 /** Whether to show default files preview container. Default: true */
 @Input() showPreviewContainer =  true;
+
+/** Custom validator function. Optional */
+@Input() customValidator: (file: File) => Observable<boolean>;
 ```
 ## Output events
 
@@ -154,7 +159,7 @@ Emitted for every file */
 ```
 
 ## File-Validation
-
+### Built-in-validations
 All validations are emitted through <b> ValidationError </b>event.
 To listen to validation errors (in case you provided validations), validationError event is emitted. validationError event implements interface [ValidationError](https://github.com/vugar005/ngx-awesome-uploader/blob/master/projects/file-picker/src/lib/validation-error.model.ts)
 and which emits failed file and error type.
@@ -168,6 +173,27 @@ Supported validations:
 | totalMaxSize: number       | Total Max size of files in MB. If cropper is enabled, the cropped image size is considered.| No limit
 | fileMaxCount: number       | Limit total files to upload by count  | No limit
 
+### Custom-validation
+You can also provide your own custom validation along with built-in validations.
+You custom validation takes `file: File` and returns `Observable<boolean>`;
+So that means you can provide sync and async validations.
+
+        myCustomValidator(file: File): Observable<boolean>  {
+	    	if (file.name.includes('panda')) {
+    		    return  of(true);
+    	      }
+		    if (file.size  >  50) {
+    			return  this.http.get('url').pipe(map((res) => res ===  'OK' ));
+		    }
+    	    return  of(false);
+        }
+and pass to Template:
+```html
+<ngx-file-picker
+[customValidator]="myCustomValidator"
+>
+</ngx-file-picker>
+```
 
 Check [Demo](https://stackblitz.com/edit/ngx-awesome-uploader?file=src%2Fapp%2Fadvanced-demo%2Fadvanced-demo.component.html)
 

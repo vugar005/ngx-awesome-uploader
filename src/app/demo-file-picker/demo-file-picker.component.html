@@ -6,12 +6,13 @@
     [uploadType]="'multi'"
     (validationError)= "onValidationError($event)"
     [adapter]="adapter"
-    [fileExtensions]="['pdf', 'jpg', 'png', 'mp4', 'css', 'docx', 'txt']"
+    [fileExtensions]="['pdf', 'jpg', 'png', 'PNG', 'mp4', 'css', 'docx', 'txt']"
     [enableCropper]="true"
     (uploadSuccess)="onUploadSuccess($event)"
     (removeSuccess)="onRemoveSuccess($event)"
     [showeDragDropZone]="true"
     [showPreviewContainer]="true"
+    [customValidator]="myCustomValidator"
     (fileAdded)="onFileAdded($event)"
  >
   <!-- <div class="dropzoneTemplate">

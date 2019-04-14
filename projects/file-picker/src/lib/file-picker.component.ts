@@ -15,8 +15,8 @@ import {getFileType} from './file-upload.utils';
 import { FileValidationTypes, ValidationError } from './validation-error.model';
 import { FilePickerAdapter } from './file-picker.adapter';
 import { FileSystemFileEntry, UploadEvent, FileSystemDirectoryEntry } from './file-drop';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subject, Observable, of, forkJoin, combineLatest} from 'rxjs';
+import { takeUntil, tap, map, switchMap , mergeMap } from 'rxjs/operators';
 declare var Cropper;
 @Component({
   selector: 'ngx-file-picker',
@@ -70,6 +70,8 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   @Output() validationError = new EventEmitter<ValidationError>();
   /** Emitted when file is added and passed validations. Not uploaded yet */
   @Output() fileAdded = new EventEmitter<FilePreviewModel>();
+  /** Custom validator function */
+  @Input() customValidator: (file: File) => Observable<boolean>;
   /** Whether to enable cropper. Default: disabled */
   @Input()
    enableCropper = false;
@@ -104,7 +106,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   filesForCropper: File[] = [];
    /** Current file to be shown in cropper*/
    currentCropperFile: File;
-  /** Custom Adapter for uploading/removing files */
+  /** Custom api Adapter for uploading/removing files */
   @Input()
    adapter: FilePickerAdapter;
   /**  Custome template for dropzone */
@@ -138,12 +140,13 @@ export class FilePickerComponent implements OnInit, OnDestroy {
       }
     });
   }
-
+/** Sets custom cropper options if avaiable */
   setCropperOptions() {
     if (!this.cropperOptions) {
     this.setDefaultCropperOptions();
     }
   }
+  /** Sets manual cropper options if no custom options are avaiable */
   setDefaultCropperOptions() {
     this.cropperOptions = {
       dragMode: 'crop',
@@ -158,22 +161,39 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   /** On input file selected */
   onChange( fileInput: HTMLInputElement) {
      const files: File[] =  Array.from(fileInput.files);
-    this.handleFiles(files);
+    this.handleFiles(files).subscribe();
   }
-  handleFiles(files: File[]) {
+  /** Handles input and drag/drop files */
+   handleFiles(files: File[]): Observable<void> {
     if (!this.isValidMaxFileCount(files)) {return; }
-    const isValidUpload = files.every(item => this.validateFile(item));
-    if (!isValidUpload) {return; }
-//    console.log(files)
-    files.forEach((file: File, index: number) => {
-      this.handleInputFile(file, index );
-    });
+    const isValidUploadSync = files.every(item => this.validateFileSync(item));
+    const asyncFunctions = files.map(item => this.validateFileAsync(item));
+    return combineLatest(...asyncFunctions)
+      .pipe(
+        map(res => {
+          const isValidUploadAsync = res.every(result => result === true);
+          if (!isValidUploadSync || !isValidUploadAsync) {return; }
+          files.forEach((file: File, index: number) => {
+            this.handleInputFile(file, index );
+          });
+        })
+      );
   }
-  validateFile(file: File): boolean {
+  /** Validates synchronous validations */
+  validateFileSync(file: File): boolean {
     if (!file) {return; }
     if (!this.isValidUploadType(file)) {return; }
     if (!this.isValidExtension(file, file.name)) {return; }
     return true;
+  }
+  /** Validates asynchronous validations */
+  validateFileAsync(file: File): Observable<boolean> {
+    if (!this.customValidator) {return of(true); }
+    return this.customValidator(file).pipe(
+      tap(res => {
+        if (!res) { this.validationError.next({file: file, error: FileValidationTypes.customValidator}); }
+      })
+    );
   }
   /** Handles input and drag&drop files */
   handleInputFile(file: File, index): void {
@@ -184,6 +204,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
         this.openCropper(file);
       }
     } else {
+      /** Size is not initially checked on handleInputFiles because of cropper size change */
        if (this.isValidSize(file, file.size)) {
         this.pushFile(file);
        }
@@ -224,20 +245,22 @@ export class FilePickerComponent implements OnInit, OnDestroy {
        // console.log(droppedFile.relativePath, fileEntry);
       }
     }
-    setTimeout(() => this.handleFiles(filesForUpload));
+    setTimeout(() => this.handleFiles(filesForUpload).subscribe());
   }
   /** Add file to file list after succesfull validation */
   pushFile( file: File, fileName = file.name): void {
       this.files.push({ file: file, fileName: fileName});
       this.fileAdded.next({ file: file, fileName: fileName});
   }
+  /** Opens cropper for image crop */
   openCropper(file: File): void {
-    if (typeof Cropper === 'undefined') {
+    if ((<any>window).UPLOADER_TEST_MODE || typeof Cropper !== 'undefined' ) {
+      this.safeCropImgUrl = this.fileService.createSafeUrl(file);
+      this.currentCropperFile = file;
+    } else  {
       console.warn('please import cropperjs script and styles to use cropper feature or disable it by setting [enableCropper]="false"');
       return;
     }
-    this.safeCropImgUrl = this.fileService.createSafeUrl(file);
-    this.currentCropperFile = file;
   }
   getSafeUrl(file: File): SafeResourceUrl {
     return this.fileService.createSafeUrl(file);
@@ -253,7 +276,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
     this.cropper = undefined;
     setTimeout(() => this.cropClosed$.next(filePreview), 200);
   }
-
+/** Removes files from files list */
   removeFileFromList(fileName: string): void {
     this.files = this.files.filter(f =>  f.fileName !== fileName);
   }
@@ -298,6 +321,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   onCropSubmit(): void {
     this.cropper.getCroppedCanvas().toBlob(this.blobFallBack.bind(this), 'image/jpeg');
   }
+  /** After crop submit */
   blobFallBack(blob: Blob): void {
     if (this.isValidSize(<File>blob, blob.size)) {
       this.pushFile(<File>blob, this.currentCropperFile.name);

@@ -4,6 +4,8 @@ import { FilePreviewModel } from './../../../projects/file-picker/src/lib/file-p
 import { HttpClient } from '@angular/common/http';
 import { DemoFilePickerAdapter } from './demo-file-picker.adapter';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { delay, map } from 'rxjs/operators';
 
 @Component({
   selector: 'demo-file-picker',
@@ -33,6 +35,16 @@ export class DemoFilePickerComponent implements OnInit {
   }
   removeFile() {
   this.uploader.removeFileFromList(this.myFiles[0].fileName);
+  }
+   myCustomValidator(file: File): Observable<boolean> {
+       console.log(file.name.length);
+      if (!file.name.includes('uploader')) {
+         return  of(true).pipe(delay(2000));
+      }
+      if (file.size > 50) {
+        return this.http.get('https://vugar.free.beeceptor.com').pipe(map((res) =>  res === 'OK' ));
+      }
+     return of(false).pipe(delay(2000));
   }
 
 }
