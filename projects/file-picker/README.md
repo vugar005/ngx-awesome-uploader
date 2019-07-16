@@ -13,7 +13,7 @@
 
 
 This is an Angular Library for uploading files. It supports: File Upload and Preview (additionally preview images with lightbox), validation, image cropper , drag and drop.
-Tested on Angular 4.3/5/6/7
+Tested on Angular 4.3/5/6/7/8
 
 * [Install](#install)
 * [Usage](#usage)

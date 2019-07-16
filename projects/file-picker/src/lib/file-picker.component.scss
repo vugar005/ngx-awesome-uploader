@@ -69,7 +69,7 @@
   }
    }
 }
-  /deep/.cropper img {
+::ng-deep.cropper img {
     max-height: 300px !important;
 }
   #images {

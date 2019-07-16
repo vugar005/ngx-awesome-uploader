@@ -13,7 +13,7 @@ import { delay, map } from 'rxjs/operators';
   styleUrls: ['./demo-file-picker.component.scss']
 })
 export class DemoFilePickerComponent implements OnInit {
-  @ViewChild('uploader') uploader: FilePickerComponent;
+  @ViewChild('uploader', { static: true }) uploader: FilePickerComponent;
   adapter = new DemoFilePickerAdapter(this.http);
   myFiles: FilePreviewModel[] = [];
   constructor(private http: HttpClient) { }
