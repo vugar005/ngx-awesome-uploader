@@ -37,6 +37,7 @@ declare var Cropper;
            [multiple]="uploadType === 'multi' ? 'multiple' : '' "
            (click)="fileInput.value = null"
            (change)="onChange(fileInput)"
+           [accept]="accept"
            class="file-input"
           >
 
