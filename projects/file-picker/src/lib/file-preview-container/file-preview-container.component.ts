@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, TemplateRef } from '@angular/core';
 import { FilePreviewModel } from '../file-preview.model';
 import { FilePickerAdapter } from '../file-picker.adapter';
+import { UploaderCaptions } from '../uploader-captions';
 
 @Component({
   selector: 'file-preview-container',
@@ -14,6 +15,7 @@ export class FilePreviewContainerComponent implements OnInit {
   @Output() public uploadSuccess = new EventEmitter<FilePreviewModel>();
   lightboxFile: FilePreviewModel;
   @Input() adapter: FilePickerAdapter;
+  @Input() captions: UploaderCaptions;
   constructor() { }
 
   ngOnInit() {

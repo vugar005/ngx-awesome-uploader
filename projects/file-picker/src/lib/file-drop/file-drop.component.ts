@@ -4,6 +4,7 @@ import { timer, Subscription } from 'rxjs';
 import { UploadFile } from './upload-file.model';
 import { UploadEvent } from './upload-event.model';
 import { FileSystemFileEntry, FileSystemEntry, FileSystemDirectoryEntry } from './dom.types';
+import { UploaderCaptions } from '../uploader-captions';
 
 @Component({
   selector: 'file-drop',
@@ -14,7 +15,7 @@ import { FileSystemFileEntry, FileSystemEntry, FileSystemDirectoryEntry } from '
 
 export class FileComponent implements OnDestroy {
   @Input()
-  headertext = '';
+  captions: UploaderCaptions
   @Input()
   customstyle: string = null;
   @Input()

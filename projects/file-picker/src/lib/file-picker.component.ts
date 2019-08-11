@@ -17,6 +17,8 @@ import { FilePickerAdapter } from './file-picker.adapter';
 import { FileSystemFileEntry, UploadEvent, FileSystemDirectoryEntry } from './file-drop';
 import { Subject, Observable, of, forkJoin, combineLatest} from 'rxjs';
 import { takeUntil, tap, map, switchMap , mergeMap } from 'rxjs/operators';
+import { DefaultCaptions } from './default-captions';
+import { UploaderCaptions } from './uploader-captions';
 declare var Cropper;
 @Component({
   selector: 'ngx-file-picker',
@@ -25,7 +27,7 @@ declare var Cropper;
       <file-drop
         (onFileDrop)="dropped($event)"
         [customstyle]="'custom-drag'"
-        [headertext]="'Drag and drop file here'"
+        [captions]="_captions"
       >
       <ng-content select=".dropzoneTemplate"> </ng-content>
       </file-drop>
@@ -45,8 +47,10 @@ declare var Cropper;
      <div class="cropperJsBox">
      <img [src]="safeCropImgUrl" id="cropper-img" (load) = "cropperImgLoaded($event)">
         <div class="cropper-actions">
-        <button class="cropSubmit" (click)="onCropSubmit()">Crop</button>
-        <button class="cropCancel" (click)="closeCropper({file: currentCropperFile, fileName: currentCropperFile.name})">Cancel</button> </div>
+        <button class="cropSubmit" (click)="onCropSubmit()">{{_captions?.cropper?.crop}}</button>
+        <button class="cropCancel" (click)="closeCropper({file: currentCropperFile, fileName: currentCropperFile.name})">
+        {{_captions?.cropper?.cancel}}
+        </button> </div>
       </div>
     </div>
     <div class="files-preview-wrapper" *ngIf="showPreviewContainer">
@@ -56,6 +60,7 @@ declare var Cropper;
       (uploadSuccess)="onUploadSuccess($event)"
       [adapter]="adapter"
       [itemTemplate]="itemTemplate"
+      [captions]="_captions"
       > </file-preview-container>
     </div>
 
@@ -112,6 +117,10 @@ export class FilePickerComponent implements OnInit, OnDestroy {
    adapter: FilePickerAdapter;
   /**  Custome template for dropzone */
    @Input() dropzoneTemplate: TemplateRef<any>;
+  /** Custom captions input. Used for multi language support */
+   @Input() captions: UploaderCaptions;
+   /** captions object*/
+   _captions: UploaderCaptions;
    cropClosed$ = new Subject<FilePreviewModel>();
    _onDestroy$ = new Subject<void>();
    safeCropImgUrl: SafeResourceUrl;
@@ -121,9 +130,13 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.setCropperOptions();
     this.listenToCropClose();
+    this.setCaptions();
   }
   ngOnDestroy() {
     this._onDestroy$.next();
+  }
+  setCaptions() {
+  this._captions = this.captions || DefaultCaptions;
   }
   /** Listen when Cropper is closed and open new cropper if next image exists */
   listenToCropClose() {

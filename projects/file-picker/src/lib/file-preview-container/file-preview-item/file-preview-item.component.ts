@@ -6,6 +6,7 @@ import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { getFileType} from '../../file-upload.utils';
 import {  Subscription } from 'rxjs';
 import { FilePickerAdapter } from '../../file-picker.adapter';
+import { UploaderCaptions } from '../../uploader-captions';
 
 @Component({
   selector: 'file-preview-item',
@@ -19,6 +20,7 @@ export class FilePreviewItemComponent implements OnInit {
   @Input() public fileItem: FilePreviewModel;
   @Input() adapter: FilePickerAdapter;
   @Input() itemTemplate: TemplateRef<any>;
+  @Input() captions: UploaderCaptions;
   icon = 'checkmark';
   uploadProgress: number;
   fileType: string;

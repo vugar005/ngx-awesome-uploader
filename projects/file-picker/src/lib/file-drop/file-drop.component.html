@@ -9,13 +9,13 @@
     <div class="content" *ngIf="ref.children?.length == 0">
              <cloud-icon></cloud-icon>
               <div class="content-top-text">
-                {{headertext}}
+                {{captions?.dropzone?.title}}
               </div>
               <div class="content-center-text">
-                or
+                {{captions?.dropzone?.or}}
               </div>
               <button class="file-browse-button">
-                 Browse Files
+                {{captions?.dropzone?.browse}}
               </button>
     </div>
 </div>

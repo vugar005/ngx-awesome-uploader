@@ -29,13 +29,14 @@
             *ngIf= "(icon === 'close') ||  uploadError || uploadProgress"
             (click)="onRemove(fileItem)"
              (mouseleave)="icon = 'checkmark'"
-             title="Remove"
+             title="{{captions?.previewCard?.remove}}"
              >
               <close-icon></close-icon>
             </a>
         </div>
         <!-- *ngIf="uploadProgress !== 100"-->
-          <a class="file-upload-error-wrapper" *ngIf="uploadError && !uploadProgress" href="javascipt:void(0)" title="Error on Upload">
+          <a class="file-upload-error-wrapper" *ngIf="uploadError && !uploadProgress" href="javascipt:void(0)"
+          title="{{captions?.previewCard?.uploadError}}">
           </a>
 
         <ng-container *ngIf="uploadProgress">
