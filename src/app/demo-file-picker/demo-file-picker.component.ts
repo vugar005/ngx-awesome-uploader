@@ -6,6 +6,7 @@ import { DemoFilePickerAdapter } from './demo-file-picker.adapter';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
+import { UploaderCaptions } from 'projects/file-picker/src/public_api';
 
 @Component({
   selector: 'demo-file-picker',
@@ -16,6 +17,21 @@ export class DemoFilePickerComponent implements OnInit {
   @ViewChild('uploader', { static: true }) uploader: FilePickerComponent;
   adapter = new DemoFilePickerAdapter(this.http);
   myFiles: FilePreviewModel[] = [];
+  captions: UploaderCaptions = {
+    dropzone: {
+      title: "Fayllari bura ata bilersiz",
+      or: "və yaxud",
+      browse: "Fayl seçin"
+    },
+    cropper: {
+      crop: "Kəs",
+      cancel:"Imtina"
+    },
+    previewCard: {
+      remove: "Sil",
+      uploadError: "Fayl yüklənmədi"
+    }
+  }
   constructor(private http: HttpClient) { }
 
   ngOnInit() {

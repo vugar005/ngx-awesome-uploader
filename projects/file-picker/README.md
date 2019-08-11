@@ -2,6 +2,7 @@
 
 
 
+
 # NGX-AWESOME-UPLOADER
 
 <p align="center">
@@ -12,8 +13,9 @@
 
 
 
-This is an Angular Library for uploading files. It supports: File Upload and Preview (additionally preview images with lightbox), validation, image cropper , drag and drop.
-Tested on Angular 4.3/5/6/7/8
+This is an Angular Library for uploading files. It supports: File Upload and Preview (additionally preview images with lightbox), validation, image cropper , drag and drop with multi language support.
+
+Tested on Angular 6/7/8
 
 * [Install](#install)
 * [Usage](#usage)
@@ -23,6 +25,7 @@ Tested on Angular 4.3/5/6/7/8
 		* [Custom validation](#custom-validation)
 * [Cropper](#cropper)
 * [Custom template](#custom-template)
+* [Multi Language](#multi-language)
 * [Bonus](#bonus)
 
 ## Quick-links
@@ -142,6 +145,8 @@ Still in Doubt? Check [Minimal Setup Demo](https://stackblitz.com/edit/ngx-aweso
 
 /** Custom validator function. Optional */
 @Input() customValidator: (file: File) => Observable<boolean>;
+  /** Custom captions input. Used for multi language support */
+@Input() captions: UploaderCaptions;
 ```
 ## Output events
 
@@ -248,6 +253,11 @@ II) To use custom file preview template, pass your custom template as below:
 </ng-template>
 ```
 In custom template <b>fileItem</b> is exposed (which implements [FilePrevieModel](https://github.com/vugar005/ngx-awesome-uploader/blob/master/projects/file-picker/src/lib/file-preview.model.ts) interface).
+## Multi Language
+You can add multi language support for library by providing ***captions*** object (which implements [UploaderCaptions](https://github.com/vugar005/ngx-awesome-uploader/blob/master/projects/file-picker/src/lib/uploader-captions.ts) interface).
+
+Check [Demo](https://stackblitz.com/edit/ngx-awesome-uploader?file=src%2Fapp%2Fadvanced-demo%2Fadvanced-demo.component.html)
+
 ## Bonus
 You can also check out library [router animations ](https://www.npmjs.com/package/ngx-router-animations)
 ## Contribution
