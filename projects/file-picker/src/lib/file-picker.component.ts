@@ -179,7 +179,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   }
   /** Handles input and drag/drop files */
    handleFiles(files: File[]): Observable<void> {
-    if (!this.isValidMaxFileCount(files)) {return; }
+    if (!this.isValidMaxFileCount(files)) {return of(null); }
     const isValidUploadSync = files.every(item => this.validateFileSync(item));
     const asyncFunctions = files.map(item => this.validateFileAsync(item));
     return combineLatest(...asyncFunctions)
@@ -337,6 +337,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   }
   /** After crop submit */
   blobFallBack(blob: Blob): void {
+    if (!blob) {return;}
     if (this.isValidSize(<File>blob, blob.size)) {
       this.pushFile(<File>blob, this.currentCropperFile.name);
     }
