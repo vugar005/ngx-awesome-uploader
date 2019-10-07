@@ -1,24 +1,16 @@
-import { FilePickerService } from './file-picker.service';
-import {
-  Component,
-  Input,
-  OnInit,
-  Output,
-  EventEmitter,
-  TemplateRef,
-  ElementRef,
-  OnDestroy
-} from '@angular/core';
-import { SafeResourceUrl } from '@angular/platform-browser';
-import { FilePreviewModel } from './file-preview.model';
+import {FilePickerService} from './file-picker.service';
+import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef} from '@angular/core';
+import {SafeResourceUrl} from '@angular/platform-browser';
+import {FilePreviewModel} from './file-preview.model';
 import {getFileType} from './file-upload.utils';
-import { FileValidationTypes, ValidationError } from './validation-error.model';
-import { FilePickerAdapter } from './file-picker.adapter';
-import { FileSystemFileEntry, UploadEvent, FileSystemDirectoryEntry } from './file-drop';
-import { Subject, Observable, of, forkJoin, combineLatest} from 'rxjs';
-import { takeUntil, tap, map, switchMap , mergeMap } from 'rxjs/operators';
-import { DefaultCaptions } from './default-captions';
-import { UploaderCaptions } from './uploader-captions';
+import {FileValidationTypes, ValidationError} from './validation-error.model';
+import {FilePickerAdapter} from './file-picker.adapter';
+import {FileSystemDirectoryEntry, FileSystemFileEntry, UploadEvent} from './file-drop';
+import {combineLatest, Observable, of, Subject} from 'rxjs';
+import {map, takeUntil, tap} from 'rxjs/operators';
+import {DefaultCaptions} from './default-captions';
+import {UploaderCaptions} from './uploader-captions';
+
 declare var Cropper;
 @Component({
   selector: 'ngx-file-picker',
@@ -291,8 +283,8 @@ export class FilePickerComponent implements OnInit, OnDestroy {
     setTimeout(() => this.cropClosed$.next(filePreview), 200);
   }
 /** Removes files from files list */
-  removeFileFromList(fileName: string): void {
-    this.files = this.files.filter(f =>  f.fileName !== fileName);
+  removeFileFromList(file: FilePreviewModel): void {
+    this.files = this.files.filter(f =>  f !== file);
   }
   /** Emits event when file upload api returns success  */
   onUploadSuccess(fileItem: FilePreviewModel): void {
@@ -356,7 +348,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
     /** Emits event when file remove api returns success  */
   onRemoveSuccess(fileItem: FilePreviewModel): void {
     this.removeSuccess.next(fileItem);
-    this.removeFileFromList(fileItem.fileName);
+    this.removeFileFromList(fileItem);
   }
 
 
