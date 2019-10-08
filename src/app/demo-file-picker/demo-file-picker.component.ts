@@ -1,12 +1,12 @@
-import { FilePickerComponent } from './../../../projects/file-picker/src/lib/file-picker.component';
-import { ValidationError } from './../../../projects/file-picker/src/lib/validation-error.model';
-import { FilePreviewModel } from './../../../projects/file-picker/src/lib/file-preview.model';
-import { HttpClient } from '@angular/common/http';
-import { DemoFilePickerAdapter } from './demo-file-picker.adapter';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { delay, map } from 'rxjs/operators';
-import { UploaderCaptions } from 'projects/file-picker/src/public_api';
+import {FilePickerComponent} from './../../../projects/file-picker/src/lib/file-picker.component';
+import {ValidationError} from './../../../projects/file-picker/src/lib/validation-error.model';
+import {FilePreviewModel} from './../../../projects/file-picker/src/lib/file-preview.model';
+import {HttpClient} from '@angular/common/http';
+import {DemoFilePickerAdapter} from './demo-file-picker.adapter';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {Observable, of} from 'rxjs';
+import {delay, map} from 'rxjs/operators';
+import {UploaderCaptions} from 'projects/file-picker/src/public_api';
 
 @Component({
   selector: 'demo-file-picker',
@@ -50,7 +50,7 @@ export class DemoFilePickerComponent implements OnInit {
     this.myFiles.push(file);
   }
   removeFile() {
-  this.uploader.removeFileFromList(this.myFiles[0].fileName);
+  this.uploader.removeFileFromList(this.myFiles[0]);
   }
    myCustomValidator(file: File): Observable<boolean> {
        console.log(file.name.length);
