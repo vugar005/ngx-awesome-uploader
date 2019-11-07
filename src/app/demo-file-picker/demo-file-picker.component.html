@@ -25,8 +25,9 @@
 
 </div>
 
-<ng-template #itemTemplate let-fileItem="fileItem">
+<ng-template #itemTemplate let-fileItem="fileItem" let-uploadProgress="uploadProgress">
   <p>{{fileItem.file.size}}</p>
   <p>{{fileItem.fileName}}</p>
+  <p>{{uploadProgress}}</p>
   <button (click)="uploader.removeFile(fileItem)">Remove</button>
 </ng-template>
