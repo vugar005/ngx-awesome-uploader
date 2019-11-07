@@ -246,13 +246,14 @@ II) To use custom file preview template, pass your custom template as below:
 >
 </ngx-file-picker>
 
-<ng-template  #itemTemplate  let-fileItem="fileItem">
+<ng-template  #itemTemplate  let-fileItem="fileItem" let-uploadProgress="uploadProgress">
 	<p>{{fileItem.file.size}}</p>
 	<p>{{fileItem.fileName}}</p>
+	<p *ngIf="uploadProgress < 100">{{uploadProgress}}%</p>
 	<button  (click)="uploader.removeFile(fileItem)">Remove</button>
 </ng-template>
 ```
-In custom template <b>fileItem</b> is exposed (which implements [FilePrevieModel](https://github.com/vugar005/ngx-awesome-uploader/blob/master/projects/file-picker/src/lib/file-preview.model.ts) interface).
+In custom template <b>uploadProgress</b> and <b>fileItem</b> (which implements [FilePrevieModel](https://github.com/vugar005/ngx-awesome-uploader/blob/master/projects/file-picker/src/lib/file-preview.model.ts) interface) are exposed .
 ## Multi Language
 You can add multi language support for library by providing ***captions*** object (which implements [UploaderCaptions](https://github.com/vugar005/ngx-awesome-uploader/blob/master/projects/file-picker/src/lib/uploader-captions.ts) interface).
 
