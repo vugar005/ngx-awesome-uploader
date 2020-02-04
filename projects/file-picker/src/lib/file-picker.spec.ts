@@ -140,6 +140,15 @@ describe('FilePickerComponent', () => {
   expect(component.validationError.next).toHaveBeenCalledWith({file: file, error: FileValidationTypes.extensions});
 
 });
+it('should isValidMaxExtension work if file extension in uppercase', () => {
+  component.fileExtensions = 'png';
+  spyOn(component.validationError, 'next');
+  const file = createMockFile('demo2.PNG', 'image/png');
+  const res =  component.isValidExtension(file, file.name);
+  expect(res).toBe(true);
+  expect(component.validationError.next).not.toHaveBeenCalled();
+
+});
  it('should isValidMaxFileCount work', () => {
   component.fileMaxCount = 1;
   spyOn(component.validationError, 'next');
