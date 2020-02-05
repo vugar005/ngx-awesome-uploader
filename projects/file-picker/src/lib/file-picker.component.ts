@@ -294,7 +294,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   isValidExtension(file: File, fileName: string): boolean {
     if (!this.fileExtensions) {return true; }
     const extension = fileName.split('.').pop();
-    if (this.fileExtensions && (!this.fileExtensions.includes(extension))) {
+    if (this.fileExtensions && (!this.fileExtensions.toLowerCase().includes(extension.toLowerCase()))) {
       this.validationError.next({file: file, error: FileValidationTypes.extensions});
       return false;
     }
