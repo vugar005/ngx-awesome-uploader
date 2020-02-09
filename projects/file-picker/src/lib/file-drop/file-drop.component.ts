@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, NgZone, OnDestroy, Renderer, TemplateRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, NgZone, OnDestroy, Renderer2 } from '@angular/core';
 import { timer, Subscription } from 'rxjs';
 
 import { UploadFile } from './upload-file.model';
@@ -40,7 +40,7 @@ export class FileComponent implements OnDestroy {
   numOfActiveReadEntries = 0;
   constructor(
     private zone: NgZone,
-    private renderer: Renderer
+    private renderer: Renderer2
   ) {
     if (!this.customstyle) {
       this.customstyle = 'drop-zone';

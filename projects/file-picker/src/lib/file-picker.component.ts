@@ -1,5 +1,5 @@
 import {FilePickerService} from './file-picker.service';
-import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ChangeDetectorRef} from '@angular/core';
 import {SafeResourceUrl} from '@angular/platform-browser';
 import {FilePreviewModel} from './file-preview.model';
 import {getFileType} from './file-upload.utils';
@@ -96,7 +96,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   accept: string;
   files: FilePreviewModel[] = [];
  /** File extensions filter */
-  @Input() fileExtensions: String;
+  @Input() fileExtensions: String[];
   cropper: any;
   /** Cropper options. */
   @Input() cropperOptions: Object;
@@ -116,7 +116,9 @@ export class FilePickerComponent implements OnInit, OnDestroy {
    cropClosed$ = new Subject<FilePreviewModel>();
    _onDestroy$ = new Subject<void>();
    safeCropImgUrl: SafeResourceUrl;
-  constructor(private fileService: FilePickerService, private elementRef: ElementRef) {
+  constructor(private fileService: FilePickerService,
+     private elementRef: ElementRef
+     ) {
   }
 
   ngOnInit() {
@@ -290,16 +292,17 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   onUploadSuccess(fileItem: FilePreviewModel): void {
     this.uploadSuccess.next(fileItem);
   }
-  /** Validates file extension */
-  isValidExtension(file: File, fileName: string): boolean {
-    if (!this.fileExtensions) {return true; }
-    const extension = fileName.split('.').pop();
-    if (this.fileExtensions && (!this.fileExtensions.toLowerCase().includes(extension.toLowerCase()))) {
-      this.validationError.next({file: file, error: FileValidationTypes.extensions});
-      return false;
-    }
-       return true;
+ /** Validates file extension */
+ isValidExtension(file: File, fileName: string): boolean {
+  if (!this.fileExtensions) {return true; }
+  const extension = fileName.split('.').pop();
+  const fileExtensions = this.fileExtensions.map(ext => ext.toLowerCase());
+  if (fileExtensions.indexOf(extension.toLowerCase()) === -1) {
+    this.validationError.next({file: file, error: FileValidationTypes.extensions});
+    return false;
   }
+     return true;
+}
    /** Validates selected file size and total file size */
   isValidSize(file: File, size: number): boolean {
     /** Validating selected file size */
