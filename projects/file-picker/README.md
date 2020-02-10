@@ -15,7 +15,7 @@
 
 This is an Angular Library for uploading files. It supports: File Upload and Preview (additionally preview images with lightbox), validation, image cropper , drag and drop with multi language support.
 
-Tested on Angular 6/7/8. Supports Server Side Rendering.
+Tested on Angular 6/7/8./9 Supports Server Side Rendering.
 
 * [Install](#install)
 * [Usage](#usage)
