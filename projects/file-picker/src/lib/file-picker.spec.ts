@@ -65,14 +65,14 @@ describe('FilePickerComponent', () => {
   });
  it('should not call pushFile on extension validation fails ', async() => {
    const spy = spyOn(component, 'pushFile');
-   component.fileExtensions = 'doc';
+   component.fileExtensions = ['doc'];
    const file = createMockFile('demo.png', 'image/png');
     await component.handleFiles([file]).toPromise();
    expect(spy).not.toHaveBeenCalled();
  });
  it('should call pushFile on extension validation success ', async () => {
    const spy = spyOn(component, 'pushFile');
-   component.fileExtensions = 'pdf';
+   component.fileExtensions = ['pdf'];
    const file = createMockFile('demo.pdf', 'application/pdf');
    await component.handleFiles([file]).toPromise();
    expect(spy).toHaveBeenCalled();
@@ -132,7 +132,7 @@ describe('FilePickerComponent', () => {
    expect(spy).not.toHaveBeenCalled();
  });
  it('should isValidMaxExtension work', () => {
-  component.fileExtensions = 'pdf';
+  component.fileExtensions = ['pdf'];
   spyOn(component.validationError, 'next');
   const file = createMockFile('demo2.png', 'image/png');
   const res =  component.isValidExtension(file, file.name);
@@ -141,7 +141,7 @@ describe('FilePickerComponent', () => {
 
 });
 it('should isValidMaxExtension work if file extension in uppercase', () => {
-  component.fileExtensions = 'png';
+  component.fileExtensions = ['png'];
   spyOn(component.validationError, 'next');
   const file = createMockFile('demo2.PNG', 'image/png');
   const res =  component.isValidExtension(file, file.name);
