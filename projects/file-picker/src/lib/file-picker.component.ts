@@ -45,7 +45,7 @@ declare var Cropper;
         </button> </div>
       </div>
     </div>
-    <div class="files-preview-wrapper" *ngIf="showPreviewContainer">
+    <div class="files-preview-wrapper" [ngClass] ="{'visually-hidden': !showPreviewContainer}" >
       <file-preview-container *ngIf="files"
       [previewFiles]="files"
       (removeFile)="removeFile($event)"
