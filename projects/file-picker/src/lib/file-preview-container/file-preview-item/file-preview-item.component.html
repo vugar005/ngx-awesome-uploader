@@ -1,5 +1,4 @@
-<ng-container *ngIf="!itemTemplate">
-    <div class="file-preview-wrapper" *ngIf="fileItem">
+    <div class="file-preview-wrapper" *ngIf="fileItem" [ngClass] = "{'visually-hidden': itemTemplate}">
 
 
         <div class="file-preview-thumbnail">
@@ -51,7 +50,5 @@
         </ng-container>
 
       </div>
-</ng-container>
-
 
 <ng-container *ngTemplateOutlet="itemTemplate;context: {fileItem: fileItem, uploadProgress: uploadProgress}" > </ng-container>
