@@ -2,7 +2,7 @@ import { FilePickerService } from './../../file-picker.service';
 import { FilePreviewModel } from './../../file-preview.model';
 import { Component, OnInit, Input, Output, EventEmitter, TemplateRef } from '@angular/core';
 import { SafeResourceUrl } from '@angular/platform-browser';
-import { HttpEvent, HttpEventType } from '@angular/common/http';
+import { HttpEvent, HttpEventType, HttpErrorResponse } from '@angular/common/http';
 import { getFileType} from '../../file-upload.utils';
 import {  Subscription } from 'rxjs';
 import { FilePickerAdapter } from '../../file-picker.adapter';
@@ -16,6 +16,7 @@ import { UploaderCaptions } from '../../uploader-captions';
 export class FilePreviewItemComponent implements OnInit {
   @Output() public removeFile = new EventEmitter<FilePreviewModel>();
   @Output() public uploadSuccess = new EventEmitter<FilePreviewModel>();
+  @Output() public uploadFail = new EventEmitter<HttpErrorResponse>();
   @Output() public imageClicked = new EventEmitter<FilePreviewModel>();
   @Input() public fileItem: FilePreviewModel;
   @Input() adapter: FilePickerAdapter;
@@ -72,8 +73,9 @@ export class FilePreviewItemComponent implements OnInit {
           this.uploadProgress = res;
         //  this.handleProgressResponse(<HttpEvent<any>>res, fileItem);
         }
-      }, (er) => {
-        this.uploadError = er;
+      }, (er: HttpErrorResponse) => {
+        this.uploadError = true;
+        this.uploadFail.next(er);
         this.uploadProgress = undefined;
   });
     } else {
