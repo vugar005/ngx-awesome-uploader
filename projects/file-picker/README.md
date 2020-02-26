@@ -151,9 +151,12 @@ Still in Doubt? Check [Minimal Setup Demo](https://stackblitz.com/edit/ngx-aweso
 ## Output events
 
 ```typescript
-/** Emitted when file is uploaded via api successfully.
+/** Emitted when file upload via api success.
 Emitted for every file */
 @Output() uploadSuccess =  new  EventEmitter<FilePreviewModel>();
+/** Emitted when file upload via api fails.
+Emitted for every file */
+@Output() uploadFail =  new  EventEmitter<HttpErrorResponse>();
 /** Emitted when file is removed via api successfully.
 	Emitted for every file */
 @Output() removeSuccess =  new  EventEmitter<FilePreviewModel>();
