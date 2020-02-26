@@ -4,6 +4,7 @@
 [fileItem]="file"
 (removeFile)="removeFile.next($event)"
 (uploadSuccess)="uploadSuccess.next($event)"
+(uploadFail)="uploadFail.next($event)"
 (imageClicked)="openLightbox($event)"
 [itemTemplate]="itemTemplate"
 [adapter]="adapter"
