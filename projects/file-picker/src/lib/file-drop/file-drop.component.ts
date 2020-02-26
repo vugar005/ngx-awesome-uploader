@@ -1,9 +1,21 @@
-import { Component, Input, Output, EventEmitter, NgZone, OnDestroy, Renderer2 } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  NgZone,
+  OnDestroy,
+  Renderer2
+} from '@angular/core';
 import { timer, Subscription } from 'rxjs';
 
 import { UploadFile } from './upload-file.model';
 import { UploadEvent } from './upload-event.model';
-import { FileSystemFileEntry, FileSystemEntry, FileSystemDirectoryEntry } from './dom.types';
+import {
+  FileSystemFileEntry,
+  FileSystemEntry,
+  FileSystemDirectoryEntry
+} from './dom.types';
 import { UploaderCaptions } from '../uploader-captions';
 
 @Component({
@@ -11,18 +23,18 @@ import { UploaderCaptions } from '../uploader-captions';
   templateUrl: './file-drop.component.html',
   styleUrls: ['./file-drop.component.scss']
 })
-
-
 export class FileComponent implements OnDestroy {
   @Input()
-  captions: UploaderCaptions
+  captions: UploaderCaptions;
   @Input()
   customstyle: string = null;
   @Input()
   disableIf = false;
 
   @Output()
-  public onFileDrop: EventEmitter<UploadEvent> = new EventEmitter<UploadEvent>();
+  public onFileDrop: EventEmitter<UploadEvent> = new EventEmitter<
+    UploadEvent
+  >();
   @Output()
   public onFileOver: EventEmitter<any> = new EventEmitter<any>();
   @Output()
@@ -38,17 +50,14 @@ export class FileComponent implements OnDestroy {
   globalEnd: Function;
 
   numOfActiveReadEntries = 0;
-  constructor(
-    private zone: NgZone,
-    private renderer: Renderer2
-  ) {
+  constructor(private zone: NgZone, private renderer: Renderer2) {
     if (!this.customstyle) {
       this.customstyle = 'drop-zone';
     }
-    this.globalStart = this.renderer.listen('document', 'dragstart', (evt) => {
+    this.globalStart = this.renderer.listen('document', 'dragstart', evt => {
       this.globalDisable = true;
     });
-    this.globalEnd = this.renderer.listen('document', 'dragend', (evt) => {
+    this.globalEnd = this.renderer.listen('document', 'dragend', evt => {
       this.globalDisable = false;
     });
   }
@@ -102,10 +111,13 @@ export class FileComponent implements OnDestroy {
               isDirectory: false,
               isFile: true,
               file: (callback: (filea: File) => void): void => {
-                callback(file)
+                callback(file);
               }
-            }
-            const toUpload: UploadFile = new UploadFile(fakeFileEntry.name, fakeFileEntry);
+            };
+            const toUpload: UploadFile = new UploadFile(
+              fakeFileEntry.name,
+              fakeFileEntry
+            );
             this.addToQueue(toUpload);
           }
         } else {
@@ -128,11 +140,9 @@ export class FileComponent implements OnDestroy {
         }
       });
     }
-
   }
 
   private traverseFileTree(item: FileSystemEntry, path: string) {
-
     if (item.isFile) {
       const toUpload: UploadFile = new UploadFile(path, item);
       this.files.push(toUpload);
@@ -146,9 +156,9 @@ export class FileComponent implements OnDestroy {
       let entries = [];
       const thisObj = this;
 
-      const readEntries = function () {
-        thisObj.numOfActiveReadEntries++
-        dirReader.readEntries(function (res) {
+      const readEntries = function() {
+        thisObj.numOfActiveReadEntries++;
+        dirReader.readEntries(function(res) {
           if (!res.length) {
             // add empty folders
             if (entries.length === 0) {
@@ -171,7 +181,7 @@ export class FileComponent implements OnDestroy {
             entries = entries.concat(res);
             readEntries();
           }
-          thisObj.numOfActiveReadEntries--
+          thisObj.numOfActiveReadEntries--;
         });
       };
 
