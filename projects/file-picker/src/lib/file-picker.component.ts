@@ -10,6 +10,7 @@ import {combineLatest, Observable, of, Subject} from 'rxjs';
 import {map, takeUntil, tap} from 'rxjs/operators';
 import {DefaultCaptions} from './default-captions';
 import {UploaderCaptions} from './uploader-captions';
+import { HttpErrorResponse } from '@angular/common/http';
 
 declare var Cropper;
 @Component({
@@ -50,6 +51,7 @@ declare var Cropper;
       [previewFiles]="files"
       (removeFile)="removeFile($event)"
       (uploadSuccess)="onUploadSuccess($event)"
+      (uploadFail)="onUploadFail($event)"
       [adapter]="adapter"
       [itemTemplate]="itemTemplate"
       [captions]="_captions"
@@ -60,8 +62,10 @@ declare var Cropper;
   styleUrls: ['./file-picker.component.scss']
 })
 export class FilePickerComponent implements OnInit, OnDestroy {
-  /** Emitted when file is uploaded via api successfully. Emitted for every file */
+  /** Emitted when file upload via api successfully. Emitted for every file */
   @Output() uploadSuccess = new EventEmitter<FilePreviewModel>();
+  /** Emitted when file upload via api failed. Emitted for every file */
+  @Output() uploadFail = new EventEmitter<HttpErrorResponse>();
   /** Emitted when file is removed via api successfully. Emitted for every file */
   @Output() removeSuccess = new EventEmitter<FilePreviewModel>();
   /** Emitted on file validation fail */
@@ -291,6 +295,10 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   /** Emits event when file upload api returns success  */
   onUploadSuccess(fileItem: FilePreviewModel): void {
     this.uploadSuccess.next(fileItem);
+  }
+  /** Emits event when file upload api returns success  */
+  onUploadFail(er: HttpErrorResponse): void {
+    this.uploadFail.next(er);
   }
  /** Validates file extension */
  isValidExtension(file: File, fileName: string): boolean {
