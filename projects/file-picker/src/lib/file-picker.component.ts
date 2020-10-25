@@ -86,6 +86,8 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   /** Custom captions input. Used for multi language support */
   @Input() captions: UploaderCaptions;
   /** captions object*/
+  /** Whether to auto upload file on fiel choose or not. Default: true */
+  @Input() enableAutoUpload = true;
   _captions: UploaderCaptions;
   cropClosed$ = new Subject<FilePreviewModel>();
   _onDestroy$ = new Subject<void>();
@@ -159,7 +161,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
     }
     const isValidUploadSync = files.every(item => this.validateFileSync(item));
     const asyncFunctions = files.map(item => this.validateFileAsync(item));
-    return combineLatest(...asyncFunctions).pipe(
+    return combineLatest([...asyncFunctions]).pipe(
       map(res => {
         const isValidUploadAsync = res.every(result => result === true);
         if (!isValidUploadSync || !isValidUploadAsync) {
@@ -316,6 +318,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
         this.validationError.next({file: file, error: FileValidationTypes.extensions});
         return false;
       }
+      return true;
   }
   /** Validates selected file size and total file size */
   isValidSize(file: File, size: number): boolean {
