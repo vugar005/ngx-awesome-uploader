@@ -42,6 +42,8 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   @Output() validationError = new EventEmitter<ValidationError>();
   /** Emitted when file is added and passed validations. Not uploaded yet */
   @Output() fileAdded = new EventEmitter<FilePreviewModel>();
+   /** Emitted when file is removed from fileList */
+   @Output() fileRemoved = new EventEmitter<FilePreviewModel>();
   /** Custom validator function */
   @Input() customValidator: (file: File) => Observable<boolean>;
   /** Whether to enable cropper. Default: disabled */
@@ -297,6 +299,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   /** Removes files from files list */
   removeFileFromList(file: FilePreviewModel): void {
     this.files = this.files.filter(f => f !== file);
+    this.fileRemoved.next(file);
   }
 
   /** Emits event when file upload api returns success  */
@@ -375,6 +378,10 @@ export class FilePickerComponent implements OnInit, OnDestroy {
     });
   }
   removeFile(fileItem: FilePreviewModel): void {
+    if (!this.enableAutoUpload) {
+      this.removeFileFromList(fileItem);
+      return;
+    }
     if (this.adapter) {
       this.adapter.removeFile(fileItem).subscribe(res => {
         this.onRemoveSuccess(fileItem);
