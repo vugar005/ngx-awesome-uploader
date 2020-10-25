@@ -1,7 +1,7 @@
 <div style="position: fixed;width: 100vw;height: 80vh;display: flex;align-items: center;justify-content: center">
   <ngx-file-picker #uploader
-    [totalMaxSize]="0.5"
-    [fileMaxCount]="1"
+    [totalMaxSize]="10"
+    [fileMaxCount]="3"
     [fileMaxSize]="200"
     [uploadType]="'multi'"
     (validationError)= "onValidationError($event)"
@@ -16,7 +16,9 @@
     [customValidator]="myCustomValidator"
     [accept]="'image/*'"
     [captions]="captions"
+    [enableAutoUpload]="true"
     (fileAdded)="onFileAdded($event)"
+    (fileRemoved)="onFileRemoved($event)"
  >
   <!-- <div class="dropzoneTemplate">
     <button>Custom</button>
