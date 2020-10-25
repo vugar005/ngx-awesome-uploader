@@ -22,6 +22,7 @@ export class FilePreviewItemComponent implements OnInit {
   @Input() adapter: FilePickerAdapter;
   @Input() itemTemplate: TemplateRef<any>;
   @Input() captions: UploaderCaptions;
+  @Input() enableAutoUpload: boolean;
   icon = 'checkmark';
   uploadProgress: number;
   fileType: string;
@@ -61,6 +62,9 @@ export class FilePreviewItemComponent implements OnInit {
     this.icon = 'error';
   }
   uploadFile(fileItem: FilePreviewModel): void {
+    if (!this.enableAutoUpload) {
+      return;
+    }
     if (this.adapter) {
       this.uploadSubscription =
       this.adapter.uploadFile(fileItem)
