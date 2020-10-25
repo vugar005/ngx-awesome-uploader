@@ -42,6 +42,8 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   @Output() validationError = new EventEmitter<ValidationError>();
   /** Emitted when file is added and passed validations. Not uploaded yet */
   @Output() fileAdded = new EventEmitter<FilePreviewModel>();
+   /** Emitted when file is removed from fileList */
+   @Output() fileRemoved = new EventEmitter<FilePreviewModel>();
   /** Custom validator function */
   @Input() customValidator: (file: File) => Observable<boolean>;
   /** Whether to enable cropper. Default: disabled */
@@ -86,6 +88,8 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   /** Custom captions input. Used for multi language support */
   @Input() captions: UploaderCaptions;
   /** captions object*/
+  /** Whether to auto upload file on fiel choose or not. Default: true */
+  @Input() enableAutoUpload = true;
   _captions: UploaderCaptions;
   cropClosed$ = new Subject<FilePreviewModel>();
   _onDestroy$ = new Subject<void>();
@@ -159,7 +163,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
     }
     const isValidUploadSync = files.every(item => this.validateFileSync(item));
     const asyncFunctions = files.map(item => this.validateFileAsync(item));
-    return combineLatest(...asyncFunctions).pipe(
+    return combineLatest([...asyncFunctions]).pipe(
       map(res => {
         const isValidUploadAsync = res.every(result => result === true);
         if (!isValidUploadSync || !isValidUploadAsync) {
@@ -292,9 +296,11 @@ export class FilePickerComponent implements OnInit, OnDestroy {
     this.cropper = undefined;
     setTimeout(() => this.cropClosed$.next(filePreview), 200);
   }
+
   /** Removes files from files list */
   removeFileFromList(file: FilePreviewModel): void {
     this.files = this.files.filter(f => f !== file);
+    this.fileRemoved.next(file);
   }
 
   /** Emits event when file upload api returns success  */
@@ -316,6 +322,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
         this.validationError.next({file: file, error: FileValidationTypes.extensions});
         return false;
       }
+      return true;
   }
   /** Validates selected file size and total file size */
   isValidSize(file: File, size: number): boolean {
@@ -372,6 +379,10 @@ export class FilePickerComponent implements OnInit, OnDestroy {
     });
   }
   removeFile(fileItem: FilePreviewModel): void {
+    if (!this.enableAutoUpload) {
+      this.removeFileFromList(fileItem);
+      return;
+    }
     if (this.adapter) {
       this.adapter.removeFile(fileItem).subscribe(res => {
         this.onRemoveSuccess(fileItem);

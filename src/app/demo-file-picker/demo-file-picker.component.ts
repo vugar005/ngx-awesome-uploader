@@ -40,29 +40,30 @@ export class DemoFilePickerComponent implements OnInit {
     console.log(e);
   }
   onUploadSuccess(e: FilePreviewModel) {
-   // console.log(e);
+    console.log(e);
   // console.log(this.myFiles)
   }
 
   onUploadFail(e: FilePreviewModel) {
-    console.log(e)
+    console.log(e);
   }
   onRemoveSuccess(e: FilePreviewModel) {
-    console.log(e);
+    console.log();
   }
   onFileAdded(file: FilePreviewModel) {
     this.myFiles.push(file);
   }
+
+  onFileRemoved(file: FilePreviewModel) {
+    console.log(this.uploader.files);
+  }
+
   removeFile() {
   this.uploader.removeFileFromList(this.myFiles[0]);
   }
    myCustomValidator(file: File): Observable<boolean> {
-       console.log(file.name.length);
       if (!file.name.includes('uploader')) {
-         return  of(true).pipe(delay(2000));
-      }
-      if (file.size > 50) {
-        return this.http.get('https://vugar.free.beeceptor.com').pipe(map((res) =>  res === 'OK' ));
+         return of(true).pipe(delay(2000));
       }
      return of(false).pipe(delay(2000));
   }
