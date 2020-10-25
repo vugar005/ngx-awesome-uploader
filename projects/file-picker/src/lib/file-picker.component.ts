@@ -296,6 +296,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
     this.cropper = undefined;
     setTimeout(() => this.cropClosed$.next(filePreview), 200);
   }
+
   /** Removes files from files list */
   removeFileFromList(file: FilePreviewModel): void {
     this.files = this.files.filter(f => f !== file);
