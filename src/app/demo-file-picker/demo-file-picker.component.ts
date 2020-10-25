@@ -51,7 +51,6 @@ export class DemoFilePickerComponent implements OnInit {
     console.log();
   }
   onFileAdded(file: FilePreviewModel) {
-    console.log(this.uploader.files)
     this.myFiles.push(file);
   }
 
