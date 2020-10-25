@@ -45,15 +45,20 @@ export class DemoFilePickerComponent implements OnInit {
   }
 
   onUploadFail(e: FilePreviewModel) {
-    console.log(e)
+    console.log(e);
   }
   onRemoveSuccess(e: FilePreviewModel) {
-    console.log(e);
+    console.log();
   }
   onFileAdded(file: FilePreviewModel) {
     console.log(this.uploader.files)
     this.myFiles.push(file);
   }
+
+  onFileRemoved(file: FilePreviewModel) {
+    console.log(this.uploader.files)
+  }
+
   removeFile() {
   this.uploader.removeFileFromList(this.myFiles[0]);
   }

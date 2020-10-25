@@ -11,6 +11,7 @@ import { FilePreviewItemComponent } from './file-preview-container/file-preview-
 import { of } from 'rxjs';
 import { getFileType } from './file-upload.utils';
 import { By } from '@angular/platform-browser';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 export class MockableUploaderAdapter extends FilePickerAdapter {
   public uploadFile(fileItem: FilePreviewModel) {
    return of('123');
@@ -37,7 +38,8 @@ describe('FilePickerComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ ],
-      imports: [FilePickerModule]
+      imports: [FilePickerModule],
+      schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();
   }));
@@ -55,6 +57,7 @@ describe('FilePickerComponent', () => {
     mockFile = createMockFile('demo.pdf', 'application/pdf');
     mockFilePreview = createMockPreviewFile('demo.pdf', 'application/pdf');
     componentPreviewItem.adapter = new MockableUploaderAdapter();
+    component.enableAutoUpload = true;
   });
 
   it('should use default cropper options when not provided', () => {
@@ -195,6 +198,7 @@ it('shoud start uploading  when file is added', fakeAsync(() => {
 it('shoud emit uploadSuccess when file is uploaded successfully', fakeAsync(() => {
   spyOn(componentPreviewItem.uploadSuccess, 'next');
   spyOn(component.uploadSuccess, 'next');
+  componentPreviewItem.enableAutoUpload = true;
   spyOn(MockableUploaderAdapter.prototype, 'uploadFile').and.returnValue(of('123'));
   componentPreviewItem.fileItem  = mockFilePreview;
   componentPreviewItem.ngOnInit();
@@ -204,7 +208,6 @@ it('shoud emit uploadSuccess when file is uploaded successfully', fakeAsync(() =
   fixture.whenStable().then(res => {
     fixturePreviewItem.detectChanges();
     fixture.detectChanges();
-   // expect(component.uploadSuccess.next).toHaveBeenCalled();
     expect(componentPreviewItem.uploadSuccess.next).toHaveBeenCalled();
   });
 }));
@@ -226,6 +229,19 @@ it('should open cropper as many times as image length on multi mode', fakeAsync(
   fixture.whenStable().then(res => {
     fixture.detectChanges();
     expect(component.openCropper).toHaveBeenCalledTimes(2);
+  });
+}));
+
+it('should not auto upoad file if enableAutoUpload is false', fakeAsync(async() => {
+  const spyUploadSuccess = spyOn(component.uploadSuccess, 'next');
+  component.enableAutoUpload = false;
+  const files = [createMockFile('test.jpg', 'image/jpeg'), createMockFile('test2.png', 'image/png')];
+  await component.handleFiles(files).toPromise();
+  fixture.detectChanges();
+  tick(1000);
+  fixture.whenStable().then(res => {
+    fixture.detectChanges();
+    expect(spyUploadSuccess).not.toHaveBeenCalled();
   });
 }));
 

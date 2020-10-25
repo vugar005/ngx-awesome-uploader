@@ -12,7 +12,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class FilePreviewContainerComponent implements OnInit {
   @Input() previewFiles: FilePreviewModel[];
   @Input() itemTemplate: TemplateRef<any>;
-  @Input() enableAutoUpload : boolean;
+  @Input() enableAutoUpload: boolean;
   @Output() public removeFile = new EventEmitter<FilePreviewModel>();
   @Output() public uploadSuccess = new EventEmitter<FilePreviewModel>();
   @Output() public uploadFail = new EventEmitter<HttpErrorResponse>();
