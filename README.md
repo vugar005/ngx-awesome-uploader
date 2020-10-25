@@ -342,20 +342,15 @@ and which emits failed file and error type.
 Supported validations:
 
 
+Supported validations:
 
-| **Validation Type** | **Description** | **Default** |
-
+| **Validation Type**                | **Description**                                                                                                                                                                       | **Default** |
 |----------------------------|---------------------------------------------------------------------------------------|----------------------------------------|
-
-| fileMaxSize: number | Max size of selected file in MB. | No limit
-
-| fileExtensions: String | Emitted when file does not satisfy provided extension | Any extension
-
-| uploadType: String | Upload type. Values: 'single' and 'multi'. |multi
-
-| totalMaxSize: number | Total Max size of files in MB. If cropper is enabled, the cropped image size is considered.| No limit
-
-| fileMaxCount: number | Limit total files to upload by count | No limit
+| fileMaxSize: number       | Max size of selected file in MB.   | No limit
+| fileExtensions: String        |  Emitted when file does not satisfy provided extension   | Any extension
+| uploadType: String      | Upload type. Values: 'single' and 'multi'.  |multi
+| totalMaxSize: number       | Total Max size of files in MB. If cropper is enabled, the cropped image size is considered.| No limit
+| fileMaxCount: number       | Limit total files to upload by count  | No limit
 
 
 
