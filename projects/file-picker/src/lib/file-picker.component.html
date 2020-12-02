@@ -27,7 +27,6 @@ class="file-input"
 <div class="cropperJsOverlay" *ngIf="currentCropperFile">
 <div class="cropperJsBox">
   <img
-    [style.display]="enableCropper ? 'none' : null"
     [src]="safeCropImgUrl"
     id="cropper-img"
     (load)="cropperImgLoaded($event)"
