@@ -42,8 +42,8 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   @Output() validationError = new EventEmitter<ValidationError>();
   /** Emitted when file is added and passed validations. Not uploaded yet */
   @Output() fileAdded = new EventEmitter<FilePreviewModel>();
-   /** Emitted when file is removed from fileList */
-   @Output() fileRemoved = new EventEmitter<FilePreviewModel>();
+  /** Emitted when file is removed from fileList */
+  @Output() fileRemoved = new EventEmitter<FilePreviewModel>();
   /** Custom validator function */
   @Input() customValidator: (file: File) => Observable<boolean>;
   /** Whether to enable cropper. Default: disabled */
@@ -72,10 +72,12 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   accept: string;
   files: FilePreviewModel[] = [];
   /** File extensions filter */
-  @Input() fileExtensions: String[];
+  @Input() fileExtensions: string[];
   cropper: any;
   /** Cropper options. */
-  @Input() cropperOptions: Object;
+  @Input() cropperOptions: object;
+  /** Cropped canvas options. */
+  @Input() croppedCanvasOptions: object = {};
   /** Files array for cropper. Will be shown equentially if crop enabled */
   filesForCropper: File[] = [];
   /** Current file to be shown in cropper*/
@@ -315,14 +317,14 @@ export class FilePickerComponent implements OnInit, OnDestroy {
 
   /** Validates file extension */
   isValidExtension(file: File, fileName: string): boolean {
-      if (!this.fileExtensions) {return true; }
-      const extension = fileName.split('.').pop();
-      const fileExtensions = this.fileExtensions.map(ext => ext.toLowerCase());
-      if (fileExtensions.indexOf(extension.toLowerCase()) === -1) {
-        this.validationError.next({file: file, error: FileValidationTypes.extensions});
-        return false;
-      }
-      return true;
+    if (!this.fileExtensions) {return true; }
+    const extension = fileName.split('.').pop();
+    const fileExtensions = this.fileExtensions.map(ext => ext.toLowerCase());
+    if (fileExtensions.indexOf(extension.toLowerCase()) === -1) {
+      this.validationError.next({file: file, error: FileValidationTypes.extensions});
+      return false;
+    }
+    return true;
   }
   /** Validates selected file size and total file size */
   isValidSize(file: File, size: number): boolean {
@@ -362,8 +364,8 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   /** when crop button submitted */
   onCropSubmit(): void {
     this.cropper
-      .getCroppedCanvas()
-      .toBlob(this.blobFallBack.bind(this), 'image/jpeg');
+      .getCroppedCanvas(this.croppedCanvasOptions)
+      .toBlob(this.blobFallBack.bind(this), 'image/png');
   }
   /** After crop submit */
   blobFallBack(blob: Blob): void {
