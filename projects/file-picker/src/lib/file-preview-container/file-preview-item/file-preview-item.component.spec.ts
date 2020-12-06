@@ -35,6 +35,7 @@ describe('FilePreviewComponent', () => {
     component.fileItem = createMockPreviewFile('test.png', 'image/', 10);
     component.uploadSuccess.next = jasmine.createSpy('uploadSuccess');
     component.uploadFail.next = jasmine.createSpy('uploadFail');
+    component.removeFile.next = jasmine.createSpy('removeFile');
   });
 
   it('should create the app', () => {
@@ -77,7 +78,7 @@ describe('FilePreviewComponent', () => {
         expect(component.uploadResponse).toBeUndefined();
     });
 
-  fdescribe('#ngOnInit', () => {
+  describe('#ngOnInit', () => {
 
     it('should safeUrl be defined', () => {
         component.ngOnInit();
@@ -99,7 +100,6 @@ describe('FilePreviewComponent', () => {
                 beforeEach(() => {
                     component.adapter = new MockUploaderAdapter();
                     spyOn(component.adapter, 'uploadFile');
-             //       spyOn(component.adapter, 'uploadFile').and.returnValue(of({body: 10, status: UploadStatus.UPLOADED}));
                     (component.adapter.uploadFile as any).and.returnValue(of({body: 10, status: UploadStatus.UPLOADED}));
                 });
                 it('should upload file', () => {
@@ -180,6 +180,18 @@ describe('FilePreviewComponent', () => {
             });
     });
       });
+  });
+
+  describe('#onRemove', () => {
+      beforeEach(() => {
+        component.uploadResponse = {id: 10 };
+      });
+      it('should removeFile be emitted', () => {
+            component.onRemove(component.fileItem);
+            expect(component.removeFile.next).toHaveBeenCalledWith(
+                {...component.fileItem, uploadResponse: component.uploadResponse}
+            );
+        });
   });
 
 });
