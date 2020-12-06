@@ -28,6 +28,7 @@ export class FilePreviewItemComponent implements OnInit {
   public fileType: string;
   public safeUrl: SafeResourceUrl;
   public uploadError: boolean;
+  public uploadResponse: any;
   private _uploadSubscription: Subscription;
   constructor(
     private fileService: FilePickerService,
@@ -61,7 +62,10 @@ export class FilePreviewItemComponent implements OnInit {
 
   public onRemove(fileItem: FilePreviewModel): void {
     this._uploadUnsubscribe();
-    this.removeFile.next(fileItem);
+    this.removeFile.next({
+      ...fileItem,
+      uploadResponse: this.uploadResponse
+    });
    }
 
   public onCheckMarkClick() {
@@ -99,6 +103,7 @@ export class FilePreviewItemComponent implements OnInit {
   }
   /** Emits event when file upload api returns success  */
   private _onUploadSuccess(uploadResponse: any, fileItem: FilePreviewModel): void {
+    this.uploadResponse = uploadResponse;
     this.fileItem.uploadResponse = uploadResponse;
     this.uploadSuccess.next({...fileItem, uploadResponse});
   }

@@ -309,7 +309,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
 
   /** Removes files from files list */
   removeFileFromList(file: FilePreviewModel): void {
-    this.files = this.files.filter(f => f !== file);
+    this.files = this.files.filter(f => f.fileName !== file.fileName);
     this.fileRemoved.next(file);
   }
 
