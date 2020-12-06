@@ -36,8 +36,8 @@ export class FilePreviewItemComponent implements OnInit {
 
   ngOnInit() {
   this.uploadFile(this.fileItem);
-    this.fileType = getFileType(this.fileItem.file.type);
-    this.safeUrl = this.getSafeUrl(this.fileItem.file);
+  this.fileType = getFileType(this.fileItem.file.type);
+  this.safeUrl = this.getSafeUrl(this.fileItem.file);
   }
   getSafeUrl(file: File | Blob): SafeResourceUrl {
     return this.fileService.createSafeUrl(file);
@@ -45,8 +45,8 @@ export class FilePreviewItemComponent implements OnInit {
   /** Converts bytes to nice size */
   niceBytes(x): string {
     const units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-    let l = 0,
-      n = parseInt(x, 10) || 0;
+    let l = 0;
+    let n = parseInt(x, 10) || 0;
     while (n >= 1024 && ++l) {
       n = n / 1024;
     }
@@ -100,7 +100,7 @@ export class FilePreviewItemComponent implements OnInit {
       case HttpEventType.UploadProgress:
         // Compute and show the % done:
         this.uploadProgress = Math.round((100 * event.loaded) / event.total);
-       return;
+        return;
 
       case HttpEventType.Response:
         const body: any = event.body;

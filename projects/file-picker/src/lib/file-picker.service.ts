@@ -14,12 +14,11 @@ export class FilePickerService {
     return of (event.detail);
   }
   createSafeUrl(file): SafeResourceUrl {
-    if ((<any> window).UPLOADER_TEST_MODE) {return;}
+    if ((window as any).UPLOADER_TEST_MODE) { return; }
     try {
       const url = window.URL.createObjectURL(file);
-    const safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-    return safeUrl;
-
+      const safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+      return safeUrl;
     } catch (er) {
       console.log(er);
     }

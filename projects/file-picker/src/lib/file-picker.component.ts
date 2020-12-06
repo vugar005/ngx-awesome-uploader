@@ -80,8 +80,9 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   @Input() croppedCanvasOptions: object = {};
   /** Files array for cropper. Will be shown equentially if crop enabled */
   filesForCropper: File[] = [];
-  /** Current file to be shown in cropper*/
+  /** Current file to be shown in cropper */
   currentCropperFile: File;
+
   /** Custom api Adapter for uploading/removing files */
   @Input()
   adapter: FilePickerAdapter;
@@ -89,7 +90,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   @Input() dropzoneTemplate: TemplateRef<any>;
   /** Custom captions input. Used for multi language support */
   @Input() captions: UploaderCaptions;
-  /** captions object*/
+  /** captions object */
   /** Whether to auto upload file on fiel choose or not. Default: true */
   @Input() enableAutoUpload = true;
   _captions: UploaderCaptions;
@@ -138,11 +139,11 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   /** Sets custom cropper options if avaiable */
   setCropperOptions() {
     if (!this.cropperOptions) {
-      this.setDefaultCropperOptions();
+      this._setDefaultCropperOptions();
     }
   }
   /** Sets manual cropper options if no custom options are avaiable */
-  setDefaultCropperOptions() {
+  private _setDefaultCropperOptions() {
     this.cropperOptions = {
       dragMode: 'crop',
       aspectRatio: 1,
@@ -199,7 +200,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
       tap(res => {
         if (!res) {
           this.validationError.next({
-            file: file,
+            file,
             error: FileValidationTypes.customValidator
           });
         }
@@ -225,7 +226,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   isValidUploadType(file): boolean {
     if (this.uploadType === 'single' && this.files.length > 0) {
       this.validationError.next({
-        file: file,
+        file,
         error: FileValidationTypes.uploadType
       });
       return false;
@@ -269,12 +270,12 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   }
   /** Add file to file list after succesfull validation */
   pushFile(file: File, fileName = file.name): void {
-    this.files.push({ file: file, fileName: fileName });
-    this.fileAdded.next({ file: file, fileName: fileName });
+    this.files.push({ file, fileName });
+    this.fileAdded.next({ file, fileName });
   }
   /** Opens cropper for image crop */
   openCropper(file: File): void {
-    if ((<any>window).UPLOADER_TEST_MODE || typeof Cropper !== 'undefined') {
+    if ((window as any).UPLOADER_TEST_MODE || typeof Cropper !== 'undefined') {
       this.safeCropImgUrl = this.fileService.createSafeUrl(file);
       this.currentCropperFile = file;
     } else {
@@ -321,7 +322,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
     const extension = fileName.split('.').pop();
     const fileExtensions = this.fileExtensions.map(ext => ext.toLowerCase());
     if (fileExtensions.indexOf(extension.toLowerCase()) === -1) {
-      this.validationError.next({file: file, error: FileValidationTypes.extensions});
+      this.validationError.next({file, error: FileValidationTypes.extensions});
       return false;
     }
     return true;
@@ -336,7 +337,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
       isValidFileSize = true;
     } else {
       this.validationError.next({
-        file: file,
+        file,
         error: FileValidationTypes.fileMaxSize
       });
     }
@@ -352,7 +353,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
       isValidTotalFileSize = true;
     } else {
       this.validationError.next({
-        file: file,
+        file,
         error: FileValidationTypes.totalMaxSize
       });
     }
@@ -372,8 +373,8 @@ export class FilePickerComponent implements OnInit, OnDestroy {
     if (!blob) {
       return;
     }
-    if (this.isValidSize(<File>blob, blob.size)) {
-      this.pushFile(<File>blob, this.currentCropperFile.name);
+    if (this.isValidSize(blob as File, blob.size)) {
+      this.pushFile(blob as File, this.currentCropperFile.name);
     }
     this.closeCropper({
       file: blob as File,

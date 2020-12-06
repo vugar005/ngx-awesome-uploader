@@ -1,13 +1,13 @@
-<preview-lightbox *ngIf="lightboxFile" [file]="lightboxFile" (close)="closeLightbox()"></preview-lightbox>
+<preview-lightbox *ngIf="lightboxFile" [file]="lightboxFile" (previewClose)="closeLightbox()"></preview-lightbox>
 <file-preview-item
-*ngFor="let file of previewFiles"
-[fileItem]="file"
-(removeFile)="removeFile.next($event)"
-(uploadSuccess)="uploadSuccess.next($event)"
-(uploadFail)="uploadFail.next($event)"
-(imageClicked)="openLightbox($event)"
-[itemTemplate]="itemTemplate"
-[adapter]="adapter"
-[captions]="captions"
-[enableAutoUpload]="enableAutoUpload"
+    *ngFor="let file of previewFiles"
+    [fileItem]="file"
+    (removeFile)="removeFile.next($event)"
+    (uploadSuccess)="uploadSuccess.next($event)"
+    (uploadFail)="uploadFail.next($event)"
+    (imageClicked)="openLightbox($event)"
+    [itemTemplate]="itemTemplate"
+    [adapter]="adapter"
+    [captions]="captions"
+    [enableAutoUpload]="enableAutoUpload"
 ></file-preview-item>

@@ -9,7 +9,7 @@ import {delay, map} from 'rxjs/operators';
 import {UploaderCaptions} from 'projects/file-picker/src/public_api';
 
 @Component({
-  selector: 'demo-file-picker',
+  selector: 'app-demo-file-picker',
   templateUrl: './demo-file-picker.component.html',
   styleUrls: ['./demo-file-picker.component.scss']
 })
@@ -19,19 +19,20 @@ export class DemoFilePickerComponent implements OnInit {
   myFiles: FilePreviewModel[] = [];
   captions: UploaderCaptions = {
     dropzone: {
-      title: "Fayllari bura ata bilersiz",
-      or: "və yaxud",
-      browse: "Fayl seçin"
+      title: 'Fayllari bura ata bilersiz',
+      or: 'və yaxud',
+      browse: 'Fayl seçin'
     },
     cropper: {
-      crop: "Kəs",
-      cancel:"Imtina"
+      crop: 'Kəs',
+      cancel: 'Imtina'
     },
     previewCard: {
-      remove: "Sil",
-      uploadError: "Fayl yüklənmədi"
+      remove: 'Sil',
+      uploadError: 'Fayl yüklənmədi'
     }
-  }
+  };
+
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
