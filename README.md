@@ -1,7 +1,7 @@
 
 # NGX-AWESOME-UPLOADER
 
-![alt-text](https://raw.githubusercontent.com/vugar005/ngx-awesome-uploader/angular-image.gif)
+![alt-text](https://raw.githubusercontent.com/vugar005/ngx-awesome-uploader/master/angular-image.gif?raw=true)
 
 
 
