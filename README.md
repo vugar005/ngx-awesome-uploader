@@ -1,12 +1,7 @@
 
 # NGX-AWESOME-UPLOADER
 
-
-<p align="center">
-
-<img src="https://i.gifer.com/MJQT.gif">
-
-<p>
+![alt-text](https://raw.githubusercontent.com/vugar005/ngx-awesome-uploader/angular-image.gif)
 
 
 
@@ -33,6 +28,7 @@ Tested on Angular 6/7/8/9/10. Supports Server Side Rendering.
 * [Cropper](#cropper)
 * [Custom template](#custom-template)
 * [Multi Language](#multi-language)
+* [Edit Mode](#edit-mode)
 * [Bonus](#bonus)
 
 
@@ -87,9 +83,6 @@ public abstract uploadFile(fileItem: FilePreviewModel): Observable<UploadRespons
 
 public abstract removeFile(fileItem: FilePreviewModel): Observable<any>;
 ```
-
-
->**Note:** Since uploadFile method will use http progress event, it has to return **id** of file (***in string type only***) in case of HttpEventType.Response type, or progress (***in number type***) in case of HttpEventType.UploadProgress. You will receive this id on removeFile method when you click remove.
 
 
 
@@ -376,8 +369,24 @@ You can add multi language support for library by providing ***captions*** objec
 
 Check [Demo](https://stackblitz.com/edit/ngx-awesome-uploader?file=src%2Fapp%2Fadvanced-demo%2Fadvanced-demo.component.html)
 
+## Edit Mode
 
+You can show your files without uploading them
 
+```   @ViewChild('uploader', { static: true }) uploader: FilePickerComponent; ```
+
+```
+  public ngOnInit(): void {
+    this.uploader.files = [
+      {
+        fileName: 'My File 1 for edit.png'
+      },
+      {
+        fileName: 'My File 2 for edit.xlsx'
+      }
+    ] as FilePreviewModel[];
+  }
+```
 ## Bonus
 
 You can also check out library [router animations ](https://www.npmjs.com/package/ngx-router-animations)
