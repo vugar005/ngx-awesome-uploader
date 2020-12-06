@@ -13,20 +13,20 @@ export class FilePreviewContainerComponent implements OnInit {
   @Input() previewFiles: FilePreviewModel[];
   @Input() itemTemplate: TemplateRef<any>;
   @Input() enableAutoUpload: boolean;
-  @Output() public removeFile = new EventEmitter<FilePreviewModel>();
-  @Output() public uploadSuccess = new EventEmitter<FilePreviewModel>();
-  @Output() public uploadFail = new EventEmitter<HttpErrorResponse>();
-  lightboxFile: FilePreviewModel;
+  @Output() public readonly removeFile = new EventEmitter<FilePreviewModel>();
+  @Output() public readonly uploadSuccess = new EventEmitter<FilePreviewModel>();
+  @Output() public readonly uploadFail = new EventEmitter<HttpErrorResponse>();
+  public lightboxFile: FilePreviewModel;
   @Input() adapter: FilePickerAdapter;
   @Input() captions: UploaderCaptions;
   constructor() { }
 
   ngOnInit() {
   }
-  openLightbox(file: FilePreviewModel) {
+  public openLightbox(file: FilePreviewModel): void {
    this.lightboxFile = file;
   }
-  closeLightbox() {
+  public closeLightbox(): void {
     this.lightboxFile = undefined;
   }
 
