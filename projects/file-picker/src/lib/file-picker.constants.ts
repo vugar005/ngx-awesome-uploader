@@ -7,3 +7,7 @@ export const DEFAULT_CROPPER_OPTIONS = {
     scalable: true,
     autoCropArea: 0.8
 };
+
+export function BITS_TO_MB(size: number): number {
+   return parseFloat(size.toString()) / 1048576;
+}
