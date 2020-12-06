@@ -48,8 +48,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   /** Custom validator function */
   @Input() customValidator: (file: File) => Observable<boolean>;
   /** Whether to enable cropper. Default: disabled */
-  @Input()
-  enableCropper = false;
+  @Input() enableCropper = false;
   /** Whether to show default drag and drop zone. Default:true */
   @Input() showeDragDropZone = true;
   /** Whether to show default files preview container. Default: true */
@@ -57,44 +56,37 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   /** Preview Item template */
   @Input() itemTemplate: TemplateRef<any>;
   /** Single or multiple. Default: multi */
-  @Input()
-  uploadType = 'multi';
+  @Input() uploadType = 'multi';
   /** Max size of selected file in MB. Default: no limit */
-  @Input()
-  fileMaxSize: number;
+  @Input() fileMaxSize: number;
   /** Max count of file in multi-upload. Default: no limit */
-  @Input()
-  fileMaxCount: number;
+  @Input() fileMaxCount: number;
   /** Total Max size limit of all files in MB. Default: no limit */
-  @Input()
-  totalMaxSize: number;
+  @Input() totalMaxSize: number;
   /** Which file types to show on choose file dialog. Default: show all */
-  @Input()
-  accept: string;
-  files: FilePreviewModel[] = [];
+  @Input() accept: string;
   /** File extensions filter */
   @Input() fileExtensions: string[];
-  cropper: any;
   /** Cropper options. */
   @Input() cropperOptions: object;
   /** Cropped canvas options. */
   @Input() croppedCanvasOptions: object = {};
+  /** Custom api Adapter for uploading/removing files */
+  @Input() adapter: FilePickerAdapter;
+  /**  Custome template for dropzone */
+  @Input() dropzoneTemplate: TemplateRef<any>;
+  /** Custom captions input. Used for multi language support */
+  @Input() captions: UploaderCaptions = DefaultCaptions;
+  /** captions object */
+  /** Whether to auto upload file on fiel choose or not. Default: true */
+  @Input() enableAutoUpload = true;
+  cropper: any;
+  files: FilePreviewModel[] = [];
   /** Files array for cropper. Will be shown equentially if crop enabled */
   filesForCropper: File[] = [];
   /** Current file to be shown in cropper */
   currentCropperFile: File;
-  /** Custom api Adapter for uploading/removing files */
-  @Input()
-  adapter: FilePickerAdapter;
-  /**  Custome template for dropzone */
-  @Input() dropzoneTemplate: TemplateRef<any>;
-  /** Custom captions input. Used for multi language support */
-  @Input() captions: UploaderCaptions;
-  /** captions object */
-  /** Whether to auto upload file on fiel choose or not. Default: true */
-  @Input() enableAutoUpload = true;
   public safeCropImgUrl: SafeResourceUrl;
-  private _captions: UploaderCaptions;
   private _cropClosed$ = new Subject<FilePreviewModel>();
   private _onDestroy$ = new Subject<void>();
   constructor(
@@ -105,10 +97,10 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   public ngOnInit() {
     this._setCropperOptions();
     this._listenToCropClose();
-    this._setCaptions();
   }
   public ngOnDestroy() {
     this._onDestroy$.next();
+    this._onDestroy$.complete();
   }
   /** On input file selected */
   public onChange(fileInput: HTMLInputElement) {
@@ -120,7 +112,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   public dropped(event: UploadEvent) {
     const files = event.files;
     const filesForUpload: File[] = [];
-    for (const droppedFile of event.files) {
+    for (const droppedFile of files) {
       // Is it a file?
       if (droppedFile.fileEntry.isFile) {
         const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
@@ -156,9 +148,6 @@ export class FilePickerComponent implements OnInit, OnDestroy {
     return this.fileService.createSafeUrl(file);
   }
 
-  private _setCaptions() {
-    this._captions = this.captions || DefaultCaptions;
-  }
   /** Listen when Cropper is closed and open new cropper if next image exists */
   private _listenToCropClose() {
     this._cropClosed$
