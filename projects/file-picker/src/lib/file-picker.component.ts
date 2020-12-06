@@ -81,11 +81,11 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   /** Whether to auto upload file on file choose or not. Default: true */
   @Input() enableAutoUpload = true;
   cropper: any;
-  files: FilePreviewModel[] = [];
+  public files: FilePreviewModel[] = [];
   /** Files array for cropper. Will be shown equentially if crop enabled */
   filesForCropper: File[] = [];
   /** Current file to be shown in cropper */
-  currentCropperFile: File;
+  public currentCropperFile: File;
   public safeCropImgUrl: SafeResourceUrl;
   private _cropClosed$ = new Subject<FilePreviewModel>();
   private _onDestroy$ = new Subject<void>();
@@ -148,6 +148,21 @@ export class FilePickerComponent implements OnInit, OnDestroy {
     return this.fileService.createSafeUrl(file);
   }
 
+  /** Removes file from UI and sends api */
+  public removeFile(fileItem: FilePreviewModel): void {
+    if (!this.enableAutoUpload) {
+      this.removeFileFromList(fileItem);
+      return;
+    }
+    if (this.adapter) {
+      this.adapter.removeFile(fileItem).subscribe(res => {
+        this.onRemoveSuccess(fileItem);
+      });
+    } else {
+      console.warn('no adapter was provided');
+    }
+  }
+
   /** Listen when Cropper is closed and open new cropper if next image exists */
   private _listenToCropClose() {
     this._cropClosed$
@@ -160,12 +175,9 @@ export class FilePickerComponent implements OnInit, OnDestroy {
           croppedIndex !== -1
             ? this.filesForCropper[croppedIndex + 1]
             : undefined;
-        // console.log(nextFile)
-        //  console.log('cropped', res);
         this.filesForCropper = [...this.filesForCropper].filter(
           item => item.name !== res.fileName
         );
-        // console.log(this.filesForCropper);
         if (nextFile) {
           this.openCropper(nextFile);
         }
@@ -329,7 +341,6 @@ export class FilePickerComponent implements OnInit, OnDestroy {
     const res: number = BITS_TO_MB(size);
     let isValidFileSize: boolean;
     let isValidTotalFileSize: boolean;
-    console.log(this.fileMaxSize, '--------', res)
     if (!this.fileMaxSize || (this.fileMaxSize && res < this.fileMaxSize)) {
       isValidFileSize = true;
     } else {
@@ -340,7 +351,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
     }
     /** Validating Total Files Size */
     const totalBits = this.files
-      .map(f => f.file.size)
+      .map(f => f.file ? f.file.size : 0)
       .reduce((acc, curr) => acc + curr, 0);
     if (
       !this.totalMaxSize ||
@@ -377,17 +388,4 @@ export class FilePickerComponent implements OnInit, OnDestroy {
     });
   }
 
-  removeFile(fileItem: FilePreviewModel): void {
-    if (!this.enableAutoUpload) {
-      this.removeFileFromList(fileItem);
-      return;
-    }
-    if (this.adapter) {
-      this.adapter.removeFile(fileItem).subscribe(res => {
-        this.onRemoveSuccess(fileItem);
-      });
-    } else {
-      console.warn('no adapter was provided');
-    }
-  }
 }

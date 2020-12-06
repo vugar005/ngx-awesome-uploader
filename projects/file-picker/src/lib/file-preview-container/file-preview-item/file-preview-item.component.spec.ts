@@ -87,7 +87,7 @@ describe('FilePreviewComponent', () => {
 
     it('should fileType be defined', () => {
         component.ngOnInit();
-        expect(component.fileType).toEqual('image');
+        expect(component.fileType).toEqual('PNG');
     });
 
     describe('and uploadFile', () => {

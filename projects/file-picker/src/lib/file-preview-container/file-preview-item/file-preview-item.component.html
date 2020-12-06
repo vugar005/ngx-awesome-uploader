@@ -2,14 +2,14 @@
 
 
         <div class="file-preview-thumbnail">
-          <div class="img-preview-thumbnail" *ngIf="fileType === 'image'" >
+          <div class="img-preview-thumbnail" *ngIf="isImageFile && fileItem?.file" >
             <img [src]="safeUrl" (click)="imageClicked.next(fileItem)">
           </div>
           <div class="other-preview-thumbnail"
-            *ngIf="fileType !== 'image'"
+            *ngIf="!isImageFile || !fileItem?.file"
             [ngClass]="fileItem.fileName.split('.').pop()"
             >
-            {{fileItem.fileName.split('.').pop()}}
+            {{fileType}}
           </div>
           <div class="thumbnail-backdrop">
 
@@ -17,7 +17,7 @@
         </div>
         <div class="file-preview-description" >
           <a class="file-preview-title" [title]="fileItem.fileName" href="javascript:void(0)"><p>{{fileItem.fileName}}</p></a>
-          <div class="file-preview-size">{{niceBytes(fileItem.file.size)}}</div>
+          <div class="file-preview-size" *ngIf="fileItem?.file">{{niceBytes(fileItem.file?.size)}}</div>
         </div>
         <div class="file-preview-actions" >
             <div class="ngx-checkmark-wrapper" (click)="onCheckMarkClick()" *ngIf="(icon === 'checkmark') && !uploadError && !uploadProgress" (mouseenter)="icon = 'close'">

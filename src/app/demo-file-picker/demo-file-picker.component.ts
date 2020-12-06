@@ -38,26 +38,35 @@ export class DemoFilePickerComponent implements OnInit {
   constructor(private http: HttpClient) { }
 
   public ngOnInit(): void {
+    this.uploader.files = [
+      {
+        fileName: 'My File 1 for edit.png', file: null
+      },
+      {
+        fileName: 'My File 2 for edit.xlsx', file: null
+      }
+    ] as FilePreviewModel[];
   }
 
-  public onValidationError(e: ValidationError): void {
-    console.log(e);
+  public onValidationError(er: ValidationError): void {
+    console.log('validationError', er);
   }
 
-  public onUploadSuccess(e: FilePreviewModel): void {
-    console.log(e);
+  public onUploadSuccess(res: FilePreviewModel): void {
+    console.log('uploadSuccess', res);
   // console.log(this.myFiles)
   }
 
-  public onUploadFail(e: FilePreviewModel): void {
-    console.log(e);
+  public onUploadFail(er: FilePreviewModel): void {
+    console.log('uploadFail', er);
   }
 
-  public onRemoveSuccess(e: FilePreviewModel): void {
-    console.log();
+  public onRemoveSuccess(res: FilePreviewModel): void {
+    console.log('removeSuccess', res);
   }
 
   public onFileAdded(file: FilePreviewModel): void {
+    console.log('fileAdded', file);
     this.myFiles.push(file);
   }
 
@@ -76,4 +85,12 @@ export class DemoFilePickerComponent implements OnInit {
     return of(false).pipe(delay(100));
 }
 
+public clearAllFiles(): void {
+  this.uploader.files = [];
+}
+
+public onRemoveFile(fileItem: FilePreviewModel): void {
+  console.log(fileItem);
+  this.uploader.removeFile(fileItem);
+}
 }

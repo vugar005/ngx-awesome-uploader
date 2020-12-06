@@ -14,8 +14,7 @@
     [showeDragDropZone]="true"
     [showPreviewContainer]="true"
     [customValidator]="myCustomValidator"
-    [captions]="captions"
-    [enableAutoUpload]="true"
+    [enableAutoUpload]="false"
     (fileAdded)="onFileAdded($event)"
     (fileRemoved)="onFileRemoved($event)"
  >
@@ -24,12 +23,12 @@
   </div> -->
 </ngx-awesome-uploader>
 <!-- <button (click)="removeFile()">Remove First File</button> -->
-
+<button (click)="clearAllFiles()">Clear All Files</button>
 </div>
 
 <ng-template #itemTemplate let-fileItem="fileItem" let-uploadProgress="uploadProgress">
-  <p>{{fileItem.file.size}}</p>
+  <p>{{fileItem.file?.size}}</p>
   <p>{{fileItem.fileName}}</p>
   <p>{{uploadProgress}}</p>
-  <button (click)="uploader.removeFile(fileItem)">Remove</button>
+  <button (click)="onRemoveFile(fileItem)">Remove</button>
 </ng-template>

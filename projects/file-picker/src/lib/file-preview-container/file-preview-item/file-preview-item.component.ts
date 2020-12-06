@@ -3,7 +3,7 @@ import { FilePreviewModel } from './../../file-preview.model';
 import { Component, OnInit, Input, Output, EventEmitter, TemplateRef } from '@angular/core';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { HttpErrorResponse } from '@angular/common/http';
-import { GET_FILE_CATEGORY_TYPE } from '../../file-upload.utils';
+import { GET_FILE_CATEGORY_TYPE, GET_FILE_TYPE, IS_IMAGE_FILE } from '../../file-upload.utils';
 import {  Subscription } from 'rxjs';
 import { FilePickerAdapter, UploadResponse, UploadStatus } from '../../file-picker.adapter';
 import { UploaderCaptions } from '../../uploader-captions';
@@ -25,6 +25,7 @@ export class FilePreviewItemComponent implements OnInit {
   @Input() enableAutoUpload: boolean;
   public icon = 'checkmark';
   public uploadProgress: number;
+  public isImageFile: boolean;
   public fileType: string;
   public safeUrl: SafeResourceUrl;
   public uploadError: boolean;
@@ -35,9 +36,12 @@ export class FilePreviewItemComponent implements OnInit {
   ) {}
 
   public ngOnInit() {
-    this._uploadFile(this.fileItem);
-    this.fileType = GET_FILE_CATEGORY_TYPE(this.fileItem.file.type);
-    this.safeUrl = this.getSafeUrl(this.fileItem.file);
+    if (this.fileItem.file) {
+      this._uploadFile(this.fileItem);
+      this.safeUrl = this.getSafeUrl(this.fileItem.file);
+    }
+    this.fileType = GET_FILE_TYPE(this.fileItem.fileName);
+    this.isImageFile = IS_IMAGE_FILE(this.fileType);
   }
 
   public getSafeUrl(file: File | Blob): SafeResourceUrl {
@@ -80,7 +84,6 @@ export class FilePreviewItemComponent implements OnInit {
       this._uploadSubscription =
       this.adapter.uploadFile(fileItem)
       .subscribe((res: UploadResponse) => {
-        console.log('--------res', res);
         if (res && res.status === UploadStatus.UPLOADED) {
           this._onUploadSuccess(res.body, fileItem);
           this.uploadProgress = undefined;
