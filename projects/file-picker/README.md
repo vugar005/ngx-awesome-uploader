@@ -102,10 +102,10 @@ You can check DEMO adapter [here](https://github.com/vugar005/ngx-awesome-upload
 
 
 ```html
-<ngx-file-picker
+<ngx-awesome-uploader
 [adapter]="adapter"
 >
-</ngx-file-picker>
+</ngx-awesome-uploader>
 
 ```
 
@@ -275,10 +275,10 @@ public myCustomValidator(file: File): Observable<boolean> {
 and pass to Template:
 
 ```html
-<ngx-file-picker
+<ngx-awesome-uploader
 [customValidator]="myCustomValidator"
 >
-</ngx-file-picker>
+</ngx-awesome-uploader>
 
 ```
 
@@ -319,14 +319,14 @@ You can provide custom template to library.
 I) To provide custom template for drag and drop zone, use content projection. Example:
 
 ```html
-  <ngx-file-picker
+  <ngx-awesome-uploader
   [adapter]="adapter">
 
   <div class="dropzoneTemplate">
   	<button>Custom</button>
   </div>
 
-</ngx-file-picker>
+</ngx-awesome-uploader>
 
 ````
 
@@ -346,11 +346,11 @@ II) To use custom file preview template, pass your custom template as below:
 
 ```html
 
-<ngx-file-picker #uploader
+<ngx-awesome-uploader #uploader
   [adapter]="adapter"
   [itemTemplate]="itemTemplate"
 >
-</ngx-file-picker>
+</ngx-awesome-uploader>
 
 <ng-template #itemTemplate let-fileItem="fileItem" let-uploadProgress="uploadProgress">
 
