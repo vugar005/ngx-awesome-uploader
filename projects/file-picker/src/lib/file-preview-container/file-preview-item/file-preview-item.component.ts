@@ -3,7 +3,7 @@ import { FilePreviewModel } from './../../file-preview.model';
 import { Component, OnInit, Input, Output, EventEmitter, TemplateRef } from '@angular/core';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { HttpErrorResponse } from '@angular/common/http';
-import { getFileType} from '../../file-upload.utils';
+import { GET_FILE_CATEGORY_TYPE } from '../../file-upload.utils';
 import {  Subscription } from 'rxjs';
 import { FilePickerAdapter, UploadResponse, UploadStatus } from '../../file-picker.adapter';
 import { UploaderCaptions } from '../../uploader-captions';
@@ -18,7 +18,7 @@ export class FilePreviewItemComponent implements OnInit {
   @Output() public readonly uploadSuccess = new EventEmitter<FilePreviewModel>();
   @Output() public readonly uploadFail = new EventEmitter<HttpErrorResponse>();
   @Output() public readonly imageClicked = new EventEmitter<FilePreviewModel>();
-  @Input() public readonly fileItem: FilePreviewModel;
+  @Input() public fileItem: FilePreviewModel;
   @Input() adapter: FilePickerAdapter;
   @Input() itemTemplate: TemplateRef<any>;
   @Input() captions: UploaderCaptions;
@@ -36,7 +36,7 @@ export class FilePreviewItemComponent implements OnInit {
 
   public ngOnInit() {
     this._uploadFile(this.fileItem);
-    this.fileType = getFileType(this.fileItem.file.type);
+    this.fileType = GET_FILE_CATEGORY_TYPE(this.fileItem.file.type);
     this.safeUrl = this.getSafeUrl(this.fileItem.file);
   }
 
@@ -80,6 +80,7 @@ export class FilePreviewItemComponent implements OnInit {
       this._uploadSubscription =
       this.adapter.uploadFile(fileItem)
       .subscribe((res: UploadResponse) => {
+        console.log('--------res', res);
         if (res && res.status === UploadStatus.UPLOADED) {
           this._onUploadSuccess(res.body, fileItem);
           this.uploadProgress = undefined;

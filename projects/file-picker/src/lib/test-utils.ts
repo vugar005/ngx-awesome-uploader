@@ -10,8 +10,7 @@ export function createMockFile(name: string, type: string, sizeInMb = 1): File {
 }
 
 export function createMockPreviewFile(name: string, type: string, sizeInMb = 1): FilePreviewModel {
-  const file = new File([''], name, { type });
-  Object.defineProperty(file, 'size', { value: 1048576 * sizeInMb });
+  const file = createMockFile(name, type, sizeInMb);
   return {file, fileName: name};
 }
 

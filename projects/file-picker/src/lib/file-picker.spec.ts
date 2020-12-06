@@ -7,7 +7,6 @@ import { ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testin
 
 import { FilePickerComponent } from './file-picker.component';
 import { createMockFile, createMockPreviewFile, mockCustomValidator } from './test-utils';
-import { FilePreviewItemComponent } from './file-preview-container/file-preview-item/file-preview-item.component';
 import { Observable, of } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
@@ -20,18 +19,10 @@ export class MockableUploaderAdapter extends FilePickerAdapter {
     public removeFile(fileItem: FilePreviewModel) {
       return of('ok');
   }
-
-
 }
 describe('FilePickerComponent', () => {
   let component: FilePickerComponent;
-  let componentPreviewItem: FilePreviewItemComponent;
-  let componentPreviewContainer: FilePreviewContainerComponent;
-
   let fixture: ComponentFixture<FilePickerComponent>;
-  let fixturePreviewItem: ComponentFixture<FilePreviewItemComponent>;
-  let fixturePreviewContainer: ComponentFixture<FilePreviewContainerComponent>;
-
   let service: FilePickerService;
   let mockFile: File;
   let mockFilePreview: FilePreviewModel;
@@ -48,16 +39,11 @@ describe('FilePickerComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(FilePickerComponent);
-    fixturePreviewItem = TestBed.createComponent(FilePreviewItemComponent);
-    fixturePreviewContainer = TestBed.createComponent(FilePreviewContainerComponent);
     component = fixture.componentInstance;
-    componentPreviewItem = fixturePreviewItem.componentInstance;
-    componentPreviewContainer = fixturePreviewContainer.componentInstance;
     service = new FilePickerService(null);
     fixture.detectChanges();
     mockFile = createMockFile('demo.pdf', 'application/pdf');
     mockFilePreview = createMockPreviewFile('demo.pdf', 'application/pdf');
-    componentPreviewItem.adapter = new MockableUploaderAdapter();
     component.fileAdded.next = jasmine.createSpy('fileAdded');
     component.validationError.next = jasmine.createSpy('validationError');
   });
@@ -355,6 +341,7 @@ describe('FilePickerComponent', () => {
     await component.handleFiles(files).toPromise();
     expect(component.filesForCropper.length).toBe(2);
 }));
+
   xit('should open cropper as many times as image length on multi mode', fakeAsync(async () => {
     spyOn(component, 'openCropper').and.callThrough();
     spyOn(component, 'closeCropper').and.callThrough();

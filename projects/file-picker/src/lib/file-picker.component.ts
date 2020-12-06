@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { FilePreviewModel } from './file-preview.model';
-import { getFileType } from './file-upload.utils';
+import { GET_FILE_CATEGORY_TYPE } from './file-upload.utils';
 import { FileValidationTypes, ValidationError } from './validation-error.model';
 import { FilePickerAdapter } from './file-picker.adapter';
 import {
@@ -234,7 +234,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
 
   /** Handles input and drag&drop files */
   handleInputFile(file: File, index): void {
-    const type = getFileType(file.type);
+    const type = GET_FILE_CATEGORY_TYPE(file.type);
     if (type === 'image' && this.enableCropper) {
       this.filesForCropper.push(file);
       if (!this.currentCropperFile) {
@@ -284,7 +284,6 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   openCropper(file: File): void {
    // if ((window as any).UPLOADER_TEST_MODE || typeof Cropper !== 'undefined') {
     if ((window as any).CROPPER  || typeof Cropper !== 'undefined') {
-      console.log(this.fileService.createSafeUrl(file), '00000000');
       this.safeCropImgUrl = this.fileService.createSafeUrl(file);
       this.currentCropperFile = file;
     } else {
