@@ -1,13 +1,19 @@
 import { FilePreviewModel } from './file-preview.model';
 import { Observable } from 'rxjs';
 
-export interface UploadStatus {
+export interface UploadResponse {
     body?: any;
-    status: 'Response' | 'Progress';
+    status: UploadStatus;
     progress?: number;
 }
 
+export enum UploadStatus {
+   UPLOADED = 'UPLOADED',
+   IN_PROGRESS = 'IN PROGRESS',
+   ERROR = 'ERROR'
+}
+
 export abstract class FilePickerAdapter {
- public abstract uploadFile(fileItem: FilePreviewModel): Observable<UploadStatus>;
+ public abstract uploadFile(fileItem: FilePreviewModel): Observable<UploadResponse>;
  public abstract removeFile(fileItem: FilePreviewModel): Observable<any>;
 }
