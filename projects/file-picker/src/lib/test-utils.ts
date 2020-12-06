@@ -3,32 +3,15 @@ import { FilePickerAdapter } from './file-picker.adapter';
 import { of, Observable } from 'rxjs';
 import { delay } from 'rxjs/operators';
 
-export function createMockFile(name: string, type: string, sizeInMb = 1) {
-  return {
-    name,
-    type,
-    size: sizeInMb * 1048576,
-    lastModified: 1,
-    lastModifiedDate: new Date(),
-    webkitRelativePath: '',
-    msClose: () => {},
-    msDetachStream: () => {},
-    slice: (): Blob => null
-  };
+export function createMockFile(name: string, type: string, sizeInMb = 1): File {
+  const file = new File([''], name, { type });
+  Object.defineProperty(file, 'size', { value: 1048576 * sizeInMb });
+  return file;
 }
 
 export function createMockPreviewFile(name: string, type: string, sizeInMb = 1): FilePreviewModel {
-  const file =  {
-    name,
-    type,
-    size: sizeInMb * 1048576,
-    lastModified: 1,
-    lastModifiedDate: new Date(),
-    webkitRelativePath: '',
-    msClose: () => {},
-    msDetachStream: () => {},
-    slice: (): Blob => null
-  };
+  const file = new File([''], name, { type });
+  Object.defineProperty(file, 'size', { value: 1048576 * sizeInMb });
   return {file, fileName: name};
 }
 

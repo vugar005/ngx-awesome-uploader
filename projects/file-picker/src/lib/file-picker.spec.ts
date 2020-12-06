@@ -12,6 +12,7 @@ import { of } from 'rxjs';
 import { getFileType } from './file-upload.utils';
 import { By } from '@angular/platform-browser';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { DEFAULT_CROPPER_OPTIONS } from './file-picker.constants';
 export class MockableUploaderAdapter extends FilePickerAdapter {
   public uploadFile(fileItem: FilePreviewModel) {
    return of('123');
@@ -61,10 +62,9 @@ describe('FilePickerComponent', () => {
   });
 
   it('should use default cropper options when not provided', () => {
-    const spy = spyOn(component, 'setDefaultCropperOptions');
     component.ngOnInit();
     fixture.detectChanges();
-    // expect(spy).toHaveBeenCalled();
+    expect(component.cropperOptions).toEqual(DEFAULT_CROPPER_OPTIONS);
   });
 
   it('should not call pushFile on extension validation fails ', async () => {

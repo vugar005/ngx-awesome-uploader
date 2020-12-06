@@ -24,6 +24,7 @@ import { map, takeUntil, tap } from 'rxjs/operators';
 import { DefaultCaptions } from './default-captions';
 import { UploaderCaptions } from './uploader-captions';
 import { HttpErrorResponse } from '@angular/common/http';
+import { DEFAULT_CROPPER_OPTIONS } from './file-picker.constants';
 
 declare var Cropper;
 @Component({
@@ -144,15 +145,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   }
   /** Sets manual cropper options if no custom options are avaiable */
   private _setDefaultCropperOptions() {
-    this.cropperOptions = {
-      dragMode: 'crop',
-      aspectRatio: 1,
-      autoCrop: true,
-      movable: true,
-      zoomable: true,
-      scalable: true,
-      autoCropArea: 0.8
-    };
+    this.cropperOptions = DEFAULT_CROPPER_OPTIONS;
   }
   /** On input file selected */
   onChange(fileInput: HTMLInputElement) {
