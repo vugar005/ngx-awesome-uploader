@@ -20,8 +20,8 @@ This is an Angular Library for uploading files. It supports: File Upload and Pre
 
 
 
-Tested on Angular 6/7/8./9 Supports Server Side Rendering.
-
+Tested on Angular 6/7/8/9/10. Supports Server Side Rendering.
+>**Breaking Changes:** [Check Changes](https://github.com/vugar005/ngx-awesome-uploader/blob/master/breaking-changes-v10.md) changes if you come from version < 10.
 
 
 * [Install](#install)
@@ -83,7 +83,7 @@ After importing it to your custom adapter implementation (EG: CustomAdapter.ts),
 
 
 ```
-public abstract uploadFile(fileItem: FilePreviewModel): Observable<number | string>;
+public abstract uploadFile(fileItem: FilePreviewModel): Observable<UploadResponse>;
 
 public abstract removeFile(fileItem: FilePreviewModel): Observable<any>;
 ```
@@ -139,7 +139,7 @@ Still in Doubt? Check [Minimal Setup Demo](https://stackblitz.com/edit/ngx-aweso
 
 
 
-## api
+## API
 
 ```typescript
 
