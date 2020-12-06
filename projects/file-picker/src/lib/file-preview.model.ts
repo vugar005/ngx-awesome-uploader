@@ -1,5 +1,5 @@
 export interface FilePreviewModel {
-  fileId?: string;
+  uploadResponse?: any;
   file: File | Blob;
   fileName: string;
 }

@@ -2,7 +2,7 @@ import { FilePickerService } from './../../file-picker.service';
 import { FilePreviewModel } from './../../file-preview.model';
 import { Component, OnInit, Input, Output, EventEmitter, TemplateRef } from '@angular/core';
 import { SafeResourceUrl } from '@angular/platform-browser';
-import { HttpEvent, HttpEventType, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { getFileType} from '../../file-upload.utils';
 import {  Subscription } from 'rxjs';
 import { FilePickerAdapter, UploadResponse, UploadStatus } from '../../file-picker.adapter';
@@ -29,7 +29,6 @@ export class FilePreviewItemComponent implements OnInit {
   public safeUrl: SafeResourceUrl;
   public uploadError: boolean;
   private _uploadSubscription: Subscription;
-  fileId: string;
   constructor(
     private fileService: FilePickerService,
   ) {}
@@ -99,10 +98,9 @@ export class FilePreviewItemComponent implements OnInit {
     }
   }
   /** Emits event when file upload api returns success  */
-  private _onUploadSuccess(id: string, fileItem: FilePreviewModel): void {
-    this.fileId = id;
-    this.fileItem.fileId = id;
-    this.uploadSuccess.next({...fileItem, fileId: id});
+  private _onUploadSuccess(uploadResponse: any, fileItem: FilePreviewModel): void {
+    this.fileItem.uploadResponse = uploadResponse;
+    this.uploadSuccess.next({...fileItem, uploadResponse});
   }
 
  /** Cancel upload. Cancels request  */
