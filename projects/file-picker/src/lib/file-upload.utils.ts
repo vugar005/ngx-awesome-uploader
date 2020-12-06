@@ -14,5 +14,5 @@ export function GET_FILE_TYPE(name: string): string {
 
 export function IS_IMAGE_FILE(fileType: string): boolean {
   const IMAGE_TYPES = ['PNG', 'JPG', 'JPEG', 'BMP', 'WEBP', 'JFIF', 'TIFF'];
-  return IMAGE_TYPES.includes(fileType.toUpperCase());
+  return (IMAGE_TYPES as any).includes(fileType.toUpperCase());
 }
