@@ -1,12 +1,14 @@
-import {FilePickerComponent} from './../../../projects/file-picker/src/lib/file-picker.component';
-import {ValidationError} from './../../../projects/file-picker/src/lib/validation-error.model';
-import {FilePreviewModel} from './../../../projects/file-picker/src/lib/file-preview.model';
+import {
+  FilePickerComponent,
+  ValidationError,
+  FilePreviewModel,
+  UploaderCaptions,
+} from 'ngx-awesome-uploader';
 import {HttpClient} from '@angular/common/http';
 import {DemoFilePickerAdapter} from './demo-file-picker.adapter';
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {delay, map} from 'rxjs/operators';
-import {UploaderCaptions} from 'projects/file-picker/src/public_api';
 
 @Component({
   selector: 'app-demo-file-picker',
@@ -35,38 +37,41 @@ export class DemoFilePickerComponent implements OnInit {
 
   constructor(private http: HttpClient) { }
 
-  ngOnInit() {
+  public ngOnInit(): void {
   }
-  onValidationError(e: ValidationError) {
+
+  public onValidationError(e: ValidationError): void {
     console.log(e);
   }
-  onUploadSuccess(e: FilePreviewModel) {
+
+  public onUploadSuccess(e: FilePreviewModel): void {
     console.log(e);
   // console.log(this.myFiles)
   }
 
-  onUploadFail(e: FilePreviewModel) {
+  public onUploadFail(e: FilePreviewModel): void {
     console.log(e);
   }
-  onRemoveSuccess(e: FilePreviewModel) {
+  public onRemoveSuccess(e: FilePreviewModel): void {
     console.log();
   }
-  onFileAdded(file: FilePreviewModel) {
+  public onFileAdded(file: FilePreviewModel): void {
     this.myFiles.push(file);
   }
 
-  onFileRemoved(file: FilePreviewModel) {
+  public onFileRemoved(file: FilePreviewModel): void {
     console.log(this.uploader.files);
   }
 
-  removeFile() {
-  this.uploader.removeFileFromList(this.myFiles[0]);
+  public removeFile(): void {
+    this.uploader.removeFileFromList(this.myFiles[0]);
   }
-   myCustomValidator(file: File): Observable<boolean> {
-      if (!file.name.includes('uploader')) {
-         return of(true).pipe(delay(2000));
-      }
-     return of(false).pipe(delay(2000));
-  }
+
+  public myCustomValidator(file: File): Observable<boolean> {
+    if (!file.name.includes('uploader')) {
+        return of(true).pipe(delay(2000));
+    }
+    return of(false).pipe(delay(2000));
+}
 
 }

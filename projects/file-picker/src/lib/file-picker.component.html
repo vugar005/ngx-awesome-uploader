@@ -6,7 +6,7 @@ class="file-drop-wrapper"
 <file-drop
   (onFileDrop)="dropped($event)"
   [customstyle]="'custom-drag'"
-  [captions]="_captions"
+  [captions]="captions"
 >
   <ng-content select=".dropzoneTemplate"> </ng-content>
 </file-drop>
@@ -33,7 +33,7 @@ class="file-input"
   />
   <div class="cropper-actions">
     <button class="cropSubmit" (click)="onCropSubmit()">
-      {{ _captions?.cropper?.crop }}
+      {{ captions?.cropper?.crop }}
     </button>
     <button
       class="cropCancel"
@@ -44,7 +44,7 @@ class="file-input"
         })
       "
     >
-      {{ _captions?.cropper?.cancel }}
+      {{ captions?.cropper?.cancel }}
     </button>
   </div>
 </div>
@@ -60,7 +60,7 @@ class="files-preview-wrapper"
   (uploadSuccess)="onUploadSuccess($event)"
   [adapter]="adapter"
   [itemTemplate]="itemTemplate"
-  [captions]="_captions"
+  [captions]="captions"
   [enableAutoUpload]="enableAutoUpload"
 >
 </file-preview-container>

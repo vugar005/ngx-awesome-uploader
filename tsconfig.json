@@ -19,6 +19,7 @@
       "dom"
     ],
     "paths": {
+      "ngx-awesome-uploader": ["projects/file-picker/src/public_api"],
       "file-picker": [
         "dist/file-picker"
       ],
