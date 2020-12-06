@@ -71,9 +71,9 @@ export class DemoFilePickerComponent implements OnInit {
 
   public myCustomValidator(file: File): Observable<boolean> {
     if (!file.name.includes('uploader')) {
-        return of(true).pipe(delay(2000));
+        return of(true).pipe(delay(100));
     }
-    return of(false).pipe(delay(2000));
+    return of(false).pipe(delay(100));
 }
 
 }

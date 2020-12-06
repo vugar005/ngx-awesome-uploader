@@ -5,7 +5,7 @@ import { SafeResourceUrl } from '@angular/platform-browser';
 import { HttpEvent, HttpEventType, HttpErrorResponse } from '@angular/common/http';
 import { getFileType} from '../../file-upload.utils';
 import {  Subscription } from 'rxjs';
-import { FilePickerAdapter } from '../../file-picker.adapter';
+import { FilePickerAdapter, UploadStatus } from '../../file-picker.adapter';
 import { UploaderCaptions } from '../../uploader-captions';
 
 @Component({
@@ -68,13 +68,13 @@ export class FilePreviewItemComponent implements OnInit {
     if (this.adapter) {
       this.uploadSubscription =
       this.adapter.uploadFile(fileItem)
-      .subscribe((res: number | string) => {
-        if (typeof res === 'string') {
-          this.onUploadSuccess(res, fileItem);
+      .subscribe((res: UploadStatus) => {
+        if (res && res.status === 'Response') {
+          this.onUploadSuccess(res.body, fileItem);
           this.uploadProgress = undefined;
         }
-        if (typeof res === 'number') {
-          this.uploadProgress = res;
+        if (res && res.status === 'Progress') {
+          this.uploadProgress = res.progress;
         //  this.handleProgressResponse(<HttpEvent<any>>res, fileItem);
         }
       }, (er: HttpErrorResponse) => {
