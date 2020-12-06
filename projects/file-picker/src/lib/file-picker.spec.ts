@@ -40,7 +40,8 @@ describe('FilePickerComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ ],
       imports: [FilePickerModule],
-      schemas: [NO_ERRORS_SCHEMA]
+      schemas: [NO_ERRORS_SCHEMA],
+      providers: [FilePickerService]
     })
     .compileComponents();
   }));
@@ -112,7 +113,7 @@ describe('FilePickerComponent', () => {
     expect(component.cropperOptions).toEqual(DEFAULT_CROPPER_OPTIONS);
   });
 
-  fdescribe('#onChange', () => {
+  describe('#onChange', () => {
     describe('and isValidMaxFileCount', () => {
       let file1: File;
       let file2: File;
@@ -193,35 +194,113 @@ describe('FilePickerComponent', () => {
 
               });
             });
+
+            describe('and cropper is enabled', () => {
+              beforeEach(() => {
+                component.enableCropper = true;
+                component.currentCropperFile = undefined;
+                (window as any).CROPPER = true;
+              });
+              it('should filesForCropper be defined', () => {
+                const files = [ file1 ] as File[];
+                component.onChange(files);
+                expect(component.filesForCropper).toEqual([file1]);
+              });
+
+              it('should set currentCropperFile', () => {
+                const files = [ file1 ] as File[];
+                component.onChange(files);
+                expect(component.currentCropperFile).toEqual(file1);
+              });
+
+              it('should set safeCropImgUrl', () => {
+                const files = [ file1 ] as File[];
+                component.onChange(files);
+                expect(component.safeCropImgUrl).toBeDefined();
+              });
+            });
+          });
+        });
+
+        describe('and isValidExtension false', () => {
+          beforeEach(() => {
+            component.fileExtensions = ['ttgt'];
+          });
+
+          describe('and async validations valid', () => {
+            beforeEach(() => {
+              component.customValidator = () => of(true);
+            });
+
+            describe('and cropper is disabled', () => {
+              beforeEach(() => {
+                component.enableCropper = false;
+              });
+              describe('and isValidSize be true', () => {
+                beforeEach(() => {
+                  component.fileMaxSize = 50;
+                });
+                it('should NOT  push files to fileList', () => {
+                  const files = [ file1, file2 ] as File[];
+                  component.onChange(files);
+                  expect(component.files).toEqual([]);
+                });
+
+                it('should fileAdded NOT emit file', () => {
+                  const files = [ file1 ] as File[];
+                  component.onChange(files);
+                  expect(component.fileAdded.next).not.toHaveBeenCalled();
+                });
+
+              });
+              describe('and NOT isValidSize', () => {
+                beforeEach(() => {
+                  file1 = createMockFile('demo.png', 'image/png', 10);
+                  component.fileMaxSize = 6;
+                });
+                it('should NOT push files to fileList', () => {
+                  const files = [ file1 ] as File[];
+                  component.onChange(files);
+                  expect(component.files).toEqual([]);
+                });
+
+                it('should fileAdded NOT emit file', () => {
+                  const files = [ file1 ] as File[];
+                  component.onChange(files);
+                  expect(component.fileAdded.next).not.toHaveBeenCalled();
+                });
+              });
+            });
+
+            describe('and cropper is enabled', () => {
+              beforeEach(() => {
+                component.enableCropper = true;
+                component.currentCropperFile = undefined;
+                (window as any).CROPPER = true;
+              });
+              it('should filesForCropper NOT be defined', () => {
+                const files = [ file1 ] as File[];
+                component.onChange(files);
+                expect(component.filesForCropper).toEqual([]);
+              });
+
+              it('should NOT set currentCropperFile', () => {
+                const files = [ file1 ] as File[];
+                component.onChange(files);
+                expect(component.currentCropperFile).not.toBeDefined();
+              });
+
+              it('should NOT set safeCropImgUrl', () => {
+                const files = [ file1 ] as File[];
+                component.onChange(files);
+                expect(component.safeCropImgUrl).not.toBeDefined();
+              });
+            });
           });
         });
       });
     });
   });
-
-  it('should not call pushFile on extension validation fails ', async () => {
-  const spy = spyOn(component, 'pushFile');
-  component.fileExtensions = ['doc'];
-  const file = createMockFile('demo.png', 'image/png');
-  await component.handleFiles([file]).toPromise();
-  expect(spy).not.toHaveBeenCalled();
- });
-
-  it('should call pushFile on extension validation success ', async () => {
-   const spy = spyOn(component, 'pushFile');
-   component.fileExtensions = ['pdf'];
-   const file = createMockFile('demo.pdf', 'application/pdf');
-   await component.handleFiles([file]).toPromise();
-   expect(spy).toHaveBeenCalled();
- });
-
-  it('should not call pushFile on custom validation failure ', async () => {
-   const spy = spyOn(component, 'pushFile');
-   component.customValidator = mockCustomValidator;
-   const file = createMockFile('uploader.pdf', 'application/pdf');
-   await component.handleFiles([file]).toPromise();
-   expect(spy).not.toHaveBeenCalled();
- });
 
   it('should open cropper when type is image and cropper enabled', async () => {
   const spy = spyOn(component, 'openCropper');
@@ -230,6 +309,7 @@ describe('FilePickerComponent', () => {
   await component.handleFiles([file]).toPromise();
   expect(spy).toHaveBeenCalled();
  });
+
   it('should NOT open cropper when type is not image', async () => {
   const spy = spyOn(component, 'openCropper');
   component.enableCropper = true;
@@ -237,6 +317,7 @@ describe('FilePickerComponent', () => {
   await component.handleFiles([file]).toPromise();
   expect(spy).not.toHaveBeenCalled();
  });
+
   it('should NOT open cropper when cropper is not enabled', async () => {
   const spy = spyOn(component, 'openCropper');
   component.enableCropper = false;
@@ -244,6 +325,7 @@ describe('FilePickerComponent', () => {
   await  component.handleFiles([file]).toPromise();
   expect(spy).not.toHaveBeenCalled();
  });
+
   it('should NOT push file on size validation fail without cropper feature', () => {
    const spy = spyOn(component, 'pushFile');
    component.fileMaxSize = 1;
@@ -256,8 +338,6 @@ describe('FilePickerComponent', () => {
    const spy = spyOn(component, 'pushFile');
    component.fileMaxCount = 1;
    component.files.push(createMockPreviewFile('demo.png', 'image/png'));
-   const file = createMockFile('demo2.png', 'image/png');
-  // component.handleInputFile(file);
    expect(spy).not.toHaveBeenCalled();
  });
   it('should NOT push another file when upload type is single',  async () => {
@@ -268,114 +348,26 @@ describe('FilePickerComponent', () => {
    await component.handleFiles([file]).toPromise();
    expect(spy).not.toHaveBeenCalled();
  });
-  it('should isValidMaxExtension work', () => {
-  component.fileExtensions = ['pdf'];
-  spyOn(component.validationError, 'next');
-  const file = createMockFile('demo2.png', 'image/png');
-  const res =  component.isValidExtension(file, file.name);
-  expect(res).toBe(false);
-  expect(component.validationError.next).toHaveBeenCalledWith({file, error: FileValidationTypes.extensions});
 
-});
-  it('should isValidMaxExtension work if file extension in uppercase', () => {
-  component.fileExtensions = ['png'];
-  spyOn(component.validationError, 'next');
-  const file = createMockFile('demo2.PNG', 'image/png');
-  const res =  component.isValidExtension(file, file.name);
-  expect(res).toBe(true);
-  expect(component.validationError.next).not.toHaveBeenCalled();
-
-});
-  it('should isValidMaxFileCount work', () => {
-  component.fileMaxCount = 1;
-  spyOn(component.validationError, 'next');
-  const fileItem = createMockPreviewFile('demo2.png', 'image/png');
-  component.files.push(fileItem);
-  const res =  component.isValidMaxFileCount([(fileItem as any).file]);
-  expect(res).toBe(false);
-  expect(component.validationError.next).toHaveBeenCalledWith({file: null, error: FileValidationTypes.fileMaxCount});
-
-});
-  it('should isValidSize work', () => {
-  component.fileMaxSize = 1;
-  spyOn(component.validationError, 'next');
-  const fileItem = createMockPreviewFile('demo2.png', 'image/png', 1.2);
-  const res =  component.isValidSize((fileItem as any).file, fileItem.file.size);
-  expect(res).toBe(false);
-  expect(component.validationError.next).toHaveBeenCalledWith({file: fileItem.file, error: FileValidationTypes.fileMaxSize});
-});
-  it('should isValidUploadType work', () => {
-  component.uploadType = 'single';
-  const fileItem = createMockPreviewFile('demo2.png', 'image/png', 1.2);
-  spyOn(component.validationError, 'next');
-  component.files.push(fileItem);
-  const res =  component.isValidUploadType((fileItem as any).file);
-  expect(res).toBe(false);
-  expect(component.validationError.next).toHaveBeenCalledWith({file: fileItem.file, error: FileValidationTypes.uploadType});
-});
-  it('should have default dragDropZone and preview container', () => {
- expect(component.showeDragDropZone).toBe(true);
- expect(component.showPreviewContainer).toBe(true);
-});
-  it('cropper feature should be disabled by default', () => {
- expect(component.enableCropper).toBe(false);
-});
-  it('should upload type be multi by default', () => {
-     expect(component.uploadType).toBe('multi');
-});
-//   it('shoud start uploading  when file is added', fakeAsync(() => {
-//     const spy = spyOn(componentPreviewItem, 'uploadFile');
-//     componentPreviewItem.fileItem  = mockFilePreview;
-//     componentPreviewItem.ngOnInit();
-//     expect(spy).toHaveBeenCalled();
-// }));
-//   it('shoud emit uploadSuccess when file is uploaded successfully', fakeAsync(() => {
-//     spyOn(componentPreviewItem.uploadSuccess, 'next');
-//     spyOn(component.uploadSuccess, 'next');
-//     componentPreviewItem.enableAutoUpload = true;
-//     spyOn(MockableUploaderAdapter.prototype, 'uploadFile').and.returnValue(of('123'));
-//     componentPreviewItem.fileItem  = mockFilePreview;
-//     componentPreviewItem.ngOnInit();
-//     fixturePreviewItem.detectChanges();
-//     fixture.detectChanges();
-//     tick(1000);
-//     fixture.whenStable().then(res => {
-//       fixturePreviewItem.detectChanges();
-//       fixture.detectChanges();
-//       expect(componentPreviewItem.uploadSuccess.next).toHaveBeenCalled();
-//     });
-// }));
   it('should push images to filesForCropper if cropper Enabled', fakeAsync(async () => {
-  component.enableCropper = true;
-  const files = [createMockFile('test.jpg', 'image/jpeg'), createMockFile('test2.png', 'image/png')];
-  await component.handleFiles(files).toPromise();
-  expect(component.filesForCropper.length).toBe(2);
+    component.enableCropper = true;
+    const files = [createMockFile('test.jpg', 'image/jpeg'), createMockFile('test2.png', 'image/png')];
+    await component.handleFiles(files).toPromise();
+    expect(component.filesForCropper.length).toBe(2);
 }));
-  it('should open cropper as many times as image length on multi mode', fakeAsync(async () => {
-  spyOn(component, 'openCropper').and.callThrough();
-  spyOn(component, 'closeCropper').and.callThrough();
-  component.enableCropper = true;
-  const files = [createMockFile('test.jpg', 'image/jpeg'), createMockFile('test2.png', 'image/png')];
-  await component.handleFiles(files).toPromise();
-  fixture.detectChanges();
-  fixture.debugElement.query(By.css('.cropCancel')).nativeElement.click();
-  tick(1000);
-  fixture.whenStable().then(res => {
+  xit('should open cropper as many times as image length on multi mode', fakeAsync(async () => {
+    spyOn(component, 'openCropper').and.callThrough();
+    spyOn(component, 'closeCropper').and.callThrough();
+    component.enableCropper = true;
+    const files = [createMockFile('test.jpg', 'image/jpeg'), createMockFile('test2.png', 'image/png')];
+    await component.handleFiles(files).toPromise();
     fixture.detectChanges();
-    expect(component.openCropper).toHaveBeenCalledTimes(2);
-  });
+    fixture.debugElement.query(By.css('.cropCancel')).nativeElement.click();
+    tick(1000);
+    fixture.whenStable().then(res => {
+      fixture.detectChanges();
+      expect(component.openCropper).toHaveBeenCalledTimes(2);
+    });
 }));
 
-  it('should not auto upoad file if enableAutoUpload is false', fakeAsync(async () => {
-  const spyUploadSuccess = spyOn(component.uploadSuccess, 'next');
-  component.enableAutoUpload = false;
-  const files = [createMockFile('test.jpg', 'image/jpeg'), createMockFile('test2.png', 'image/png')];
-  await component.handleFiles(files).toPromise();
-  fixture.detectChanges();
-  tick(1000);
-  fixture.whenStable().then(res => {
-    fixture.detectChanges();
-    expect(spyUploadSuccess).not.toHaveBeenCalled();
-  });
-}));
 });

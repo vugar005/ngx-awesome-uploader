@@ -14,7 +14,7 @@ export class FilePickerService {
     return of (event.detail);
   }
   createSafeUrl(file): SafeResourceUrl {
-    if ((window as any).UPLOADER_TEST_MODE) { return; }
+   // if ((window as any).UPLOADER_TEST_MODE) { return; }
     try {
       const url = window.URL.createObjectURL(file);
       const safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);

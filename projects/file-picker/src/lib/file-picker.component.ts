@@ -282,7 +282,9 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   }
   /** Opens cropper for image crop */
   openCropper(file: File): void {
-    if ((window as any).UPLOADER_TEST_MODE || typeof Cropper !== 'undefined') {
+   // if ((window as any).UPLOADER_TEST_MODE || typeof Cropper !== 'undefined') {
+    if ((window as any).CROPPER  || typeof Cropper !== 'undefined') {
+      console.log(this.fileService.createSafeUrl(file), '00000000');
       this.safeCropImgUrl = this.fileService.createSafeUrl(file);
       this.currentCropperFile = file;
     } else {
