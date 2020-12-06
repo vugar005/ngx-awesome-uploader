@@ -23,7 +23,6 @@ export class FilePreviewItemComponent implements OnInit {
   @Input() itemTemplate: TemplateRef<any>;
   @Input() captions: UploaderCaptions;
   @Input() enableAutoUpload: boolean;
-  public icon = 'checkmark';
   public uploadProgress: number;
   public isImageFile: boolean;
   public fileType: string;
@@ -71,10 +70,6 @@ export class FilePreviewItemComponent implements OnInit {
       uploadResponse: this.uploadResponse
     });
    }
-
-  public onCheckMarkClick() {
-    this.icon = 'error';
-  }
 
   private _uploadFile(fileItem: FilePreviewModel): void {
     if (!this.enableAutoUpload) {

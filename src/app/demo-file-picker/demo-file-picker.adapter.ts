@@ -11,7 +11,7 @@ export class DemoFilePickerAdapter extends FilePickerAdapter {
   public uploadFile(fileItem: FilePreviewModel): Observable<UploadResponse> {
     const form = new FormData();
     form.append('file', fileItem.file);
-    const api = 'https://run.mocky.io/v3/f4bee334-cd93-4fc8-b9ba-46ee0a0251f9';
+    const api = 'ngx-awesome-uploader.free.beeceptor.com/upload';
     const req = new HttpRequest('POST', api, form, {reportProgress: true});
     return this.http.request(req)
     .pipe(

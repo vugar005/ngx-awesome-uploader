@@ -20,20 +20,17 @@
           <div class="file-preview-size" *ngIf="fileItem?.file">{{niceBytes(fileItem.file?.size)}}</div>
         </div>
         <div class="file-preview-actions" >
-            <div class="ngx-checkmark-wrapper" (click)="onCheckMarkClick()" *ngIf="(icon === 'checkmark') && !uploadError && !uploadProgress" (mouseenter)="icon = 'close'">
+            <div class="ngx-checkmark-wrapper" *ngIf="!uploadError && !uploadProgress">
               <span class="ngx-checkmark"></span>
             </div>
-            <refresh-icon *ngIf="uploadError" (retry)="onRetry()"></refresh-icon>
+            <refresh-icon *ngIf="uploadError" (click)="onRetry()"></refresh-icon>
             <a class="ngx-close-icon-wrapper"
-            *ngIf= "(icon === 'close') ||  uploadError || uploadProgress"
             (click)="onRemove(fileItem)"
-             (mouseleave)="icon = 'checkmark'"
              title="{{captions?.previewCard?.remove}}"
              >
-              <close-icon></close-icon>
+              <close-icon class="ngx-close-icon"></close-icon>
             </a>
         </div>
-        <!-- *ngIf="uploadProgress !== 100"-->
           <a class="file-upload-error-wrapper" *ngIf="uploadError && !uploadProgress" href="javascipt:void(0)"
           title="{{captions?.previewCard?.uploadError}}">
           </a>

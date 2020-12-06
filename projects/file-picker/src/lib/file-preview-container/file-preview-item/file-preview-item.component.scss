@@ -161,9 +161,10 @@
     }
     .ngx-close-icon-wrapper {
       border-radius: 50%;
-      background: #fe7676;
+     // background: #fe7676;
       padding: 3px;
-      box-shadow: -1px 1px 6px rgba(254, 118, 118, 0.8);
+      margin-left: 5px;
+     // box-shadow: -1px 1px 6px rgba(254, 118, 118, 0.8);
       cursor: pointer;
     }
   }
