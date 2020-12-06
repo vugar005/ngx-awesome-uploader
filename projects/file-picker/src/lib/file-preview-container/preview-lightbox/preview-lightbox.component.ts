@@ -9,7 +9,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 })
 export class PreviewLightboxComponent implements OnInit {
   @Input() file: FilePreviewModel;
-  @Output() close = new EventEmitter<void>();
+  @Output() previewClose = new EventEmitter<void>();
   loaded: boolean;
   safeUrl: SafeResourceUrl;
   constructor(private sanitizer: DomSanitizer) { }
@@ -22,7 +22,7 @@ export class PreviewLightboxComponent implements OnInit {
     this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
   onClose(event): void {
-   this.close.next();
+   this.previewClose.next();
   }
 
 }

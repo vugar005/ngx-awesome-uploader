@@ -2,10 +2,10 @@ import { FilePickerService } from './../../file-picker.service';
 import { FilePreviewModel } from './../../file-preview.model';
 import { Component, OnInit, Input, Output, EventEmitter, TemplateRef } from '@angular/core';
 import { SafeResourceUrl } from '@angular/platform-browser';
-import { HttpEvent, HttpEventType, HttpErrorResponse } from '@angular/common/http';
-import { getFileType} from '../../file-upload.utils';
+import { HttpErrorResponse } from '@angular/common/http';
+import { GET_FILE_CATEGORY_TYPE, GET_FILE_TYPE, IS_IMAGE_FILE } from '../../file-upload.utils';
 import {  Subscription } from 'rxjs';
-import { FilePickerAdapter } from '../../file-picker.adapter';
+import { FilePickerAdapter, UploadResponse, UploadStatus } from '../../file-picker.adapter';
 import { UploaderCaptions } from '../../uploader-captions';
 
 @Component({
@@ -14,39 +14,43 @@ import { UploaderCaptions } from '../../uploader-captions';
   styleUrls: ['./file-preview-item.component.scss']
 })
 export class FilePreviewItemComponent implements OnInit {
-  @Output() public removeFile = new EventEmitter<FilePreviewModel>();
-  @Output() public uploadSuccess = new EventEmitter<FilePreviewModel>();
-  @Output() public uploadFail = new EventEmitter<HttpErrorResponse>();
-  @Output() public imageClicked = new EventEmitter<FilePreviewModel>();
+  @Output() public readonly removeFile = new EventEmitter<FilePreviewModel>();
+  @Output() public readonly uploadSuccess = new EventEmitter<FilePreviewModel>();
+  @Output() public readonly uploadFail = new EventEmitter<HttpErrorResponse>();
+  @Output() public readonly imageClicked = new EventEmitter<FilePreviewModel>();
   @Input() public fileItem: FilePreviewModel;
   @Input() adapter: FilePickerAdapter;
   @Input() itemTemplate: TemplateRef<any>;
   @Input() captions: UploaderCaptions;
   @Input() enableAutoUpload: boolean;
-  icon = 'checkmark';
-  uploadProgress: number;
-  fileType: string;
-  safeUrl: SafeResourceUrl;
-  uploadError: boolean;
-  uploadSubscription: Subscription;
-  fileId: string;
+  public uploadProgress: number;
+  public isImageFile: boolean;
+  public fileType: string;
+  public safeUrl: SafeResourceUrl;
+  public uploadError: boolean;
+  public uploadResponse: any;
+  private _uploadSubscription: Subscription;
   constructor(
     private fileService: FilePickerService,
   ) {}
 
-  ngOnInit() {
-  this.uploadFile(this.fileItem);
-    this.fileType = getFileType(this.fileItem.file.type);
-    this.safeUrl = this.getSafeUrl(this.fileItem.file);
+  public ngOnInit() {
+    if (this.fileItem.file) {
+      this._uploadFile(this.fileItem);
+      this.safeUrl = this.getSafeUrl(this.fileItem.file);
+    }
+    this.fileType = GET_FILE_TYPE(this.fileItem.fileName);
+    this.isImageFile = IS_IMAGE_FILE(this.fileType);
   }
-  getSafeUrl(file: File | Blob): SafeResourceUrl {
+
+  public getSafeUrl(file: File | Blob): SafeResourceUrl {
     return this.fileService.createSafeUrl(file);
   }
   /** Converts bytes to nice size */
   niceBytes(x): string {
     const units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-    let l = 0,
-      n = parseInt(x, 10) || 0;
+    let l = 0;
+    let n = parseInt(x, 10) || 0;
     while (n >= 1024 && ++l) {
       n = n / 1024;
     }
@@ -55,27 +59,37 @@ export class FilePreviewItemComponent implements OnInit {
     return n.toFixed(n < 10 && l > 0 ? 1 : 0) + ' ' + units[l];
   }
   /** Retry file upload when upload was unsuccessfull */
-  onRetry(): void {
-    this.uploadFile(this.fileItem);
+  public onRetry(): void {
+    this._uploadFile(this.fileItem);
   }
-  onCheckMarkClick() {
-    this.icon = 'error';
-  }
-  uploadFile(fileItem: FilePreviewModel): void {
+
+  public onRemove(fileItem: FilePreviewModel): void {
+    this._uploadUnsubscribe();
+    this.removeFile.next({
+      ...fileItem,
+      uploadResponse: this.uploadResponse
+    });
+   }
+
+  private _uploadFile(fileItem: FilePreviewModel): void {
     if (!this.enableAutoUpload) {
       return;
     }
     if (this.adapter) {
-      this.uploadSubscription =
+      this._uploadSubscription =
       this.adapter.uploadFile(fileItem)
-      .subscribe((res: number | string) => {
-        if (typeof res === 'string') {
-          this.onUploadSuccess(res, fileItem);
+      .subscribe((res: UploadResponse) => {
+        if (res && res.status === UploadStatus.UPLOADED) {
+          this._onUploadSuccess(res.body, fileItem);
           this.uploadProgress = undefined;
         }
-        if (typeof res === 'number') {
-          this.uploadProgress = res;
-        //  this.handleProgressResponse(<HttpEvent<any>>res, fileItem);
+        if (res && res.status === UploadStatus.IN_PROGRESS) {
+          this.uploadProgress = res.progress;
+        }
+        if (res && res.status === UploadStatus.ERROR) {
+          this.uploadError = true;
+          this.uploadFail.next(res.body);
+          this.uploadProgress = undefined;
         }
       }, (er: HttpErrorResponse) => {
         this.uploadError = true;
@@ -87,41 +101,16 @@ export class FilePreviewItemComponent implements OnInit {
     }
   }
   /** Emits event when file upload api returns success  */
-  onUploadSuccess(id: string, fileItem: FilePreviewModel): void {
-    this.fileId = id;
-    this.fileItem.fileId = id;
-    this.uploadSuccess.next({...fileItem, fileId: id});
+  private _onUploadSuccess(uploadResponse: any, fileItem: FilePreviewModel): void {
+    this.uploadResponse = uploadResponse;
+    this.fileItem.uploadResponse = uploadResponse;
+    this.uploadSuccess.next({...fileItem, uploadResponse});
   }
-  handleProgressResponse(event: HttpEvent<any> , fileName) {
-    switch (event.type) {
-      case HttpEventType.Sent:
-        return ;
 
-      case HttpEventType.UploadProgress:
-        // Compute and show the % done:
-        this.uploadProgress = Math.round((100 * event.loaded) / event.total);
-       return;
-
-      case HttpEventType.Response:
-        const body: any = event.body;
-        if (body && body.data) {
-         // this.uploaded.next(res.data.toString());
-        }
-        this.uploadProgress = undefined;
-        return;
-      default:
-        this.uploadProgress = undefined;
-        return `File "${fileName}" surprising upload event: ${event.type}.`;
-    }
-  }
- onRemove(fileItem: FilePreviewModel): void {
-  this.uploadUnsubscribe();
-  this.removeFile.next(fileItem);
- }
  /** Cancel upload. Cancels request  */
- uploadUnsubscribe(): void {
-  if (this.uploadSubscription) {
-    this.uploadSubscription.unsubscribe();
+ private _uploadUnsubscribe(): void {
+  if (this._uploadSubscription) {
+    this._uploadSubscription.unsubscribe();
    }
  }
 

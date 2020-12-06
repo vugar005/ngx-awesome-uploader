@@ -1,7 +1,5 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CloudIconComponent } from './cloud-icon.component';
 
@@ -9,7 +7,7 @@ describe('CloudIconComponent', () => {
   let component: CloudIconComponent;
   let fixture: ComponentFixture<CloudIconComponent>;
 
-  beforeEach(async(() => {
+  beforeEach((() => {
     TestBed.configureTestingModule({
       declarations: [ CloudIconComponent ]
     })

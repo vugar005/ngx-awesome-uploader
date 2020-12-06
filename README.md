@@ -20,8 +20,8 @@ This is an Angular Library for uploading files. It supports: File Upload and Pre
 
 
 
-Tested on Angular 6/7/8./9 Supports Server Side Rendering.
-
+Tested on Angular 6/7/8/9/10. Supports Server Side Rendering.
+>**Breaking Changes:** [Check Changes](https://github.com/vugar005/ngx-awesome-uploader/blob/master/breaking-changes-v10.md) changes if you come from version < 10.
 
 
 * [Install](#install)
@@ -83,7 +83,7 @@ After importing it to your custom adapter implementation (EG: CustomAdapter.ts),
 
 
 ```
-public abstract uploadFile(fileItem: FilePreviewModel): Observable<number | string>;
+public abstract uploadFile(fileItem: FilePreviewModel): Observable<UploadResponse>;
 
 public abstract removeFile(fileItem: FilePreviewModel): Observable<any>;
 ```
@@ -102,10 +102,10 @@ You can check DEMO adapter [here](https://github.com/vugar005/ngx-awesome-upload
 
 
 ```html
-<ngx-file-picker
+<ngx-awesome-uploader
 [adapter]="adapter"
 >
-</ngx-file-picker>
+</ngx-awesome-uploader>
 
 ```
 
@@ -139,7 +139,7 @@ Still in Doubt? Check [Minimal Setup Demo](https://stackblitz.com/edit/ngx-aweso
 
 
 
-## api
+## API
 
 ```typescript
 
@@ -275,10 +275,10 @@ public myCustomValidator(file: File): Observable<boolean> {
 and pass to Template:
 
 ```html
-<ngx-file-picker
+<ngx-awesome-uploader
 [customValidator]="myCustomValidator"
 >
-</ngx-file-picker>
+</ngx-awesome-uploader>
 
 ```
 
@@ -319,14 +319,14 @@ You can provide custom template to library.
 I) To provide custom template for drag and drop zone, use content projection. Example:
 
 ```html
-  <ngx-file-picker
+  <ngx-awesome-uploader
   [adapter]="adapter">
 
   <div class="dropzoneTemplate">
   	<button>Custom</button>
   </div>
 
-</ngx-file-picker>
+</ngx-awesome-uploader>
 
 ````
 
@@ -346,11 +346,11 @@ II) To use custom file preview template, pass your custom template as below:
 
 ```html
 
-<ngx-file-picker #uploader
+<ngx-awesome-uploader #uploader
   [adapter]="adapter"
   [itemTemplate]="itemTemplate"
 >
-</ngx-file-picker>
+</ngx-awesome-uploader>
 
 <ng-template #itemTemplate let-fileItem="fileItem" let-uploadProgress="uploadProgress">
 
@@ -390,6 +390,6 @@ You can fork project from github. Pull requests are kindly accepted.
 
 1. Building library: ng build file-picker
 
-2. Running tests: ng test file-picker
+2. Running tests: ng test file-picker  --browsers=ChromeHeadless
 
 3. Run demo: ng serve

@@ -32,9 +32,7 @@ export class FileComponent implements OnDestroy {
   disableIf = false;
 
   @Output()
-  public onFileDrop: EventEmitter<UploadEvent> = new EventEmitter<
-    UploadEvent
-  >();
+  public onFileDrop: EventEmitter<UploadEvent> = new EventEmitter<UploadEvent>();
   @Output()
   public onFileOver: EventEmitter<any> = new EventEmitter<any>();
   @Output()
@@ -46,8 +44,8 @@ export class FileComponent implements OnDestroy {
   dragoverflag = false;
 
   globalDisable = false;
-  globalStart: Function;
-  globalEnd: Function;
+  globalStart: () => void;
+  globalEnd: () => void;
 
   numOfActiveReadEntries = 0;
   constructor(private zone: NgZone, private renderer: Renderer2) {
@@ -156,9 +154,9 @@ export class FileComponent implements OnDestroy {
       let entries = [];
       const thisObj = this;
 
-      const readEntries = function() {
+      const readEntries = () => {
         thisObj.numOfActiveReadEntries++;
-        dirReader.readEntries(function(res) {
+        dirReader.readEntries((res) => {
           if (!res.length) {
             // add empty folders
             if (entries.length === 0) {

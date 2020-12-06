@@ -1,71 +1,96 @@
-import {FilePickerComponent} from './../../../projects/file-picker/src/lib/file-picker.component';
-import {ValidationError} from './../../../projects/file-picker/src/lib/validation-error.model';
-import {FilePreviewModel} from './../../../projects/file-picker/src/lib/file-preview.model';
+import {
+  FilePickerComponent,
+  ValidationError,
+  FilePreviewModel,
+  UploaderCaptions,
+} from 'ngx-awesome-uploader';
 import {HttpClient} from '@angular/common/http';
 import {DemoFilePickerAdapter} from './demo-file-picker.adapter';
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {delay, map} from 'rxjs/operators';
-import {UploaderCaptions} from 'projects/file-picker/src/public_api';
 
 @Component({
-  selector: 'demo-file-picker',
+  selector: 'app-demo-file-picker',
   templateUrl: './demo-file-picker.component.html',
   styleUrls: ['./demo-file-picker.component.scss']
 })
 export class DemoFilePickerComponent implements OnInit {
   @ViewChild('uploader', { static: true }) uploader: FilePickerComponent;
-  adapter = new DemoFilePickerAdapter(this.http);
-  myFiles: FilePreviewModel[] = [];
-  captions: UploaderCaptions = {
+  public adapter = new DemoFilePickerAdapter(this.http);
+  public myFiles: FilePreviewModel[] = [];
+  public captions: UploaderCaptions = {
     dropzone: {
-      title: "Fayllari bura ata bilersiz",
-      or: "və yaxud",
-      browse: "Fayl seçin"
+      title: 'Fayllari bura ata bilersiz',
+      or: 'və yaxud',
+      browse: 'Fayl seçin'
     },
     cropper: {
-      crop: "Kəs",
-      cancel:"Imtina"
+      crop: 'Kəs',
+      cancel: 'Imtina'
     },
     previewCard: {
-      remove: "Sil",
-      uploadError: "Fayl yüklənmədi"
+      remove: 'Sil',
+      uploadError: 'Fayl yüklənmədi'
     }
-  }
+  };
+
   constructor(private http: HttpClient) { }
 
-  ngOnInit() {
+  public ngOnInit(): void {
+    // this.uploader.files = [
+    //   {
+    //     fileName: 'My File 1 for edit.png', file: null
+    //   },
+    //   {
+    //     fileName: 'My File 2 for edit.xlsx', file: null
+    //   }
+    // ] as FilePreviewModel[];
   }
-  onValidationError(e: ValidationError) {
-    console.log(e);
+
+  public onValidationError(er: ValidationError): void {
+    console.log('validationError', er);
   }
-  onUploadSuccess(e: FilePreviewModel) {
-    console.log(e);
+
+  public onUploadSuccess(res: FilePreviewModel): void {
+    console.log('uploadSuccess', res);
   // console.log(this.myFiles)
   }
 
-  onUploadFail(e: FilePreviewModel) {
-    console.log(e);
+  public onUploadFail(er: FilePreviewModel): void {
+    console.log('uploadFail', er);
   }
-  onRemoveSuccess(e: FilePreviewModel) {
-    console.log();
+
+  public onRemoveSuccess(res: FilePreviewModel): void {
+    console.log('removeSuccess', res);
   }
-  onFileAdded(file: FilePreviewModel) {
+
+  public onFileAdded(file: FilePreviewModel): void {
+    console.log('fileAdded', file);
     this.myFiles.push(file);
   }
 
-  onFileRemoved(file: FilePreviewModel) {
+  public onFileRemoved(file: FilePreviewModel): void {
     console.log(this.uploader.files);
   }
 
-  removeFile() {
-  this.uploader.removeFileFromList(this.myFiles[0]);
-  }
-   myCustomValidator(file: File): Observable<boolean> {
-      if (!file.name.includes('uploader')) {
-         return of(true).pipe(delay(2000));
-      }
-     return of(false).pipe(delay(2000));
+  public removeFile(): void {
+    this.uploader.removeFileFromList(this.myFiles[0]);
   }
 
+  public myCustomValidator(file: File): Observable<boolean> {
+    if (!file.name.includes('uploader')) {
+        return of(true).pipe(delay(100));
+    }
+    return of(false).pipe(delay(100));
+}
+
+public clearAllFiles(): void {
+  this.uploader.files = [];
+}
+
+public onRemoveFile(fileItem: FilePreviewModel): void {
+  console.log(fileItem);
+  this.uploader.removeFile(fileItem);
+}
 }

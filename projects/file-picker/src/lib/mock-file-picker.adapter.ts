@@ -28,7 +28,7 @@ export class DemoFilePickerAdapter extends FilePickerAdapter {
   }
     public removeFile(fileItem: FilePreviewModel): Observable<any> {
       console.log(fileItem.fileId);
-    const removeApi = 'https://file-remove-demo.free.beeceptor.com';
-    return this.http.post(removeApi, {id: fileItem.fileId});
+      const removeApi = 'https://file-remove-demo.free.beeceptor.com';
+      return this.http.post(removeApi, {id: fileItem.fileId});
     }
 }

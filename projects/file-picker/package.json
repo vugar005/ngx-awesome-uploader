@@ -1,10 +1,10 @@
 {
   "name": "ngx-awesome-uploader",
-  "version": "9.0.8",
+  "version": "10.0.0",
   "description": "Angular Library for uploading files with Real-Time Progress bar, File Preview, Drag && Drop and Custom Template with Multi Language support",
   "peerDependencies": {
-    "@angular/common": "^6.0.0 || ^7.0.0 || ^8.0.0 || ^9.0.0",
-    "@angular/core": " ^6.0.0 || ^7.0.0 || ^8.0.0 || ^9.0.0"
+    "@angular/common": "^6.0.0 || ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0",
+    "@angular/core": " ^6.0.0 || ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0"
   },
   "keywords": [
     "ngx",
@@ -24,6 +24,9 @@
     "name" : "Vugar Abdullayev",
     "url": "https://twitter.com/vugar005",
     "email": "https://twitter.com/vugar005"
+  },
+  "dependencies": {
+    "tslib": "^2.0.0"
   },
   "homepage": "https://ngx-awesome-uploader.stackblitz.io/"
 
