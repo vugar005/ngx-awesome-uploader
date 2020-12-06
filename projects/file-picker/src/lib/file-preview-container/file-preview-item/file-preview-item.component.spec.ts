@@ -33,6 +33,8 @@ describe('FilePreviewComponent', () => {
     fixture = TestBed.createComponent(FilePreviewItemComponent);
     component = fixture.componentInstance;
     component.fileItem = createMockPreviewFile('test.png', 'image/', 10);
+    component.uploadSuccess.next = jasmine.createSpy('uploadSuccess');
+    component.uploadFail.next = jasmine.createSpy('uploadFail');
   });
 
   it('should create the app', () => {
@@ -96,13 +98,68 @@ describe('FilePreviewComponent', () => {
             describe('and adapter exist', () => {
                 beforeEach(() => {
                     component.adapter = new MockUploaderAdapter();
-                    spyOn(component.adapter, 'uploadFile').and.returnValue(of({body: 10, status: UploadStatus.UPLOADED}));
+                    spyOn(component.adapter, 'uploadFile');
+             //       spyOn(component.adapter, 'uploadFile').and.returnValue(of({body: 10, status: UploadStatus.UPLOADED}));
+                    (component.adapter.uploadFile as any).and.returnValue(of({body: 10, status: UploadStatus.UPLOADED}));
                 });
                 it('should upload file', () => {
                     component.ngOnInit();
                     expect(component.adapter.uploadFile).toHaveBeenCalled();
                 });
+                describe('and upload resposne type is UPLOADED', () => {
+                    let uploadResponse;
+                    beforeEach(() => {
+                        uploadResponse = {id: 12};
+                        (component.adapter.uploadFile as any).and.returnValue(of({body: uploadResponse, status: UploadStatus.UPLOADED}));
+                    });
+                    it('should uploadResponse be defined', () => {
+                        component.ngOnInit();
+                        expect(component.uploadResponse).toEqual(uploadResponse);
+                    });
 
+                    it('should uploadProgress be undefined', () => {
+                        component.ngOnInit();
+                        expect(component.uploadProgress).toBeUndefined();
+                    });
+
+                    it('should emit uploadSuccess', () => {
+                        component.ngOnInit();
+                        expect(component.uploadSuccess.next).toHaveBeenCalledWith({
+                            ...component.fileItem,
+                            uploadResponse
+                        });
+                    });
+                });
+
+                describe('and upload resposne type is IN_PROGRESS', () => {
+                    beforeEach(() => {
+                        (component.adapter.uploadFile as any).and.returnValue(of({progress: 10, status: UploadStatus.IN_PROGRESS}));
+                    });
+                    it('should uploadProgress be defined', () => {
+                        component.ngOnInit();
+                        expect(component.uploadProgress).toBe(10);
+                    });
+                });
+
+                describe('and upload resposne type is ERROR', () => {
+                    let error;
+                    beforeEach(() => {
+                        error = 'some-error';
+                        (component.adapter.uploadFile as any).and.returnValue(of({body: error, status: UploadStatus.ERROR}));
+                    });
+                    it('should uploadError be true', () => {
+                        component.ngOnInit();
+                        expect(component.uploadError).toBe(true);
+                    });
+                    it('should uploadProgress be undefined', () => {
+                        component.ngOnInit();
+                        expect(component.uploadProgress).toBeUndefined();
+                    });
+                    it('should uploadFail be emitted', () => {
+                        component.ngOnInit();
+                        expect(component.uploadFail.next).toHaveBeenCalledWith(error);
+                    });
+                });
             });
         });
 
