@@ -1,27 +1,27 @@
 <div
-(click)="fileInput.click()"
-class="file-drop-wrapper"
-*ngIf="showeDragDropZone"
+  (click)="fileInput.click()"
+  class="file-drop-wrapper"
+  *ngIf="showeDragDropZone"
 >
-<file-drop
-  (onFileDrop)="dropped($event)"
-  [customstyle]="'custom-drag'"
-  [captions]="captions"
->
-  <ng-content select=".dropzoneTemplate"> </ng-content>
-</file-drop>
+  <file-drop
+    (onFileDrop)="dropped($event)"
+    [customstyle]="'custom-drag'"
+    [captions]="captions"
+  >
+    <ng-content select=".dropzoneTemplate"> </ng-content>
+  </file-drop>
 </div>
 
 <input
-type="file"
-name="file[]"
-id="fileInput"
-#fileInput
-[multiple]="uploadType === 'multi' ? 'multiple' : ''"
-(click)="fileInput.value = null"
-(change)="onChange(fileInput)"
-[accept]="accept"
-class="file-input"
+  type="file"
+  name="file[]"
+  id="fileInput"
+  #fileInput
+  [multiple]="uploadType === 'multi' ? 'multiple' : ''"
+  (click)="fileInput.value = null"
+  (change)="onChange(fileInput)"
+  [accept]="accept"
+  class="file-input"
 />
 
 <div class="cropperJsOverlay" *ngIf="currentCropperFile">
@@ -49,19 +49,20 @@ class="file-input"
   </div>
 </div>
 </div>
+
 <div
-class="files-preview-wrapper"
-[ngClass]="{ 'visually-hidden': !showPreviewContainer }"
+  class="files-preview-wrapper"
+  [ngClass]="{ 'visually-hidden': !showPreviewContainer }"
 >
-<file-preview-container
-  *ngIf="files"
-  [previewFiles]="files"
-  (removeFile)="removeFile($event)"
-  (uploadSuccess)="onUploadSuccess($event)"
-  [adapter]="adapter"
-  [itemTemplate]="itemTemplate"
-  [captions]="captions"
-  [enableAutoUpload]="enableAutoUpload"
->
-</file-preview-container>
+  <file-preview-container
+    *ngIf="files"
+    [previewFiles]="files"
+    (removeFile)="removeFile($event)"
+    (uploadSuccess)="onUploadSuccess($event)"
+    [adapter]="adapter"
+    [itemTemplate]="itemTemplate"
+    [captions]="captions"
+    [enableAutoUpload]="enableAutoUpload"
+  >
+  </file-preview-container>
 </div>
