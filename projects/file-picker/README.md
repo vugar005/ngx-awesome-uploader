@@ -390,6 +390,6 @@ You can fork project from github. Pull requests are kindly accepted.
 
 1. Building library: ng build file-picker
 
-2. Running tests: ng test file-picker
+2. Running tests: ng test file-picker  --browsers=ChromeHeadless
 
 3. Run demo: ng serve

@@ -28,7 +28,7 @@ import { DEFAULT_CROPPER_OPTIONS, BITS_TO_MB } from './file-picker.constants';
 
 declare var Cropper;
 @Component({
-  selector: 'ngx-file-picker',
+  selector: 'ngx-awesome-uploader',
   templateUrl: './file-picker.component.html',
   styleUrls: ['./file-picker.component.scss']
 })
