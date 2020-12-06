@@ -78,7 +78,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   /** Custom captions input. Used for multi language support */
   @Input() captions: UploaderCaptions = DefaultCaptions;
   /** captions object */
-  /** Whether to auto upload file on fiel choose or not. Default: true */
+  /** Whether to auto upload file on file choose or not. Default: true */
   @Input() enableAutoUpload = true;
   cropper: any;
   files: FilePreviewModel[] = [];
@@ -103,8 +103,8 @@ export class FilePickerComponent implements OnInit, OnDestroy {
     this._onDestroy$.complete();
   }
   /** On input file selected */
-  public onChange(fileInput: HTMLInputElement) {
-    const files: File[] = Array.from(fileInput.files);
+  public onChange(event: File[]) {
+    const files: File[] = Array.from(event);
     this.handleFiles(files).subscribe();
   }
 
@@ -263,9 +263,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
 
   /** Validates max file count */
   isValidMaxFileCount(files: File[]): boolean {
-    if (
-      !this.fileMaxCount ||
-      this.fileMaxCount >= this.files.length + files.length
+    if (!this.fileMaxCount || this.fileMaxCount >= this.files.length + files.length
     ) {
       return true;
     } else {
@@ -330,6 +328,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
     const res: number = BITS_TO_MB(size);
     let isValidFileSize: boolean;
     let isValidTotalFileSize: boolean;
+    console.log(this.fileMaxSize, '--------', res)
     if (!this.fileMaxSize || (this.fileMaxSize && res < this.fileMaxSize)) {
       isValidFileSize = true;
     } else {

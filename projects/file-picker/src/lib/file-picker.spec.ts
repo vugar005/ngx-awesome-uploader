@@ -9,10 +9,10 @@ import { FilePickerComponent } from './file-picker.component';
 import { createMockFile, createMockPreviewFile, mockCustomValidator } from './test-utils';
 import { FilePreviewItemComponent } from './file-preview-container/file-preview-item/file-preview-item.component';
 import { Observable, of } from 'rxjs';
-import { getFileType } from './file-upload.utils';
 import { By } from '@angular/platform-browser';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { DEFAULT_CROPPER_OPTIONS } from './file-picker.constants';
+
 export class MockableUploaderAdapter extends FilePickerAdapter {
   public uploadFile(fileItem: FilePreviewModel): Observable<UploadResponse> {
    return of({body: 50, status: UploadStatus.UPLOADED});
@@ -54,17 +54,149 @@ describe('FilePickerComponent', () => {
     componentPreviewContainer = fixturePreviewContainer.componentInstance;
     service = new FilePickerService(null);
     fixture.detectChanges();
-    component.enableCropper = false;
     mockFile = createMockFile('demo.pdf', 'application/pdf');
     mockFilePreview = createMockPreviewFile('demo.pdf', 'application/pdf');
     componentPreviewItem.adapter = new MockableUploaderAdapter();
-    component.enableAutoUpload = true;
+    component.fileAdded.next = jasmine.createSpy('fileAdded');
+    component.validationError.next = jasmine.createSpy('validationError');
+  });
+
+  it('should enableCropper be false by default', () => {
+    component.ngOnInit();
+    expect(component.enableCropper).toBe(false);
+  });
+
+  it('should showDragDropZone be true by default', () => {
+    component.ngOnInit();
+    expect(component.showeDragDropZone).toBe(true);
+  });
+
+  it('should showPreviewContainer be true by default', () => {
+    component.ngOnInit();
+    expect(component.showPreviewContainer).toBe(true);
+  });
+
+  it('should uploadType be multi by default', () => {
+    component.ngOnInit();
+    expect(component.uploadType).toBe('multi');
+  });
+
+  it('should itemTemplate be undefined by default', () => {
+    component.ngOnInit();
+    expect(component.itemTemplate).toBeUndefined();
+  });
+
+  it('should fileMaxSize be undefined by default', () => {
+    component.ngOnInit();
+    expect(component.fileMaxSize).toBeUndefined();
+  });
+
+  it('should fileMaxCount be undefined by default', () => {
+    component.ngOnInit();
+    expect(component.fileMaxCount).toBeUndefined();
+  });
+
+  it('should totalMaxSize be undefined by default', () => {
+    component.ngOnInit();
+    expect(component.totalMaxSize).toBeUndefined();
+  });
+
+  it('should enableAutoUpload be true by default', () => {
+    component.ngOnInit();
+    expect(component.enableAutoUpload).toBe(true);
   });
 
   it('should use default cropper options when not provided', () => {
     component.ngOnInit();
     fixture.detectChanges();
     expect(component.cropperOptions).toEqual(DEFAULT_CROPPER_OPTIONS);
+  });
+
+  fdescribe('#onChange', () => {
+    describe('and isValidMaxFileCount', () => {
+      let file1: File;
+      let file2: File;
+      beforeEach(() => {
+         file1 = createMockFile('demo.png', 'image/png', 5);
+         file2 = createMockFile('demo-2.png', 'image/png', 10);
+         component.fileMaxCount = 2;
+      });
+      describe('and isValidUploadType true', () => {
+        beforeEach(() => {
+          component.uploadType = 'multi';
+        });
+
+        describe('and isValidExtension true', () => {
+          beforeEach(() => {
+            component.fileExtensions = ['png'];
+          });
+
+          describe('and async validations valid', () => {
+            beforeEach(() => {
+              component.customValidator = () => of(true);
+            });
+
+            describe('and cropper is disabled', () => {
+              beforeEach(() => {
+                component.enableCropper = false;
+              });
+              describe('and isValidSize', () => {
+                beforeEach(() => {
+                  component.fileMaxSize = 50;
+                });
+                it('should push files to fileList', () => {
+                  const files = [ file1, file2 ] as File[];
+                  component.onChange(files);
+                  expect(component.files).toEqual([
+                    {file: file1, fileName: file1.name},
+                    {file: file2, fileName: file2.name}
+                  ]);
+                });
+
+                it('should fileAdded emit file', () => {
+                  const files = [ file1 ] as File[];
+                  component.onChange(files);
+                  expect(component.fileAdded.next).toHaveBeenCalledWith({file: file1, fileName: file1.name});
+                });
+
+                it('should NOT emit validationError with size error', () => {
+                  const files = [ file1 ] as File[];
+                  component.onChange(files);
+                  expect(component.validationError.next).not.toHaveBeenCalled();
+                });
+              });
+              describe('and NOT isValidSize', () => {
+                beforeEach(() => {
+                  file1 = createMockFile('demo.png', 'image/png', 10);
+                  component.fileMaxSize = 6;
+                });
+                it('should NOT push files to fileList', () => {
+                  const files = [ file1 ] as File[];
+                  component.onChange(files);
+                  expect(component.files).toEqual([]);
+                });
+
+                it('should fileAdded NOT emit file', () => {
+                  const files = [ file1 ] as File[];
+                  component.onChange(files);
+                  expect(component.fileAdded.next).not.toHaveBeenCalled();
+                });
+
+                it('should emit validationError with size error', () => {
+                  const files = [ file1 ] as File[];
+                  component.onChange(files);
+                  expect(component.validationError.next).toHaveBeenCalledWith({
+                    file: file1,
+                    error: FileValidationTypes.fileMaxSize
+                  });
+                });
+
+              });
+            });
+          });
+        });
+      });
+    });
   });
 
   it('should not call pushFile on extension validation fails ', async () => {

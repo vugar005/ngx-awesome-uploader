@@ -19,7 +19,7 @@
   #fileInput
   [multiple]="uploadType === 'multi' ? 'multiple' : ''"
   (click)="fileInput.value = null"
-  (change)="onChange(fileInput)"
+  (change)="onChange(fileInput.files)"
   [accept]="accept"
   class="file-input"
 />
