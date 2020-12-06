@@ -17,9 +17,9 @@ import {delay, map} from 'rxjs/operators';
 })
 export class DemoFilePickerComponent implements OnInit {
   @ViewChild('uploader', { static: true }) uploader: FilePickerComponent;
-  adapter = new DemoFilePickerAdapter(this.http);
-  myFiles: FilePreviewModel[] = [];
-  captions: UploaderCaptions = {
+  public adapter = new DemoFilePickerAdapter(this.http);
+  public myFiles: FilePreviewModel[] = [];
+  public captions: UploaderCaptions = {
     dropzone: {
       title: 'Fayllari bura ata bilersiz',
       or: 'və yaxud',
@@ -52,9 +52,11 @@ export class DemoFilePickerComponent implements OnInit {
   public onUploadFail(e: FilePreviewModel): void {
     console.log(e);
   }
+
   public onRemoveSuccess(e: FilePreviewModel): void {
     console.log();
   }
+
   public onFileAdded(file: FilePreviewModel): void {
     this.myFiles.push(file);
   }
