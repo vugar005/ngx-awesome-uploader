@@ -32,11 +32,12 @@
     (load)="cropperImgLoaded($event)"
   />
   <div class="cropper-actions">
-    <button class="cropSubmit" (click)="onCropSubmit()">
+    <button class="cropSubmit" (click)="onCropSubmit()" type="button">
       {{ captions?.cropper?.crop }}
     </button>
     <button
       class="cropCancel"
+      type="button"
       (click)="
         closeCropper({
           file: currentCropperFile,
