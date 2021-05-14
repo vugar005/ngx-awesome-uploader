@@ -16,7 +16,7 @@ This is an Angular Library for uploading files. It supports: File Upload and Pre
 
 
 
-Tested on Angular 6/7/8/9/10. Supports Server Side Rendering.
+Tested on Angular Angular 6+. Supports Server Side Rendering.
 >**Breaking Changes:** [Check Changes](https://github.com/vugar005/ngx-awesome-uploader/blob/master/breaking-changes-v10.md) changes if you come from version < 10.
 
 
@@ -378,7 +378,7 @@ You can show your files without uploading them
 
 ```
   public ngOnInit(): void {
-    this.uploader.files = [
+    const files = [
       {
         fileName: 'My File 1 for edit.png'
       },
@@ -386,6 +386,7 @@ You can show your files without uploading them
         fileName: 'My File 2 for edit.xlsx'
       }
     ] as FilePreviewModel[];
+    this.uploader.setFiles(files);
   }
 ```
 ## Bonus
@@ -398,7 +399,7 @@ You can also check out library [router animations ](https://www.npmjs.com/packag
 
 You can fork project from github. Pull requests are kindly accepted.
 
-1. Building library: ng build file-picker
+1. Building library: ng build file-picker --prod
 
 2. Running tests: ng test file-picker  --browsers=ChromeHeadless
 
