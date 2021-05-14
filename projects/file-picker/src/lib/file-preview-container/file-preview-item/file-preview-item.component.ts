@@ -37,7 +37,6 @@ export class FilePreviewItemComponent implements OnInit {
   ) {}
 
   public ngOnInit() {
-    console.log(this.fileItem)
     if (this.fileItem.file) {
       this._uploadFile(this.fileItem);
       this.safeUrl = this.getSafeUrl(this.fileItem.file);

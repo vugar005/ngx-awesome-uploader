@@ -90,7 +90,6 @@ public clearAllFiles(): void {
 }
 
 public onRemoveFile(fileItem: FilePreviewModel): void {
-  console.log(fileItem);
   this.uploader.removeFile(fileItem);
 }
 }

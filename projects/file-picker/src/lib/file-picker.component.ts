@@ -296,7 +296,6 @@ export class FilePickerComponent implements OnInit, OnDestroy {
     const newFile = { file, fileName };
     this.files = [...this.files, newFile];
     this.fileAdded.next({ file, fileName });
-    console.log(this.files)
     this.changeRef.detectChanges();
   }
   /** Opens cropper for image crop */
