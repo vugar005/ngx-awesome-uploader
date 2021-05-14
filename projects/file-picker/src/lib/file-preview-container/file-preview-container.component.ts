@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, TemplateRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { FilePreviewModel } from '../file-preview.model';
 import { FilePickerAdapter } from '../file-picker.adapter';
 import { UploaderCaptions } from '../uploader-captions';
@@ -7,7 +7,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 @Component({
   selector: 'file-preview-container',
   templateUrl: './file-preview-container.component.html',
-  styleUrls: ['./file-preview-container.component.scss']
+  styleUrls: ['./file-preview-container.component.scss'],
+//  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilePreviewContainerComponent implements OnInit {
   @Input() previewFiles: FilePreviewModel[];
@@ -19,13 +20,17 @@ export class FilePreviewContainerComponent implements OnInit {
   public lightboxFile: FilePreviewModel;
   @Input() adapter: FilePickerAdapter;
   @Input() captions: UploaderCaptions;
-  constructor() { }
+  constructor(
+  ) { }
 
   ngOnInit() {
+    console.log(this.previewFiles)
   }
+
   public openLightbox(file: FilePreviewModel): void {
    this.lightboxFile = file;
   }
+
   public closeLightbox(): void {
     this.lightboxFile = undefined;
   }

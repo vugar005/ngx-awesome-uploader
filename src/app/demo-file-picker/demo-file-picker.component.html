@@ -7,7 +7,7 @@
     (validationError)= "onValidationError($event)"
     [adapter]="adapter"
     [fileExtensions]="['pdf', 'jpg', 'png', 'PNG', 'mp4', 'css', 'docx', 'txt']"
-    [enableCropper]="false"
+    [enableCropper]="true"
     (uploadSuccess)="onUploadSuccess($event)"
     (uploadFail)="onUploadFail($event)"
     (removeSuccess)="onRemoveSuccess($event)"
@@ -15,7 +15,6 @@
     [showPreviewContainer]="true"
     [customValidator]="myCustomValidator"
     [enableAutoUpload]="true"
-    [itemTemplate]="itemTemplate"
     (fileAdded)="onFileAdded($event)"
     (fileRemoved)="onFileRemoved($event)"
  >

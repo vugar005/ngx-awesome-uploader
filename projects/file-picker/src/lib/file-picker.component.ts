@@ -1,5 +1,7 @@
 import { FilePickerService } from './file-picker.service';
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -30,7 +32,8 @@ declare var Cropper;
 @Component({
   selector: 'ngx-awesome-uploader',
   templateUrl: './file-picker.component.html',
-  styleUrls: ['./file-picker.component.scss']
+  styleUrls: ['./file-picker.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilePickerComponent implements OnInit, OnDestroy {
   /** Emitted when file upload via api successfully. Emitted for every file */
@@ -91,7 +94,8 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   private _onDestroy$ = new Subject<void>();
   constructor(
     private fileService: FilePickerService,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private changeRef: ChangeDetectorRef
   ) {}
 
   public ngOnInit() {
@@ -291,12 +295,15 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   pushFile(file: File, fileName = file.name): void {
     this.files.push({ file, fileName });
     this.fileAdded.next({ file, fileName });
+    console.log(this.files)
+    this.changeRef.detectChanges();
   }
   /** Opens cropper for image crop */
   openCropper(file: File): void {
     if ((window as any).CROPPER  || typeof Cropper !== 'undefined') {
       this.safeCropImgUrl = this.fileService.createSafeUrl(file);
       this.currentCropperFile = file;
+      this.changeRef.detectChanges();
     } else {
       console.warn(
         "please import cropperjs script and styles to use cropper feature or disable it by setting [enableCropper]='false'"
@@ -314,6 +321,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   closeCropper(filePreview: FilePreviewModel): void {
     this.currentCropperFile = undefined;
     this.cropper = undefined;
+    this.changeRef.detectChanges();
     setTimeout(() => this._cropClosed$.next(filePreview), 200);
   }
 
@@ -321,6 +329,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   removeFileFromList(file: FilePreviewModel): void {
     this.files = this.files.filter(f => f.fileName !== file.fileName);
     this.fileRemoved.next(file);
+    this.changeRef.detectChanges();
   }
 
   /** Validates file extension */
