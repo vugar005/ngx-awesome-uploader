@@ -49,7 +49,7 @@ export class FilePreviewItemComponent implements OnInit {
     return this.fileService.createSafeUrl(file);
   }
   /** Converts bytes to nice size */
-  private niceBytes(x): string {
+  public niceBytes(x): string {
     const units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
     let l = 0;
     let n = parseInt(x, 10) || 0;

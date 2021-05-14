@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef,
   EventEmitter,
   Input,
   OnDestroy,
@@ -94,7 +93,6 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   private _onDestroy$ = new Subject<void>();
   constructor(
     private fileService: FilePickerService,
-    private elementRef: ElementRef,
     private changeRef: ChangeDetectorRef
   ) {}
 

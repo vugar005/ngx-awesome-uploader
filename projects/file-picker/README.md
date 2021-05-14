@@ -398,7 +398,7 @@ You can also check out library [router animations ](https://www.npmjs.com/packag
 
 You can fork project from github. Pull requests are kindly accepted.
 
-1. Building library: ng build file-picker
+1. Building library: ng build file-picker --prod
 
 2. Running tests: ng test file-picker  --browsers=ChromeHeadless
 
