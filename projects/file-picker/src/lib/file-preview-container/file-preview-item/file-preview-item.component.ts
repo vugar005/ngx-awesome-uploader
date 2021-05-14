@@ -12,7 +12,7 @@ import { UploaderCaptions } from '../../uploader-captions';
   selector: 'file-preview-item',
   templateUrl: './file-preview-item.component.html',
   styleUrls: ['./file-preview-item.component.scss'],
-//  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilePreviewItemComponent implements OnInit {
   @Output() public readonly removeFile = new EventEmitter<FilePreviewModel>();
