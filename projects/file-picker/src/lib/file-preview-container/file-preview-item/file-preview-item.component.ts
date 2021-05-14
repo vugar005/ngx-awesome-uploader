@@ -1,6 +1,6 @@
 import { FilePickerService } from './../../file-picker.service';
 import { FilePreviewModel } from './../../file-preview.model';
-import { Component, OnInit, Input, Output, EventEmitter, TemplateRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, TemplateRef, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { HttpErrorResponse } from '@angular/common/http';
 import { GET_FILE_CATEGORY_TYPE, GET_FILE_TYPE, IS_IMAGE_FILE } from '../../file-upload.utils';
@@ -11,7 +11,8 @@ import { UploaderCaptions } from '../../uploader-captions';
 @Component({
   selector: 'file-preview-item',
   templateUrl: './file-preview-item.component.html',
-  styleUrls: ['./file-preview-item.component.scss']
+  styleUrls: ['./file-preview-item.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilePreviewItemComponent implements OnInit {
   @Output() public readonly removeFile = new EventEmitter<FilePreviewModel>();
@@ -32,6 +33,7 @@ export class FilePreviewItemComponent implements OnInit {
   private _uploadSubscription: Subscription;
   constructor(
     private fileService: FilePickerService,
+    private changeRef: ChangeDetectorRef
   ) {}
 
   public ngOnInit() {
@@ -47,7 +49,7 @@ export class FilePreviewItemComponent implements OnInit {
     return this.fileService.createSafeUrl(file);
   }
   /** Converts bytes to nice size */
-  niceBytes(x): string {
+  public niceBytes(x): string {
     const units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
     let l = 0;
     let n = parseInt(x, 10) || 0;
@@ -60,6 +62,7 @@ export class FilePreviewItemComponent implements OnInit {
   }
   /** Retry file upload when upload was unsuccessfull */
   public onRetry(): void {
+    this.uploadError = undefined;
     this._uploadFile(this.fileItem);
   }
 
@@ -85,16 +88,19 @@ export class FilePreviewItemComponent implements OnInit {
         }
         if (res && res.status === UploadStatus.IN_PROGRESS) {
           this.uploadProgress = res.progress;
+          this.changeRef.detectChanges();
         }
         if (res && res.status === UploadStatus.ERROR) {
           this.uploadError = true;
           this.uploadFail.next(res.body);
           this.uploadProgress = undefined;
         }
+        this.changeRef.detectChanges();
       }, (er: HttpErrorResponse) => {
         this.uploadError = true;
         this.uploadFail.next(er);
         this.uploadProgress = undefined;
+        this.changeRef.detectChanges();
   });
     } else {
       console.warn('no adapter was provided');
