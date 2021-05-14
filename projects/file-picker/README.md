@@ -16,7 +16,7 @@ This is an Angular Library for uploading files. It supports: File Upload and Pre
 
 
 
-Tested on Angular 6/7/8/9/10. Supports Server Side Rendering.
+Tested on Angular Angular 6+. Supports Server Side Rendering.
 >**Breaking Changes:** [Check Changes](https://github.com/vugar005/ngx-awesome-uploader/blob/master/breaking-changes-v10.md) changes if you come from version < 10.
 
 
