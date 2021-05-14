@@ -293,7 +293,8 @@ export class FilePickerComponent implements OnInit, OnDestroy {
 
   /** Add file to file list after succesfull validation */
   pushFile(file: File, fileName = file.name): void {
-    this.files.push({ file, fileName });
+    const newFile = { file, fileName };
+    this.files = [...this.files, newFile];
     this.fileAdded.next({ file, fileName });
     console.log(this.files)
     this.changeRef.detectChanges();

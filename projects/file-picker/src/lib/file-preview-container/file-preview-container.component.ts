@@ -8,7 +8,7 @@ import { HttpErrorResponse } from '@angular/common/http';
   selector: 'file-preview-container',
   templateUrl: './file-preview-container.component.html',
   styleUrls: ['./file-preview-container.component.scss'],
-//  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilePreviewContainerComponent implements OnInit {
   @Input() previewFiles: FilePreviewModel[];
@@ -24,7 +24,6 @@ export class FilePreviewContainerComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log(this.previewFiles)
   }
 
   public openLightbox(file: FilePreviewModel): void {
