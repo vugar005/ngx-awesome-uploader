@@ -38,14 +38,17 @@ export class DemoFilePickerComponent implements OnInit {
   constructor(private http: HttpClient) { }
 
   public ngOnInit(): void {
-    // this.uploader.files = [
-    //   {
-    //     fileName: 'My File 1 for edit.png', file: null
-    //   },
-    //   {
-    //     fileName: 'My File 2 for edit.xlsx', file: null
-    //   }
-    // ] as FilePreviewModel[];
+  setTimeout(() => {
+    const files = [
+      {
+        fileName: 'My File 1 for edit.png', file: null
+      },
+      {
+        fileName: 'My File 2 for edit.xlsx', file: null
+      }
+    ] as FilePreviewModel[];
+    this.uploader.setFiles(files);
+  }, 1000);
   }
 
   public onValidationError(er: ValidationError): void {

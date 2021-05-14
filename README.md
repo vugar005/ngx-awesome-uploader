@@ -377,7 +377,7 @@ You can show your files without uploading them
 
 ```
   public ngOnInit(): void {
-    this.uploader.files = [
+    const files = [
       {
         fileName: 'My File 1 for edit.png'
       },
@@ -385,6 +385,7 @@ You can show your files without uploading them
         fileName: 'My File 2 for edit.xlsx'
       }
     ] as FilePreviewModel[];
+    this.uploader.setFiles(files);
   }
 ```
 ## Bonus

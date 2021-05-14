@@ -292,8 +292,14 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   /** Add file to file list after succesfull validation */
   pushFile(file: File, fileName = file.name): void {
     const newFile = { file, fileName };
-    this.files = [...this.files, newFile];
+    const files = [...this.files, newFile];
+    this.setFiles(files);
     this.fileAdded.next({ file, fileName });
+    this.changeRef.detectChanges();
+  }
+
+  public setFiles(files: FilePreviewModel[]): void {
+    this.files = files;
     this.changeRef.detectChanges();
   }
   /** Opens cropper for image crop */
@@ -325,7 +331,8 @@ export class FilePickerComponent implements OnInit, OnDestroy {
 
   /** Removes files from files list */
   removeFileFromList(file: FilePreviewModel): void {
-    this.files = this.files.filter(f => f.fileName !== file.fileName);
+    const files = this.files.filter(f => f.fileName !== file.fileName);
+    this.setFiles(files);
     this.fileRemoved.next(file);
     this.changeRef.detectChanges();
   }
