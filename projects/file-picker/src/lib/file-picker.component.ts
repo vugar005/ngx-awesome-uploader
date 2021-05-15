@@ -89,8 +89,11 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   /** Current file to be shown in cropper */
   public currentCropperFile: File;
   public safeCropImgUrl: SafeResourceUrl;
+  public isCroppingBusy: boolean;
+
   private _cropClosed$ = new Subject<FilePreviewModel>();
   private _onDestroy$ = new Subject<void>();
+
   constructor(
     private fileService: FilePickerService,
     private changeRef: ChangeDetectorRef
@@ -100,10 +103,12 @@ export class FilePickerComponent implements OnInit, OnDestroy {
     this._setCropperOptions();
     this._listenToCropClose();
   }
+
   public ngOnDestroy() {
     this._onDestroy$.next();
     this._onDestroy$.complete();
   }
+
   /** On input file selected */
   public onChange(event: File[]) {
     const files: File[] = Array.from(event);
@@ -185,6 +190,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
         }
       });
   }
+
   /** Sets custom cropper options if avaiable */
   private _setCropperOptions() {
     if (!this.cropperOptions) {
@@ -215,6 +221,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
       })
     );
   }
+
   /** Validates synchronous validations */
   private _validateFileSync(file: File): boolean {
     if (!file) {
@@ -298,10 +305,12 @@ export class FilePickerComponent implements OnInit, OnDestroy {
     this.changeRef.detectChanges();
   }
 
+  /** @description Set files for uploader */
   public setFiles(files: FilePreviewModel[]): void {
     this.files = files;
     this.changeRef.detectChanges();
   }
+
   /** Opens cropper for image crop */
   openCropper(file: File): void {
     if ((window as any).CROPPER  || typeof Cropper !== 'undefined') {
@@ -321,6 +330,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
     const image = document.getElementById('cropper-img');
     this.cropper = new Cropper(image, this.cropperOptions);
   }
+
   /** Close or cancel cropper */
   closeCropper(filePreview: FilePreviewModel): void {
     this.currentCropperFile = undefined;
@@ -348,6 +358,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
     }
     return true;
   }
+
   /** Validates selected file size and total file size */
   isValidSize(file: File, size: number): boolean {
     /** Validating selected file size */
@@ -383,10 +394,12 @@ export class FilePickerComponent implements OnInit, OnDestroy {
 
   /** when crop button submitted */
   onCropSubmit(): void {
+    this.isCroppingBusy = true;
     this.cropper
-      .getCroppedCanvas(this.croppedCanvasOptions)
-      .toBlob(this._blobFallBack.bind(this), 'image/png');
+    .getCroppedCanvas(this.croppedCanvasOptions)
+    .toBlob(this._blobFallBack.bind(this), 'image/png');
   }
+
   /** After crop submit */
   private _blobFallBack(blob: Blob): void {
     if (!blob) {
@@ -399,6 +412,8 @@ export class FilePickerComponent implements OnInit, OnDestroy {
       file: blob as File,
       fileName: this.currentCropperFile.name
     });
+    this.isCroppingBusy = false;
+    this.changeRef.detectChanges();
   }
 
 }
