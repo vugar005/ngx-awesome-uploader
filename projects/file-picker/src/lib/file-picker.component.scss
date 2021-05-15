@@ -126,3 +126,48 @@
     -webkit-appearance: none;
     -moz-appearance: none;
   }
+
+  button.is-loading {
+    color: rgba(0,0,0,.26)!important;
+    background-color: #ffffff!important;
+    box-shadow: none;
+    cursor: not-allowed;
+    outline: none;
+    &:after {
+      content: "";
+      font-family: sans-serif;
+      font-weight: 100;
+      -webkit-animation: 1.25s linear infinite three-quarters;
+      animation: 1.25s linear infinite three-quarters;
+      border: 3px solid #7f8c8d;
+      border-right-color: transparent;
+      border-radius: 100%;
+      box-sizing: border-box;
+      display: inline-block;
+      position: relative;
+      vertical-align: middle;
+      overflow: hidden;
+      text-indent: -9999px;
+      width: 18px;
+      height: 18px;
+      opacity: 1;
+      margin-left: 10px;
+  }
+    }
+    @keyframes three-quarters {
+      0% {
+          -webkit-transform: rotate(0deg);
+          -moz-transform: rotate(0deg);
+          -ms-transform: rotate(0deg);
+          -o-transform: rotate(0deg);
+          transform: rotate(0deg);
+      }
+
+      100% {
+          -webkit-transform: rotate(360deg);
+          -moz-transform: rotate(360deg);
+          -ms-transform: rotate(360deg);
+          -o-transform: rotate(360deg);
+          transform: rotate(360deg);
+      }
+    }
