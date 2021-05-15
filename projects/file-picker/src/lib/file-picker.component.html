@@ -32,7 +32,11 @@
     (load)="cropperImgLoaded($event)"
   />
   <div class="cropper-actions">
-    <button class="cropSubmit" (click)="onCropSubmit()" type="button">
+    <button class="cropSubmit"
+    (click)="onCropSubmit()"
+    [disabled]="isCroppingBusy"
+    type="button" [ngClass]="{'is-loading':isCroppingBusy }"
+    >
       {{ captions?.cropper?.crop }}
     </button>
     <button
