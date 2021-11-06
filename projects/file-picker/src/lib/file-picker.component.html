@@ -18,6 +18,7 @@
   id="fileInput"
   #fileInput
   [multiple]="uploadType === 'multi' ? 'multiple' : ''"
+  [attr.capture]="fileInputCapture"
   (click)="fileInput.value = null"
   (change)="onChange(fileInput.files)"
   [accept]="accept"
