@@ -192,6 +192,10 @@ autoCropArea: 0.8
 
 /** Whether to auto upload file on file choose or not. Default: true. You can get files list by accessing component files. */
 @Input() enableAutoUpload = true;
+
+/** capture paramerter for file input such as user,environment*/
+@Input() fileInputCapture: string;
+
 ```
 
 ## Output events
