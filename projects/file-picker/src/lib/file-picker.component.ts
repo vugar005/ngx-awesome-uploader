@@ -82,6 +82,10 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   /** captions object */
   /** Whether to auto upload file on file choose or not. Default: true */
   @Input() enableAutoUpload = true;
+
+  /** capture paramerter for file input such as user,environment*/
+  @Input() fileInputCapture: string;
+
   cropper: any;
   public files: FilePreviewModel[] = [];
   /** Files array for cropper. Will be shown equentially if crop enabled */
