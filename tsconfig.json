@@ -12,9 +12,12 @@
     "noFallthroughCasesInSwitch": true,
     "sourceMap": true,
     "paths": {
-      "my-lib": [
-        "dist/my-lib/my-lib",
-        "dist/my-lib"
+      "ngx-awesome-uploader": ["projects/file-picker/src/public_api"],
+      "file-picker": [
+        "dist/file-picker"
+      ],
+      "file-picker/*": [
+        "dist/file-picker/*"
       ]
     },
     "declaration": false,
