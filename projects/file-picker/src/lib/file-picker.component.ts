@@ -114,7 +114,8 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   }
 
   /** On input file selected */
-  public onChange(event: File[]) {
+  // TODO: fix any
+  public onChange(event: any) {
     const files: File[] = Array.from(event);
     this.handleFiles(files).subscribe();
   }
@@ -229,13 +230,13 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   /** Validates synchronous validations */
   private _validateFileSync(file: File): boolean {
     if (!file) {
-      return;
+      return false;
     }
     if (!this.isValidUploadType(file)) {
-      return;
+      return false;
     }
     if (!this.isValidExtension(file, file.name)) {
-      return;
+      return false;
     }
     return true;
   }

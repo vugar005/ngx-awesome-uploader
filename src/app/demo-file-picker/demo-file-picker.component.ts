@@ -4,7 +4,7 @@ import {
   FilePreviewModel,
   UploaderCaptions,
 } from 'ngx-awesome-uploader';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {DemoFilePickerAdapter} from './demo-file-picker.adapter';
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Observable, of} from 'rxjs';
@@ -60,7 +60,7 @@ export class DemoFilePickerComponent implements OnInit {
   // console.log(this.myFiles)
   }
 
-  public onUploadFail(er: FilePreviewModel): void {
+  public onUploadFail(er: HttpErrorResponse): void {
     console.log('uploadFail', er);
   }
 
