@@ -171,7 +171,7 @@ describe('FilePreviewComponent', () => {
             describe('and adapter exist', () => {
                 beforeEach(() => {
                     component.adapter = new MockUploaderAdapter();
-                    spyOn(component.adapter, 'uploadFile').and.returnValue(of(5));
+                    (component.adapter.uploadFile as any).and.returnValue(of({body: 10, status: UploadStatus.UPLOADED}));
                 });
                 it('should NOT upload file', () => {
                     component.ngOnInit();

@@ -1,5 +1,5 @@
 import { FilePreviewModel } from './../../../projects/file-picker/src/lib/file-preview.model';
-import { HttpRequest, HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
+import { HttpRequest, HttpClient, HttpEvent, HttpEventType, HttpErrorResponse } from '@angular/common/http';
 import { catchError, map } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { FilePickerAdapter, UploadResponse, UploadStatus } from 'projects/file-picker/src/lib/file-picker.adapter';
@@ -15,6 +15,8 @@ export class DemoFilePickerAdapter extends FilePickerAdapter {
     const req = new HttpRequest('POST', api, form, {reportProgress: true});
     return this.http.request(req)
     .pipe(
+    // @ts-ignore: not all return value
+    // TODO: fix return type
       map((res: HttpEvent<any>) => {
         if (res.type === HttpEventType.Response) {
           const responseFromBackend = res.body;
@@ -31,7 +33,7 @@ export class DemoFilePickerAdapter extends FilePickerAdapter {
             };
         }
       }),
-      catchError(er => {
+      catchError((er: HttpErrorResponse) => {
         console.log(er);
         return of({status: UploadStatus.ERROR, body: er });
       })
