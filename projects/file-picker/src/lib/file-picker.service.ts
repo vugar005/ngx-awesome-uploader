@@ -13,6 +13,8 @@ export class FilePickerService {
     });
     return of (event.detail);
   }
+
+  // @ts-ignore: Not all code paths return a value
   createSafeUrl(file): SafeResourceUrl {
     try {
       const url = window.URL.createObjectURL(file);
