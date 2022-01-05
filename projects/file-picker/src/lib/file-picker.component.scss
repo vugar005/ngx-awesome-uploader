@@ -14,18 +14,20 @@
 .files-preview-wrapper {
   width: 100%;
 }
+
 #cropper-img {
   max-width: 60vw;
   display: none;
 }
+
 #cropper-img img {
   width: 100%;
   height: 100%;
 }
+
 .file-drop-wrapper {
   width: 100%;
   background: #fafbfd;
-  padding-top: 20px;
 }
 
   .preview-container {
@@ -44,6 +46,7 @@
     height: 100vh;
     background: rgba(0, 0, 0, 0.32);
   }
+
   .cropperJsBox {
     display: flex;
     flex-direction: column;
@@ -79,16 +82,13 @@
     width: 500px;
     overflow-x: auto;
   }
+
   #images .image {
     flex: 0 0 100px;
     margin: 0 2px;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-  }
-
-  #fileInput {
-    display: none;
   }
 
   .uploader-submit-btn {

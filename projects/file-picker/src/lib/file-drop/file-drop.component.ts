@@ -3,216 +3,177 @@ import {
   Input,
   Output,
   EventEmitter,
-  NgZone,
-  OnDestroy,
-  Renderer2
+  ViewChild,
+  ElementRef,
+  Self,
+  HostBinding,
+  HostListener
 } from '@angular/core';
-import { timer, Subscription } from 'rxjs';
 
-import { UploadFile } from './upload-file.model';
-import { UploadEvent } from './upload-event.model';
-import {
-  FileSystemFileEntry,
-  FileSystemEntry,
-  FileSystemDirectoryEntry
-} from './dom.types';
+
 import { UploaderCaptions } from '../uploader-captions';
+import { FileDropService } from './ngx-dropzone.service';
+import { coerceBooleanProperty, coerceNumberProperty } from './file-dop.utils';
+import { UploadEvent } from './file-drop.models';
+
 
 @Component({
   selector: 'file-drop',
   templateUrl: './file-drop.component.html',
-  styleUrls: ['./file-drop.component.scss']
+  styleUrls: ['./file-drop.component.scss'],
+  providers: [FileDropService]
 })
-export class FileComponent implements OnDestroy {
-  @Input()
-  captions: UploaderCaptions;
-  @Input()
-  customstyle: string = null;
-  @Input()
-  disableIf = false;
+export class FileComponent {
 
-  @Output()
-  public onFileDrop: EventEmitter<UploadEvent> = new EventEmitter<UploadEvent>();
+  constructor(
+    @Self() private service: FileDropService
+  ) { }
+
+  @Input() captions: UploaderCaptions;
+  @Input() customstyle: string;
+
+  @Output() readonly onFileDrop = new EventEmitter<UploadEvent>();
+
   @Output()
   public onFileOver: EventEmitter<any> = new EventEmitter<any>();
   @Output()
   public onFileLeave: EventEmitter<any> = new EventEmitter<any>();
 
-  stack = [];
-  files: UploadFile[] = [];
-  subscription: Subscription;
-  dragoverflag = false;
+  /** A template reference to the native file input element. */
+  @ViewChild('fileInput', { static: true }) _fileInput: ElementRef;
 
-  globalDisable = false;
-  globalStart: () => void;
-  globalEnd: () => void;
+  /** Set the accepted file types. Defaults to '*'. */
+  @Input() accept = '*';
 
-  numOfActiveReadEntries = 0;
-  constructor(private zone: NgZone, private renderer: Renderer2) {
-    if (!this.customstyle) {
-      this.customstyle = 'drop-zone';
+  /** Disable any user interaction with the component. */
+  @Input()
+  @HostBinding('class.ngx-dz-disabled')
+  get disabled(): boolean {
+    return this._disabled;
+  }
+
+  set disabled(value: boolean) {
+    this._disabled = coerceBooleanProperty(value);
+
+    if (this.isHovered) {
+      this.isHovered = false;
     }
-    this.globalStart = this.renderer.listen('document', 'dragstart', evt => {
-      this.globalDisable = true;
+  }
+  private _disabled = false;
+
+  /** Allow the selection of multiple files. */
+  @Input()
+  get multiple(): boolean {
+    return this._multiple;
+  }
+  set multiple(value: boolean) {
+    this._multiple = coerceBooleanProperty(value);
+  }
+  private _multiple = true;
+
+  /** Set the maximum size a single file may have. */
+  @Input()
+  get maxFileSize(): number {
+    return this._maxFileSize;
+  }
+  set maxFileSize(value: number) {
+    this._maxFileSize = coerceNumberProperty(value);
+  }
+  private _maxFileSize: number = undefined;
+
+  /** Allow the dropzone container to expand vertically. */
+  @Input()
+  @HostBinding('class.expandable')
+  get expandable(): boolean {
+    return this._expandable;
+  }
+  set expandable(value: boolean) {
+    this._expandable = coerceBooleanProperty(value);
+  }
+  private _expandable: boolean = false;
+
+  /** Open the file selector on click. */
+  @Input()
+  @HostBinding('class.unclickable')
+  get disableClick(): boolean {
+    return this._disableClick;
+  }
+  set disableClick(value: boolean) {
+    this._disableClick = coerceBooleanProperty(value);
+  }
+  private _disableClick = false;
+
+  /** Expose the id, aria-label, aria-labelledby and aria-describedby of the native file input for proper accessibility. */
+  @Input() id: string;
+  @Input('aria-label') ariaLabel: string;
+  @Input('aria-labelledby') ariaLabelledby: string;
+  @Input('aria-describedby') ariaDescribedBy: string;
+
+  @HostBinding('class.ngx-dz-hovered') isHovered = false;
+
+  /** Show the native OS file explorer to select files. */
+  @HostListener('click')
+  onClick() {
+    if (!this.disableClick) {
+      this.showFileSelector();
+    }
+  }
+
+  @HostListener('dragover', ['$event'])
+  onDragOver(event) {
+    if (this.disabled) {
+      return;
+    }
+
+    this.preventDefault(event);
+    this.isHovered = true;
+  }
+
+  @HostListener('dragleave')
+  onDragLeave() {
+    this.isHovered = false;
+  }
+
+  @HostListener('drop', ['$event'])
+  onDrop(event) {
+    if (this.disabled) {
+      return;
+    }
+
+    this.preventDefault(event);
+    this.isHovered = false;
+    this.handleFileDrop(event.dataTransfer.files);
+  }
+
+  private showFileSelector() {
+    if (!this.disabled) {
+      (this._fileInput.nativeElement as HTMLInputElement).click();
+    }
+  }
+
+  public onFilesSelected(event) {
+    const files: FileList = event.target.files;
+    this.handleFileDrop(files);
+
+    // Reset the native file input element to allow selecting the same file again
+    this._fileInput.nativeElement.value = '';
+
+    // fix(#32): Prevent the default event behaviour which caused the change event to emit twice.
+    this.preventDefault(event);
+  }
+
+  private handleFileDrop(files: FileList): void {
+    const result = this.service.parseFileList(files);
+    this.onFileDrop.next({
+      files: result.addedFiles
     });
-    this.globalEnd = this.renderer.listen('document', 'dragend', evt => {
-      this.globalDisable = false;
-    });
-  }
-  public onDragOver(event: Event): void {
-    if (!this.globalDisable && !this.disableIf) {
-      if (!this.dragoverflag) {
-        this.dragoverflag = true;
-        this.onFileOver.emit(event);
-      }
-      this.preventAndStop(event);
-    }
   }
 
-  public onDragLeave(event: Event): void {
-    if (!this.globalDisable && !this.disableIf) {
-      if (this.dragoverflag) {
-        this.dragoverflag = false;
-        this.onFileLeave.emit(event);
-      }
-      this.preventAndStop(event);
-    }
-  }
-
-  dropFiles(event: any) {
-    if (!this.globalDisable && !this.disableIf) {
-      this.dragoverflag = false;
-      event.dataTransfer.dropEffect = 'copy';
-      let length;
-      if (event.dataTransfer.items) {
-        length = event.dataTransfer.items.length;
-      } else {
-        length = event.dataTransfer.files.length;
-      }
-
-      for (let i = 0; i < length; i++) {
-        let entry: FileSystemEntry;
-        if (event.dataTransfer.items) {
-          if (event.dataTransfer.items[i].webkitGetAsEntry) {
-            entry = event.dataTransfer.items[i].webkitGetAsEntry();
-          }
-        } else {
-          if (event.dataTransfer.files[i].webkitGetAsEntry) {
-            entry = event.dataTransfer.files[i].webkitGetAsEntry();
-          }
-        }
-        if (!entry) {
-          const file: File = event.dataTransfer.files[i];
-          if (file) {
-            const fakeFileEntry: FileSystemFileEntry = {
-              name: file.name,
-              isDirectory: false,
-              isFile: true,
-              file: (callback: (filea: File) => void): void => {
-                callback(file);
-              }
-            };
-            const toUpload: UploadFile = new UploadFile(
-              fakeFileEntry.name,
-              fakeFileEntry
-            );
-            this.addToQueue(toUpload);
-          }
-        } else {
-          if (entry.isFile) {
-            const toUpload: UploadFile = new UploadFile(entry.name, entry);
-            this.addToQueue(toUpload);
-          } else if (entry.isDirectory) {
-            this.traverseFileTree(entry, entry.name);
-          }
-        }
-      }
-
-      this.preventAndStop(event);
-
-      const timerObservable = timer(200, 200);
-      this.subscription = timerObservable.subscribe(t => {
-        if (this.files.length > 0 && this.numOfActiveReadEntries === 0) {
-          this.onFileDrop.emit(new UploadEvent(this.files));
-          this.files = [];
-        }
-      });
-    }
-  }
-
-  private traverseFileTree(item: FileSystemEntry, path: string) {
-    if (item.isFile) {
-      const toUpload: UploadFile = new UploadFile(path, item);
-      this.files.push(toUpload);
-      this.zone.run(() => {
-        this.popToStack();
-      });
-    } else {
-      this.pushToStack(path);
-      path = path + '/';
-      const dirReader = (item as FileSystemDirectoryEntry).createReader();
-      let entries = [];
-      const thisObj = this;
-
-      const readEntries = () => {
-        thisObj.numOfActiveReadEntries++;
-        dirReader.readEntries((res) => {
-          if (!res.length) {
-            // add empty folders
-            if (entries.length === 0) {
-              const toUpload: UploadFile = new UploadFile(path, item);
-              thisObj.zone.run(() => {
-                thisObj.addToQueue(toUpload);
-              });
-            } else {
-              for (let i = 0; i < entries.length; i++) {
-                thisObj.zone.run(() => {
-                  thisObj.traverseFileTree(entries[i], path + entries[i].name);
-                });
-              }
-            }
-            thisObj.zone.run(() => {
-              thisObj.popToStack();
-            });
-          } else {
-            // continue with the reading
-            entries = entries.concat(res);
-            readEntries();
-          }
-          thisObj.numOfActiveReadEntries--;
-        });
-      };
-
-      readEntries();
-    }
-  }
-
-  private addToQueue(item: UploadFile) {
-    this.files.push(item);
-  }
-
-  pushToStack(str) {
-    this.stack.push(str);
-  }
-
-  popToStack() {
-    const value = this.stack.pop();
-  }
-
-  private clearQueue() {
-    this.files = [];
-  }
-
-  private preventAndStop(event) {
-    event.stopPropagation();
+  private preventDefault(event: DragEvent) {
     event.preventDefault();
-  }
-
-  ngOnDestroy() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-    this.globalStart();
-    this.globalEnd();
+    event.stopPropagation();
   }
 }
+
+
+
