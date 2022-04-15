@@ -26,6 +26,8 @@ import { DefaultCaptions } from './default-captions';
 import { UploaderCaptions } from './uploader-captions';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DEFAULT_CROPPER_OPTIONS, BITS_TO_MB } from './file-picker.constants';
+import { lookup } from 'mrmime';
+
 
 declare var Cropper;
 @Component({
@@ -398,11 +400,15 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   }
 
   /** when crop button submitted */
-  onCropSubmit(): void {
+  async onCropSubmit(): Promise<void> {
+    const mimeType = lookup(this.currentCropperFile.name)
+    if (!mimeType) {
+      throw new Error("mimeType not found");
+    }
     this.isCroppingBusy = true;
     this.cropper
     .getCroppedCanvas(this.croppedCanvasOptions)
-    .toBlob(this._blobFallBack.bind(this), 'image/png');
+    .toBlob(this._blobFallBack.bind(this), mimeType);
   }
 
   /** After crop submit */
