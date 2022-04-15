@@ -400,7 +400,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   }
 
   /** when crop button submitted */
-  async onCropSubmit(): Promise<void> {
+  onCropSubmit(): void {
     const mimeType = lookup(this.currentCropperFile.name)
     if (!mimeType) {
       throw new Error("mimeType not found");
