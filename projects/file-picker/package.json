@@ -26,7 +26,8 @@
     "email": "https://twitter.com/vugar005"
   },
   "dependencies": {
-    "tslib": "^2.0.0"
+    "tslib": "^2.0.0",
+    "mrmime": "1.0.0"
   },
   "homepage": "https://ngx-awesome-uploader.stackblitz.io/"
 
