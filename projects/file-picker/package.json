@@ -1,6 +1,6 @@
 {
   "name": "ngx-awesome-uploader",
-  "version": "13.0.0",
+  "version": "13.0.1",
   "description": "Angular Library for uploading files with Real-Time Progress bar, File Preview, Drag && Drop and Custom Template with Multi Language support",
   "peerDependencies": {
     "@angular/common": "^6.0.0 || ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0 || ^13.0",

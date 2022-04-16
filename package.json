@@ -19,7 +19,8 @@
     "@angular/router": "^13.0.1",
     "rxjs": "~6.6.3",
     "tslib": "^2.3.1",
-    "zone.js": "~0.11.4"
+    "zone.js": "~0.11.4",
+    "mrmime": "1.0.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~13.0.2",
