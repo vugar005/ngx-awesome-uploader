@@ -1,8 +1,8 @@
 <div style="position: fixed;width: 100vw;height: 80vh;display: flex;align-items: center;justify-content: center">
   <ngx-awesome-uploader #uploader
+    [fileMaxCount]="2"
+    [fileMaxSize]="20"
     [totalMaxSize]="100"
-    [fileMaxCount]="3"
-    [fileMaxSize]="200"
     [uploadType]="'multi'"
     (validationError)= "onValidationError($event)"
     [adapter]="adapter"
