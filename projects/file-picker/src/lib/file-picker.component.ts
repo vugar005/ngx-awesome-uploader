@@ -25,8 +25,9 @@ import { map, takeUntil, tap } from 'rxjs/operators';
 import { DefaultCaptions } from './default-captions';
 import { UploaderCaptions } from './uploader-captions';
 import { HttpErrorResponse } from '@angular/common/http';
-import { DEFAULT_CROPPER_OPTIONS, BITS_TO_MB } from './file-picker.constants';
+import { DEFAULT_CROPPER_OPTIONS } from './file-picker.constants';
 import { lookup } from 'mrmime';
+import { FileValidatorService } from './services/file-validator/file-validator.service';
 
 
 declare var Cropper;
@@ -101,29 +102,30 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   private _onDestroy$ = new Subject<void>();
 
   constructor(
-    private fileService: FilePickerService,
-    private changeRef: ChangeDetectorRef
+    private readonly fileService: FilePickerService,
+    private readonly fileValidatorService: FileValidatorService,
+    private readonly changeRef: ChangeDetectorRef
   ) {}
 
-  public ngOnInit() {
+  public ngOnInit(): void {
     this._setCropperOptions();
     this._listenToCropClose();
   }
 
-  public ngOnDestroy() {
+  public ngOnDestroy(): void {
     this._onDestroy$.next();
     this._onDestroy$.complete();
   }
 
   /** On input file selected */
   // TODO: fix any
-  public onChange(event: any) {
+  public onChange(event: any): void {
     const files: File[] = Array.from(event);
     this.handleFiles(files).subscribe();
   }
 
   /** On file dropped */
-  public dropped(event: UploadEvent) {
+  public dropped(event: UploadEvent): void {
     const files = event.files;
     const filesForUpload: File[] = [];
     for (const droppedFile of files) {
@@ -178,7 +180,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   }
 
   /** Listen when Cropper is closed and open new cropper if next image exists */
-  private _listenToCropClose() {
+  private _listenToCropClose(): void {
     this._cropClosed$
       .pipe(takeUntil(this._onDestroy$))
       .subscribe((res: FilePreviewModel) => {
@@ -199,13 +201,13 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   }
 
   /** Sets custom cropper options if avaiable */
-  private _setCropperOptions() {
+  private _setCropperOptions(): void {
     if (!this.cropperOptions) {
       this._setDefaultCropperOptions();
     }
   }
   /** Sets manual cropper options if no custom options are avaiable */
-  private _setDefaultCropperOptions() {
+  private _setDefaultCropperOptions(): void {
     this.cropperOptions = DEFAULT_CROPPER_OPTIONS;
   }
 
@@ -277,22 +279,25 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   }
 
   /** Validates if upload type is single so another file cannot be added */
-  isValidUploadType(file): boolean {
-    if (this.uploadType === 'single' && this.files.length > 0) {
+  private isValidUploadType(file): boolean {
+    const isValid = this.fileValidatorService.isValidUploadType(this.files, this.uploadType);
+
+    if (!isValid) {
       this.validationError.next({
         file,
         error: FileValidationTypes.uploadType
       });
       return false;
-    } else {
-      return true;
-    }
+    };
+
+    return true;
   }
 
   /** Validates max file count */
-  isValidMaxFileCount(files: File[]): boolean {
-    if (!this.fileMaxCount || this.fileMaxCount >= this.files.length + files.length
-    ) {
+  private isValidMaxFileCount(files: File[]): boolean {
+    const isValid = this.fileValidatorService.isValidMaxFileCount(this.fileMaxCount, files, this.files);
+
+    if (isValid) {
       return true;
     } else {
       this.validationError.next({
@@ -325,9 +330,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
       this.currentCropperFile = file;
       this.changeRef.detectChanges();
     } else {
-      console.warn(
-        "please import cropperjs script and styles to use cropper feature or disable it by setting [enableCropper]='false'"
-      );
+      console.warn("please import cropperjs script and styles to use cropper feature or disable it by setting [enableCropper]='false'" );
       return;
     }
   }
@@ -355,11 +358,9 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   }
 
   /** Validates file extension */
-  isValidExtension(file: File, fileName: string): boolean {
-    if (!this.fileExtensions) {return true; }
-    const extension = fileName.split('.').pop();
-    const fileExtensions = this.fileExtensions.map(ext => ext.toLowerCase());
-    if (fileExtensions.indexOf(extension.toLowerCase()) === -1) {
+  private isValidExtension(file: File, fileName: string): boolean {
+    const isValid = this.fileValidatorService.isValidExtension(fileName, this.fileExtensions);
+    if (!isValid) {
       this.validationError.next({file, error: FileValidationTypes.extensions});
       return false;
     }
@@ -367,36 +368,27 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   }
 
   /** Validates selected file size and total file size */
-  isValidSize(file: File, size: number): boolean {
+  private isValidSize(newFile: File, newFileSize: number): boolean {
     /** Validating selected file size */
-    const res: number = BITS_TO_MB(size);
-    let isValidFileSize: boolean;
-    let isValidTotalFileSize: boolean;
-    if (!this.fileMaxSize || (this.fileMaxSize && res < this.fileMaxSize)) {
-      isValidFileSize = true;
-    } else {
+    const isValidFileSize: boolean = this.fileValidatorService.isValidFileSize(newFileSize, this.fileMaxSize);
+    const isValidTotalFileSize: boolean = this.fileValidatorService.isValidTotalFileSize(newFile, this.files, this.totalMaxSize);
+
+    if (!isValidFileSize) {
       this.validationError.next({
-        file,
+        file: newFile,
         error: FileValidationTypes.fileMaxSize
       });
     }
+
     /** Validating Total Files Size */
-    const totalBits = this.files
-      .map(f => f.file ? f.file.size : 0)
-      .reduce((acc, curr) => acc + curr, 0);
-    if (
-      !this.totalMaxSize ||
-      (this.totalMaxSize &&
-        BITS_TO_MB(totalBits + file.size) < this.totalMaxSize)
-    ) {
-      isValidTotalFileSize = true;
-    } else {
+    if (!isValidTotalFileSize) {
       this.validationError.next({
-        file,
+        file: newFile,
         error: FileValidationTypes.totalMaxSize
       });
-    }
-    return !!isValidFileSize && isValidTotalFileSize;
+    };
+
+    return isValidFileSize && isValidTotalFileSize;
   }
 
   /** when crop button submitted */

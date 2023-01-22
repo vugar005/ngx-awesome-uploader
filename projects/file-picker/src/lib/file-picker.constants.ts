@@ -8,6 +8,6 @@ export const DEFAULT_CROPPER_OPTIONS = {
     autoCropArea: 0.8
 };
 
-export function BITS_TO_MB(size: number): number {
+export function bitsToMB(size: number): number {
    return parseFloat(size.toString()) / 1048576;
 }
