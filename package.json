@@ -5,6 +5,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:lib": "ng build file-picker",
+    "test:lib": "ng test file-picker",
     "test": "ng test"
   },
   "private": true,
