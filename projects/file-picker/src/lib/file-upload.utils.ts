@@ -9,7 +9,7 @@ export function GET_FILE_CATEGORY_TYPE(fileExtension: string): string {
 }
 
 export function GET_FILE_TYPE(name: string): string {
-  return name.substr(name.lastIndexOf('.') + 1).toUpperCase();
+  return name.split('.').pop().toUpperCase();
 }
 
 export function IS_IMAGE_FILE(fileType: string): boolean {
