@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { FilePreviewModel } from 'file-picker';
 import { bitsToMB } from '../../file-picker.constants';
+import { FilePreviewModel } from '../../file-preview.model';
 
 @Injectable({
   providedIn: 'root'
