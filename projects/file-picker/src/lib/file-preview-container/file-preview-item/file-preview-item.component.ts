@@ -70,7 +70,7 @@ export class FilePreviewItemComponent implements OnInit {
     this._uploadUnsubscribe();
     this.removeFile.next({
       ...fileItem,
-      uploadResponse: this.uploadResponse
+      uploadResponse: this.uploadResponse || fileItem.uploadResponse
     });
    }
 
