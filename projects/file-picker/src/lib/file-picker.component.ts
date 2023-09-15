@@ -3,11 +3,11 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  EventEmitter,
+  EventEmitter, inject, Injector,
   Input,
   OnDestroy,
   OnInit,
-  Output,
+  Output, runInInjectionContext,
   TemplateRef
 } from '@angular/core';
 import { SafeResourceUrl } from '@angular/platform-browser';
@@ -20,7 +20,7 @@ import {
   FileSystemFileEntry,
   UploadEvent
 } from './file-drop';
-import { combineLatest, Observable, of, Subject } from 'rxjs';
+import {combineLatest, Observable, of, Subject, Subscription} from 'rxjs';
 import { map, takeUntil, tap } from 'rxjs/operators';
 import { DefaultCaptions } from './default-captions';
 import { UploaderCaptions } from './uploader-captions';
@@ -28,6 +28,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { DEFAULT_CROPPER_OPTIONS } from './file-picker.constants';
 import { lookup } from 'mrmime';
 import { FileValidatorService } from './services/file-validator/file-validator.service';
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 
 declare var Cropper;
@@ -100,6 +101,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
 
   private _cropClosed$ = new Subject<FilePreviewModel>();
   private _onDestroy$ = new Subject<void>();
+  private readonly injector = inject(Injector);
 
   constructor(
     private readonly fileService: FilePickerService,
@@ -134,6 +136,11 @@ export class FilePickerComponent implements OnInit, OnDestroy {
         const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
         fileEntry.file((file: File) => {
           filesForUpload.push(file);
+          runInInjectionContext((this.injector), () => {
+            this.handleFiles(filesForUpload).pipe(
+              takeUntilDestroyed()
+            ).subscribe();
+          });
         });
       } else {
         // It was a directory (empty directories are added, otherwise only files)
@@ -141,7 +148,6 @@ export class FilePickerComponent implements OnInit, OnDestroy {
         // console.log(droppedFile.relativePath, fileEntry);
       }
     }
-    setTimeout(() => this.handleFiles(filesForUpload).subscribe());
   }
 
   /** Emits event when file upload api returns success  */
