@@ -8,7 +8,7 @@ export class DemoFilePickerAdapter extends FilePickerAdapter {
   constructor(private http: HttpClient) {
     super();
   }
-  public uploadFile(fileItem: FilePreviewModel): Observable<UploadResponse> {
+  public uploadFile(fileItem: FilePreviewModel): Observable<UploadResponse | undefined> {
     const form = new FormData();
     form.append('file', fileItem.file);
    const api = 'https://ngx-awesome-uploader-2.free.beeceptor.com/upload';
@@ -24,7 +24,7 @@ export class DemoFilePickerAdapter extends FilePickerAdapter {
             body: responseFromBackend,
             status: UploadStatus.UPLOADED
           };
-        } else if (res.type ===  HttpEventType.UploadProgress) {
+        } else if ((res.type ===  HttpEventType.UploadProgress) && res.total) {
           /** Compute and show the % done: */
             const uploadProgress = +Math.round((100 * res.loaded) / res.total);
             return {

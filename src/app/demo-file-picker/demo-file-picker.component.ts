@@ -8,7 +8,7 @@ import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {DemoFilePickerAdapter} from './demo-file-picker.adapter';
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Observable, of} from 'rxjs';
-import {delay, map} from 'rxjs/operators';
+import {delay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-demo-file-picker',
@@ -38,17 +38,17 @@ export class DemoFilePickerComponent implements OnInit {
   constructor(private http: HttpClient) { }
 
   public ngOnInit(): void {
-  setTimeout(() => {
-    const files = [
-      {
-        fileName: 'My File 1 for edit.png', file: null
-      },
-      {
-        fileName: 'My File 2 for edit.xlsx', file: null
-      }
-    ] as FilePreviewModel[];
-  //  this.uploader.setFiles(files);
-  }, 1000);
+    setTimeout(() => {
+      const files = [
+        {
+          fileName: 'My File 1 for edit.png', file: null as any
+        },
+        {
+          fileName: 'My File 2 for edit.xlsx', file: null as any
+        }
+      ] as FilePreviewModel[];
+    //  this.uploader.setFiles(files);
+    }, 1000);
   }
 
   public onValidationError(er: ValidationError): void {

@@ -14,6 +14,6 @@ export enum UploadStatus {
 }
 
 export abstract class FilePickerAdapter {
- public abstract uploadFile(fileItem: FilePreviewModel): Observable<UploadResponse>;
+ public abstract uploadFile(fileItem: FilePreviewModel): Observable<UploadResponse | undefined>;
  public abstract removeFile(fileItem: FilePreviewModel): Observable<any>;
 }
