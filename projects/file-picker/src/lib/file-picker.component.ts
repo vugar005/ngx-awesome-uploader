@@ -136,6 +136,11 @@ export class FilePickerComponent implements OnInit, OnDestroy {
         const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
         fileEntry.file((file: File) => {
           filesForUpload.push(file);
+          runInInjectionContext((this.injector), () => {
+            this.handleFiles(filesForUpload).pipe(
+              takeUntilDestroyed()
+            ).subscribe();
+          });
         });
         runInInjectionContext((this.injector), () => {
           this.handleFiles(filesForUpload).pipe(
@@ -148,7 +153,6 @@ export class FilePickerComponent implements OnInit, OnDestroy {
         // console.log(droppedFile.relativePath, fileEntry);
       }
     }
-    setTimeout(() => this.handleFiles(filesForUpload).subscribe());
   }
 
   /** Emits event when file upload api returns success  */
