@@ -136,11 +136,11 @@ export class FilePickerComponent implements OnInit, OnDestroy {
         const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
         fileEntry.file((file: File) => {
           filesForUpload.push(file);
-          runInInjectionContext((this.injector), () => {
-            this.handleFiles(filesForUpload).pipe(
-              takeUntilDestroyed()
-            ).subscribe();
-          });
+        });
+        runInInjectionContext((this.injector), () => {
+          this.handleFiles(filesForUpload).pipe(
+            takeUntilDestroyed()
+          ).subscribe();
         });
       } else {
         // It was a directory (empty directories are added, otherwise only files)
