@@ -61,14 +61,14 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "ngx-awesome-uploader:build"
+            "buildTarget": "ngx-awesome-uploader:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "ngx-awesome-uploader:build:production"
+              "buildTarget": "ngx-awesome-uploader:build:production"
             },
             "development": {
-              "browserTarget": "ngx-awesome-uploader:build:development"
+              "buildTarget": "ngx-awesome-uploader:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -76,7 +76,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ngx-awesome-uploader:build"
+            "buildTarget": "ngx-awesome-uploader:build"
           }
         },
         "test": {
