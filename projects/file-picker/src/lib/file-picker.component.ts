@@ -20,7 +20,7 @@ import {
   FileSystemFileEntry,
   UploadEvent
 } from './file-drop';
-import {combineLatest, Observable, of, Subject, Subscription} from 'rxjs';
+import { bufferCount, combineLatest, Observable, of, Subject, switchMap} from 'rxjs';
 import { map, takeUntil, tap } from 'rxjs/operators';
 import { DefaultCaptions } from './default-captions';
 import { UploaderCaptions } from './uploader-captions';
@@ -28,7 +28,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { DEFAULT_CROPPER_OPTIONS } from './file-picker.constants';
 import { lookup } from 'mrmime';
 import { FileValidatorService } from './services/file-validator/file-validator.service';
-import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 
 declare var Cropper;
@@ -129,18 +129,15 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   /** On file dropped */
   public dropped(event: UploadEvent): void {
     const files = event.files;
-    const filesForUpload: File[] = [];
+    const filesForUpload: Subject<File> = new Subject();
+    let droppedFilesCount = 0;
     for (const droppedFile of files) {
       // Is it a file?
       if (droppedFile.fileEntry.isFile) {
+        droppedFilesCount += 1;
         const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
         fileEntry.file((file: File) => {
-          filesForUpload.push(file);
-        });
-        runInInjectionContext((this.injector), () => {
-          this.handleFiles(filesForUpload).pipe(
-            takeUntilDestroyed()
-          ).subscribe();
+          filesForUpload.next(file);
         });
       } else {
         // It was a directory (empty directories are added, otherwise only files)
@@ -148,6 +145,13 @@ export class FilePickerComponent implements OnInit, OnDestroy {
         // console.log(droppedFile.relativePath, fileEntry);
       }
     }
+    runInInjectionContext((this.injector), () => {
+      filesForUpload.pipe(
+        takeUntilDestroyed(),
+        bufferCount(droppedFilesCount),
+        switchMap(filesForUpload => this.handleFiles(filesForUpload))
+      ).subscribe();
+    });
   }
 
   /** Emits event when file upload api returns success  */
