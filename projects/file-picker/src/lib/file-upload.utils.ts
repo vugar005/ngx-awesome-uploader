@@ -1,4 +1,4 @@
-export function GET_FILE_CATEGORY_TYPE(fileExtension: string): string {
+export function getFileCategoryType(fileExtension: string): string {
   if (fileExtension.includes('image')) {
     return 'image';
   } else if (fileExtension.includes('video')) {
@@ -8,11 +8,11 @@ export function GET_FILE_CATEGORY_TYPE(fileExtension: string): string {
   }
 }
 
-export function GET_FILE_TYPE(name: string): string {
+export function getFileType(name: string): string {
   return name.split('.').pop().toUpperCase();
 }
 
-export function IS_IMAGE_FILE(fileType: string): boolean {
+export function isImageFile(fileType: string): boolean {
   const IMAGE_TYPES = ['PNG', 'JPG', 'JPEG', 'BMP', 'WEBP', 'JFIF', 'TIFF'];
   return (IMAGE_TYPES as any).includes(fileType.toUpperCase());
 }

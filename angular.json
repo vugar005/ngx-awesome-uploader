@@ -66,7 +66,7 @@
               "src/**/*.html"
             ]
           }
-      },
+        },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
@@ -134,6 +134,15 @@
             "main": "projects/file-picker/src/test.ts",
             "tsConfig": "projects/file-picker/tsconfig.spec.json",
             "karmaConfig": "projects/file-picker/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/file-picker/**/*.ts",
+              "projects/file-picker/**/*.html"
+            ]
           }
         }
       }

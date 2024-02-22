@@ -1,18 +1,27 @@
 import { FilePickerService } from './../../file-picker.service';
 import { FilePreviewModel } from './../../file-preview.model';
-import { Component, OnInit, Input, Output, EventEmitter, TemplateRef, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  TemplateRef,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { HttpErrorResponse } from '@angular/common/http';
-import { GET_FILE_CATEGORY_TYPE, GET_FILE_TYPE, IS_IMAGE_FILE } from '../../file-upload.utils';
-import {  Subscription } from 'rxjs';
+import { getFileType, isImageFile } from '../../file-upload.utils';
+import { Subscription } from 'rxjs';
 import { FilePickerAdapter, UploadResponse, UploadStatus } from '../../file-picker.adapter';
 import { UploaderCaptions } from '../../uploader-captions';
 
 @Component({
-  selector: 'file-preview-item',
+  selector: 'ngx-file-preview-item',
   templateUrl: './file-preview-item.component.html',
   styleUrls: ['./file-preview-item.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FilePreviewItemComponent implements OnInit {
   @Output() public readonly removeFile = new EventEmitter<FilePreviewModel>();
@@ -36,13 +45,13 @@ export class FilePreviewItemComponent implements OnInit {
     private changeRef: ChangeDetectorRef
   ) {}
 
-  public ngOnInit() {
+  public ngOnInit(): void {
     if (this.fileItem.file) {
       this._uploadFile(this.fileItem);
       this.safeUrl = this.getSafeUrl(this.fileItem.file);
     }
-    this.fileType = GET_FILE_TYPE(this.fileItem.fileName);
-    this.isImageFile = IS_IMAGE_FILE(this.fileType);
+    this.fileType = getFileType(this.fileItem.fileName);
+    this.isImageFile = isImageFile(this.fileType);
   }
 
   public getSafeUrl(file: File | Blob): SafeResourceUrl {
@@ -70,38 +79,39 @@ export class FilePreviewItemComponent implements OnInit {
     this._uploadUnsubscribe();
     this.removeFile.next({
       ...fileItem,
-      uploadResponse: this.uploadResponse || fileItem.uploadResponse
+      uploadResponse: this.uploadResponse || fileItem.uploadResponse,
     });
-   }
+  }
 
   private _uploadFile(fileItem: FilePreviewModel): void {
     if (!this.enableAutoUpload) {
       return;
     }
     if (this.adapter) {
-      this._uploadSubscription =
-      this.adapter.uploadFile(fileItem)
-      .subscribe((res: UploadResponse) => {
-        if (res && res.status === UploadStatus.UPLOADED) {
-          this._onUploadSuccess(res.body, fileItem);
+      this._uploadSubscription = this.adapter.uploadFile(fileItem).subscribe(
+        (res: UploadResponse) => {
+          if (res && res.status === UploadStatus.UPLOADED) {
+            this._onUploadSuccess(res.body, fileItem);
+            this.uploadProgress = undefined;
+          }
+          if (res && res.status === UploadStatus.IN_PROGRESS) {
+            this.uploadProgress = res.progress;
+            this.changeRef.detectChanges();
+          }
+          if (res && res.status === UploadStatus.ERROR) {
+            this.uploadError = true;
+            this.uploadFail.next(res.body);
+            this.uploadProgress = undefined;
+          }
+          this.changeRef.detectChanges();
+        },
+        (er: HttpErrorResponse) => {
+          this.uploadError = true;
+          this.uploadFail.next(er);
           this.uploadProgress = undefined;
-        }
-        if (res && res.status === UploadStatus.IN_PROGRESS) {
-          this.uploadProgress = res.progress;
           this.changeRef.detectChanges();
         }
-        if (res && res.status === UploadStatus.ERROR) {
-          this.uploadError = true;
-          this.uploadFail.next(res.body);
-          this.uploadProgress = undefined;
-        }
-        this.changeRef.detectChanges();
-      }, (er: HttpErrorResponse) => {
-        this.uploadError = true;
-        this.uploadFail.next(er);
-        this.uploadProgress = undefined;
-        this.changeRef.detectChanges();
-  });
+      );
     } else {
       console.warn('no adapter was provided');
     }
@@ -110,14 +120,13 @@ export class FilePreviewItemComponent implements OnInit {
   private _onUploadSuccess(uploadResponse: any, fileItem: FilePreviewModel): void {
     this.uploadResponse = uploadResponse;
     this.fileItem.uploadResponse = uploadResponse;
-    this.uploadSuccess.next({...fileItem, uploadResponse});
+    this.uploadSuccess.next({ ...fileItem, uploadResponse });
   }
 
- /** Cancel upload. Cancels request  */
- private _uploadUnsubscribe(): void {
-  if (this._uploadSubscription) {
-    this._uploadSubscription.unsubscribe();
-   }
- }
-
+  /** Cancel upload. Cancels request  */
+  private _uploadUnsubscribe(): void {
+    if (this._uploadSubscription) {
+      this._uploadSubscription.unsubscribe();
+    }
+  }
 }
