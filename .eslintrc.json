@@ -41,24 +41,7 @@
         "@angular-eslint/prefer-output-readonly": [
           "warn"
         ],
-        "@typescript-eslint/member-ordering": [
-          "error",
-          {
-            "default": [
-              "public-static-field",
-              "public-instance-field",
-              "protected-static-field",
-              "protected-instance-field",
-              "private-static-field",
-              "private-instance-field",
-              "public-constructor",
-              "private-constructor",
-              "public-instance-method",
-              "protected-instance-method",
-              "private-instance-method"
-            ]
-          }
-        ],
+        "@typescript-eslint/member-ordering": "off",
         "@typescript-eslint/no-unsafe-member-access": [
           "off"
         ],

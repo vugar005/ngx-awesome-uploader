@@ -7,12 +7,11 @@ describe('CloudIconComponent', () => {
   let component: CloudIconComponent;
   let fixture: ComponentFixture<CloudIconComponent>;
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ CloudIconComponent ]
-    })
-    .compileComponents();
-  }));
+      declarations: [CloudIconComponent],
+    }).compileComponents();
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(CloudIconComponent);

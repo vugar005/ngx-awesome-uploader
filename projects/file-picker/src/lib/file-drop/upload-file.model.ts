@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { FileSystemEntry, FileSystemFileEntry, FileSystemDirectoryEntry } from './dom.types';
 
 /**
@@ -6,8 +8,8 @@ import { FileSystemEntry, FileSystemFileEntry, FileSystemDirectoryEntry } from '
  * properties of the given {@link FileSystemEntry}.
  */
 export class UploadFile {
-    constructor(
-        public relativePath: string,
-        public fileEntry: FileSystemEntry) {
-    }
+  constructor(
+    public relativePath: string,
+    public fileEntry: FileSystemEntry
+  ) {}
 }

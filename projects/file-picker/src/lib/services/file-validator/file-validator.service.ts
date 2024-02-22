@@ -3,18 +3,17 @@ import { bitsToMB } from '../../file-picker.constants';
 import { FilePreviewModel } from '../../file-preview.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FileValidatorService {
-
-  constructor() { }
-
   /** Validates file extension */
   public isValidExtension(fileName: string, fileExtensions: string[]): boolean {
-    if (!fileExtensions?.length) { return true; }
+    if (!fileExtensions?.length) {
+      return true;
+    }
 
     const extension: string = fileName.split('.').pop();
-    const fileExtensionsLowercase = fileExtensions.map(ext => ext.toLowerCase());
+    const fileExtensionsLowercase = fileExtensions.map((ext) => ext.toLowerCase());
     if (fileExtensionsLowercase.indexOf(extension.toLowerCase()) === -1) {
       return false;
     }
@@ -39,7 +38,7 @@ export class FileValidatorService {
     }
   }
 
-  public isValidFileSize(size: number, fileMaxSize: number) {
+  public isValidFileSize(size: number, fileMaxSize: number): boolean {
     const fileMB: number = bitsToMB(size);
     if (!fileMaxSize || (fileMaxSize && fileMB < fileMaxSize)) {
       return true;
@@ -48,11 +47,9 @@ export class FileValidatorService {
     }
   }
 
-  public isValidTotalFileSize(newFile: File, files: FilePreviewModel[], totalMaxSize: number) {
+  public isValidTotalFileSize(newFile: File, files: FilePreviewModel[], totalMaxSize: number): boolean {
     /** Validating Total Files Size */
-    const totalBits = files
-      .map(f => f.file ? f.file.size : 0)
-      .reduce((acc, curr) => acc + curr, 0);
+    const totalBits = files.map((f) => (f.file ? f.file.size : 0)).reduce((acc, curr) => acc + curr, 0);
 
     if (!totalMaxSize || (totalMaxSize && bitsToMB(totalBits + newFile.size) < totalMaxSize)) {
       return true;

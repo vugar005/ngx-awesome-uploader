@@ -8,5 +8,5 @@ export enum FileValidationTypes {
   totalMaxSize = 'TOTAL_MAX_SIZE',
   extensions = 'EXTENSIONS',
   uploadType = 'UPLOAD_TYPE',
-  customValidator = 'CUSTOM_VALIDATOR'
+  customValidator = 'CUSTOM_VALIDATOR',
 }
