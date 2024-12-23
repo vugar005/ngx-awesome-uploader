@@ -3,16 +3,17 @@ import { FilePreviewModel } from './../../file-preview.model';
 import { Component, OnInit, Input, Output, EventEmitter, TemplateRef, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { HttpErrorResponse } from '@angular/common/http';
-import { GET_FILE_CATEGORY_TYPE, GET_FILE_TYPE, IS_IMAGE_FILE } from '../../file-upload.utils';
+import { GET_FILE_TYPE, IS_IMAGE_FILE } from '../../file-upload.utils';
 import {  Subscription } from 'rxjs';
 import { FilePickerAdapter, UploadResponse, UploadStatus } from '../../file-picker.adapter';
 import { UploaderCaptions } from '../../uploader-captions';
 
 @Component({
-  selector: 'file-preview-item',
-  templateUrl: './file-preview-item.component.html',
-  styleUrls: ['./file-preview-item.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'file-preview-item',
+    templateUrl: './file-preview-item.component.html',
+    styleUrls: ['./file-preview-item.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class FilePreviewItemComponent implements OnInit {
   @Output() public readonly removeFile = new EventEmitter<FilePreviewModel>();
