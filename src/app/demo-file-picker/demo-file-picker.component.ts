@@ -4,7 +4,7 @@ import {
   FilePreviewModel,
   UploaderCaptions,
 } from 'ngx-awesome-uploader';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import {DemoFilePickerAdapter} from './demo-file-picker.adapter';
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Observable, of} from 'rxjs';
