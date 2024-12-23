@@ -33,10 +33,11 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 declare var Cropper;
 @Component({
-  selector: 'ngx-awesome-uploader',
-  templateUrl: './file-picker.component.html',
-  styleUrls: ['./file-picker.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'ngx-awesome-uploader',
+    templateUrl: './file-picker.component.html',
+    styleUrls: ['./file-picker.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class FilePickerComponent implements OnInit, OnDestroy {
   /** Emitted when file upload via api successfully. Emitted for every file */

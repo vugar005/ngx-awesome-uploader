@@ -19,9 +19,10 @@ import {
 import { UploaderCaptions } from '../uploader-captions';
 
 @Component({
-  selector: 'file-drop',
-  templateUrl: './file-drop.component.html',
-  styleUrls: ['./file-drop.component.scss']
+    selector: 'file-drop',
+    templateUrl: './file-drop.component.html',
+    styleUrls: ['./file-drop.component.scss'],
+    standalone: false
 })
 export class FileComponent implements OnDestroy {
   @Input()

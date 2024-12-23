@@ -11,9 +11,10 @@ import {Observable, of} from 'rxjs';
 import {delay } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-demo-file-picker',
-  templateUrl: './demo-file-picker.component.html',
-  styleUrls: ['./demo-file-picker.component.scss']
+    selector: 'app-demo-file-picker',
+    templateUrl: './demo-file-picker.component.html',
+    styleUrls: ['./demo-file-picker.component.scss'],
+    standalone: false
 })
 export class DemoFilePickerComponent implements OnInit {
   @ViewChild('uploader', { static: true }) uploader: FilePickerComponent;

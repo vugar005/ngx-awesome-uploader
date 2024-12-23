@@ -5,10 +5,11 @@ import { UploaderCaptions } from '../uploader-captions';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'file-preview-container',
-  templateUrl: './file-preview-container.component.html',
-  styleUrls: ['./file-preview-container.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'file-preview-container',
+    templateUrl: './file-preview-container.component.html',
+    styleUrls: ['./file-preview-container.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class FilePreviewContainerComponent implements OnInit {
   @Input() previewFiles: FilePreviewModel[];
