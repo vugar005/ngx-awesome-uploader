@@ -1,0 +1,51 @@
+    <div class="file-preview-wrapper" *ngIf="fileItem" [ngClass] = "{'visually-hidden': itemTemplate}">
+
+
+        <div class="file-preview-thumbnail">
+          <div class="img-preview-thumbnail" *ngIf="isImageFile && fileItem?.file" >
+            <img [src]="safeUrl" (click)="imageClicked.next(fileItem)">
+          </div>
+          <div class="other-preview-thumbnail"
+            *ngIf="!isImageFile || !fileItem?.file"
+            [ngClass]="fileItem.fileName.split('.').pop()"
+            >
+            {{fileType}}
+          </div>
+          <div class="thumbnail-backdrop">
+
+          </div>
+        </div>
+        <div class="file-preview-description" >
+          <a class="file-preview-title" [title]="fileItem.fileName" href="javascript:void(0)"><p>{{fileItem.fileName}}</p></a>
+          <div class="file-preview-size" *ngIf="fileItem?.file">{{niceBytes(fileItem.file?.size)}}</div>
+        </div>
+        <div class="file-preview-actions" >
+            <div class="ngx-checkmark-wrapper" *ngIf="!uploadError && !uploadProgress && fileItem?.file">
+              <span class="ngx-checkmark"></span>
+            </div>
+            <refresh-icon *ngIf="uploadError" (click)="onRetry()"></refresh-icon>
+            <a class="ngx-close-icon-wrapper"
+            (click)="onRemove(fileItem)"
+             title="{{captions?.previewCard?.remove}}"
+             >
+              <close-icon class="ngx-close-icon"></close-icon>
+            </a>
+        </div>
+          <a class="file-upload-error-wrapper" *ngIf="uploadError && !uploadProgress" href="javascipt:void(0)"
+          title="{{captions?.previewCard?.uploadError}}">
+          </a>
+
+        <ng-container *ngIf="uploadProgress">
+        <div class="file-upload-progress-bar-wrapper"  >
+          <div class="file-upload-progress-bar"  [ngStyle]="{ 'width': uploadProgress + '%' }">
+          </div>
+        </div>
+
+        <div class="file-upload-percentage-wrapper" >
+          <div class="file-upload-percentage">{{uploadProgress}} %</div>
+          </div>
+        </ng-container>
+
+      </div>
+
+<ng-container *ngTemplateOutlet="itemTemplate;context: {fileItem: fileItem, uploadProgress: uploadProgress}" > </ng-container>

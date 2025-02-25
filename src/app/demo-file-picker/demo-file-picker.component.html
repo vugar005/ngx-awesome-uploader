@@ -1,0 +1,34 @@
+<div style="position: fixed;width: 100vw;height: 80vh;display: flex;align-items: center;justify-content: center">
+  <ngx-awesome-uploader #uploader
+    [fileMaxCount]="2"
+    [fileMaxSize]="20"
+    [totalMaxSize]="100"
+    [uploadType]="'multi'"
+    (validationError)= "onValidationError($event)"
+    [adapter]="adapter"
+    [fileExtensions]="['pdf', 'jpg', 'png', 'PNG', 'mp4', 'css', 'docx', 'txt']"
+    [enableCropper]="false"
+    (uploadSuccess)="onUploadSuccess($event)"
+    (uploadFail)="onUploadFail($event)"
+    (removeSuccess)="onRemoveSuccess($event)"
+    [showeDragDropZone]="true"
+    [showPreviewContainer]="true"
+    [customValidator]="myCustomValidator"
+    [enableAutoUpload]="true"
+    (fileAdded)="onFileAdded($event)"
+    (fileRemoved)="onFileRemoved($event)"
+ >
+  <!-- <div class="dropzoneTemplate">
+    <button>Custom</button>
+  </div> -->
+</ngx-awesome-uploader>
+<!-- <button (click)="removeFile()">Remove First File</button> -->
+<!-- <button (click)="clearAllFiles()">Clear All Files</button> -->
+</div>
+
+<ng-template #itemTemplate let-fileItem="fileItem" let-uploadProgress="uploadProgress">
+  <p>{{fileItem.file?.size}}</p>
+  <p>{{fileItem.fileName}}</p>
+  <p>{{uploadProgress}}</p>
+  <button (click)="onRemoveFile(fileItem)">Remove</button>
+</ng-template>

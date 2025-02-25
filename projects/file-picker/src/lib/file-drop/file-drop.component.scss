@@ -1,0 +1,49 @@
+:host {
+  display: block;
+  width: 100%;
+  padding: 0 16px;
+}
+#dropZone {
+  max-width: 440px;
+  margin: auto;
+  border: 2px dashed #ecf0f1;
+ // border: 2px dashed #c2cdda;
+  border-radius: 6px;
+  padding: 56px 0;
+  background: #ffffff;
+}
+.file-browse-button {
+  padding: 12px 18px;
+  background: #7f8c8d;
+ // background: linear-gradient(135deg, #3a8ffe 0, #9658fe 100%);
+  border: 0;
+  outline: 0;
+  font-size: 14px;
+  color: #ffffff;
+  font-weight: 700;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.over {
+  background-color: rgba(147, 147, 147, 0.5);
+}
+.content-top-text {
+  font-size: 18px;
+  font-weight: bold;
+  font-weight: bold;
+  color: #5b5b7b;
+}
+.content-center-text {
+  color: #90a0bc;
+  margin: 12px 0;
+  font-size: 14px;
+}
+
+
+

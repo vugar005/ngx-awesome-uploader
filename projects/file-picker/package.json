@@ -1,0 +1,34 @@
+{
+  "name": "ngx-awesome-uploader",
+  "version": "18.0.0",
+  "description": "Angular Library for uploading files with Real-Time Progress bar, File Preview, Drag && Drop and Custom Template with Multi Language support",
+  "peerDependencies": {
+    "@angular/common": "^10.0.0 || ^11.0.0 || ^12.0.0 || ^13.0 || ^14.0 || ^15.0 || ^16.0 || ^17.0 || ^18.0",
+    "@angular/core": "^10.0.0 || ^11.0.0 || ^12.0.0 || ^13.0 || ^14.0 || ^15.0 || ^16.0 || ^17.0 || ^18.0"
+  },
+  "keywords": [
+    "ngx",
+    "angular",
+    "file uploader",
+    "angular file uploader",
+    "awesome uploader",
+    "drag and drop",
+    "image cropper",
+    "angular image uploader",
+    "angular uploader",
+    "angular file upload"
+  ],
+  "license": "MIT",
+  "repository": "https://github.com/vugar005/ngx-awesome-uploader",
+  "author": {
+    "name" : "Vugar Abdullayev",
+    "url": "https://twitter.com/vugar005",
+    "email": "https://twitter.com/vugar005"
+  },
+  "dependencies": {
+    "tslib": "^2.0.0",
+    "mrmime": "1.0.0"
+  },
+  "homepage": "https://ngx-awesome-uploader.stackblitz.io/"
+
+}

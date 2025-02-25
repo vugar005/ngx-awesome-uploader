@@ -1,0 +1,173 @@
+* {
+  box-sizing: border-box;
+}
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  max-width: 440px;
+  border-radius: 6px;
+}
+.files-preview-wrapper {
+  width: 100%;
+}
+#cropper-img {
+  max-width: 60vw;
+  display: none;
+}
+#cropper-img img {
+  width: 100%;
+  height: 100%;
+}
+.file-drop-wrapper {
+  width: 100%;
+  background: #fafbfd;
+  padding-top: 20px;
+}
+
+  .preview-container {
+    display: flex;
+  }
+
+  .cropperJsOverlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 999;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.32);
+  }
+  .cropperJsBox {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-height: calc(100vh - 38px - 50px);
+    max-width: 90vw;
+   .cropper-actions {
+     display: flex;
+     button {
+      margin: 5px;
+      padding: 12px 25px;
+      border-radius: 6px;
+      border: 0;
+      cursor: pointer;
+     }
+    .cropSubmit {
+      color: #ffffff;
+      background: #16a085;
+  }
+  .cropCancel {
+   // color: #ffffff;
+   // background: #474787;
+  }
+   }
+}
+::ng-deep.cropper img {
+    max-height: 300px !important;
+}
+  #images {
+    display: flex;
+    justify-content: center;
+    width: 500px;
+    overflow-x: auto;
+  }
+  #images .image {
+    flex: 0 0 100px;
+    margin: 0 2px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  #fileInput {
+    display: none;
+  }
+
+  .uploader-submit-btn {
+    background: #ffd740;
+    color: rgba(0, 0, 0, 0.87);
+    border: 0;
+    padding: 0 16px;
+    line-height: 36px;
+    font-size: 15px;
+    margin-top: 12px;
+    border-radius: 4px;
+    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2),
+    0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+  }
+  button:disabled {
+    color: rgba(0,0,0,.26);
+    background: gainsboro;
+  }
+
+  .visually-hidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+
+    // Avoid browsers rendering the focus ring in some cases.
+    outline: 0;
+
+    // Avoid some cases where the browser will still render the native controls (see #9049).
+    -webkit-appearance: none;
+    -moz-appearance: none;
+  }
+
+  button.is-loading {
+    color: rgba(0,0,0,.26)!important;
+    background-color: #ffffff!important;
+    box-shadow: none;
+    cursor: not-allowed;
+    outline: none;
+    &:after {
+      content: "";
+      font-family: sans-serif;
+      font-weight: 100;
+      -webkit-animation: 1.25s linear infinite three-quarters;
+      animation: 1.25s linear infinite three-quarters;
+      border: 3px solid #7f8c8d;
+      border-right-color: transparent;
+      border-radius: 100%;
+      box-sizing: border-box;
+      display: inline-block;
+      position: relative;
+      vertical-align: middle;
+      overflow: hidden;
+      text-indent: -9999px;
+      width: 18px;
+      height: 18px;
+      opacity: 1;
+      margin-left: 10px;
+  }
+    }
+    @keyframes three-quarters {
+      0% {
+          -webkit-transform: rotate(0deg);
+          -moz-transform: rotate(0deg);
+          -ms-transform: rotate(0deg);
+          -o-transform: rotate(0deg);
+          transform: rotate(0deg);
+      }
+
+      100% {
+          -webkit-transform: rotate(360deg);
+          -moz-transform: rotate(360deg);
+          -ms-transform: rotate(360deg);
+          -o-transform: rotate(360deg);
+          transform: rotate(360deg);
+      }
+    }

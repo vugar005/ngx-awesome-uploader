@@ -1,0 +1,12 @@
+<div class="ng-modal-backdrop" (click)="onClose($event)">
+
+</div>
+
+<div class="ng-modal-content" >
+  <div class="close-icon-wrapper" (click)="onClose($event)">
+      <close-icon></close-icon>
+  </div>
+  <div class="lightbox-item" >
+    <img [src]="safeUrl" (load)="loaded = true" [ngStyle]="{'visibility': loaded ? 'visible' : 'hidden'}">
+  </div>
+ </div>
