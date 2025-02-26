@@ -3,10 +3,11 @@ import { FilePreviewModel } from '../../file-preview.model';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
-  selector: 'preview-lightbox',
-  templateUrl: './preview-lightbox.component.html',
-  styleUrls: ['./preview-lightbox.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'preview-lightbox',
+    templateUrl: './preview-lightbox.component.html',
+    styleUrls: ['./preview-lightbox.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class PreviewLightboxComponent implements OnInit {
   @Input() file: FilePreviewModel;
