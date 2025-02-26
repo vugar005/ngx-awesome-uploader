@@ -9,10 +9,11 @@ import { FilePickerAdapter, UploadResponse, UploadStatus } from '../../file-pick
 import { UploaderCaptions } from '../../uploader-captions';
 
 @Component({
-  selector: 'file-preview-item',
-  templateUrl: './file-preview-item.component.html',
-  styleUrls: ['./file-preview-item.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'file-preview-item',
+    templateUrl: './file-preview-item.component.html',
+    styleUrls: ['./file-preview-item.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class FilePreviewItemComponent implements OnInit {
   @Output() public readonly removeFile = new EventEmitter<FilePreviewModel>();
